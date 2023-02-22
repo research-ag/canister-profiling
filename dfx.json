@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "canisters": {
+    "RBTree_bench": {
+      "type": "motoko",
+      "main": "src/RBTreeBench.mo"
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": "",
+      "args": ""
+    }
+  }
+}
