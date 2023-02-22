@@ -4,11 +4,23 @@
     "RBTree_bench": {
       "type": "motoko",
       "main": "src/RBTreeBench.mo"
+    },
+    "vector_bench": {
+      "type": "motoko",
+      "main": "src/vectorBench.mo"
+    },
+    "sha2_bench": {
+      "type": "motoko",
+      "main": "src/sha2Bench.mo"
+    },
+    "LLRBTree_bench": {
+      "type": "motoko",
+      "main": "src/LLRBTreeBench.mo"
     }
   },
   "defaults": {
     "build": {
-      "packtool": "",
+      "packtool": "vessel sources",
       "args": ""
     }
   }
