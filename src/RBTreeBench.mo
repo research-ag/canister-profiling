@@ -10,6 +10,7 @@ import Option "mo:base/Option";
 import Buffer "mo:base/Buffer";
 import Order "mo:base/Order";
 import Prim "mo:⛔";
+import Vector "mo:mrr/Vector";
 
 actor {
   type Tree = {
@@ -18,7 +19,7 @@ actor {
   };
 
   class ArrayWithInverse<K>(compare : (K, K) -> Order.Order) {
-    private let array = Buffer.Buffer<K>(0);
+    private let array = Vector.new<K>();
 
     public var tree = (#leaf : Tree);
 
@@ -26,7 +27,7 @@ actor {
       switch t {
         case (#leaf) { null };
         case (#node(c, l, y, r)) {
-          switch (compare(x, array.get(y))) {
+          switch (compare(x, Vector.get(array, y))) {
             case (#less) { get(x, l) };
             case (#equal) { ?y };
             case (#greater) { get(x, r) };
@@ -87,10 +88,10 @@ actor {
       func ins(tree : Tree) : Tree {
         switch tree {
           case (#leaf) {
-            #node(#R, #leaf, array.size() - 1, #leaf);
+            #node(#R, #leaf, Vector.size(array) - 1, #leaf);
           };
           case (#node(#B, left, y, right)) {
-            switch (compare(x, array.get(y))) {
+            switch (compare(x, Vector.get(array, y))) {
               case (#less) {
                 lbalance(ins left, y, right);
               };
@@ -98,12 +99,12 @@ actor {
                 rbalance(left, y, ins right);
               };
               case (#equal) {
-                #node(#B, left, array.size() - 1, right);
+                #node(#B, left, Vector.size(array) - 1, right);
               };
             };
           };
           case (#node(#R, left, y, right)) {
-            switch (compare(x, array.get(y))) {
+            switch (compare(x, Vector.get(array, y))) {
               case (#less) {
                 #node(#R, ins left, y, right);
               };
@@ -111,14 +112,14 @@ actor {
                 #node(#R, left, y, ins right);
               };
               case (#equal) {
-                #node(#R, left, array.size() - 1, right);
+                #node(#R, left, Vector.size(array) - 1, right);
               };
             };
           };
         };
       };
 
-      array.add(x);
+      Vector.add(array, x);
       tree := switch (ins tree) {
         case (#node(#R, left, y, right)) {
           #node(#B, left, y, right);
@@ -132,7 +133,7 @@ actor {
     };
 
     public func toArray() : [K] {
-      Buffer.toArray(array);
+      Vector.toArray(array);
     };
   };
 
