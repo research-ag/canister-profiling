@@ -19,7 +19,7 @@ actor {
   };
 
   class ArrayWithInverse() {
-    private var array = ([var] : [var Blob]);
+    private var array = ([var ""] : [var Blob]);
     private var size = 0;
 
     public var tree = (#leaf : Tree);
