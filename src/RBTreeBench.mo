@@ -18,16 +18,17 @@ actor {
     #leaf;
   };
 
-  class ArrayWithInverse<K>(compare : (K, K) -> Order.Order) {
-    private let array = Vector.new<K>();
+  class ArrayWithInverse() {
+    private var array = ([var] : [var Blob]);
+    private var size = 0;
 
     public var tree = (#leaf : Tree);
 
-    func get(x : K, t : Tree) : ?Nat {
+    func get(x : Blob, t : Tree) : ?Nat {
       switch t {
         case (#leaf) { null };
         case (#node(c, l, y, r)) {
-          switch (compare(x, Vector.get(array, y))) {
+          switch (Blob.compare(x, array[y])) {
             case (#less) { get(x, l) };
             case (#equal) { ?y };
             case (#greater) { get(x, r) };
@@ -84,14 +85,14 @@ actor {
       };
     };
 
-    public func add(x : K) {
+    public func add(x : Blob) {
       func ins(tree : Tree) : Tree {
         switch tree {
           case (#leaf) {
-            #node(#R, #leaf, Vector.size(array) - 1, #leaf);
+            #node(#R, #leaf, size - 1, #leaf);
           };
           case (#node(#B, left, y, right)) {
-            switch (compare(x, Vector.get(array, y))) {
+            switch (Blob.compare(x, array[y])) {
               case (#less) {
                 lbalance(ins left, y, right);
               };
@@ -99,12 +100,12 @@ actor {
                 rbalance(left, y, ins right);
               };
               case (#equal) {
-                #node(#B, left, Vector.size(array) - 1, right);
+                #node(#B, left, size - 1, right);
               };
             };
           };
           case (#node(#R, left, y, right)) {
-            switch (compare(x, Vector.get(array, y))) {
+            switch (Blob.compare(x, array[y])) {
               case (#less) {
                 #node(#R, ins left, y, right);
               };
@@ -112,14 +113,19 @@ actor {
                 #node(#R, left, y, ins right);
               };
               case (#equal) {
-                #node(#R, left, Vector.size(array) - 1, right);
+                #node(#R, left, size - 1, right);
               };
             };
           };
         };
       };
 
-      Vector.add(array, x);
+      if (size == array.size()) {
+        array := Array.tabulateVar<Blob>(size * 2, func(i) = if (i < size) { array[i] } else { "" });
+      };
+      array[size] := x;
+      size += 1;
+
       tree := switch (ins tree) {
         case (#node(#R, left, y, right)) {
           #node(#B, left, y, right);
@@ -128,12 +134,12 @@ actor {
       };
     };
 
-    public func index_of(key : K) : ?Nat {
+    public func index_of(key : Blob) : ?Nat {
       get(key, tree);
     };
 
-    public func toArray() : [K] {
-      Vector.toArray(array);
+    public func toArray() : [var Blob] {
+      array;
     };
   };
 
@@ -164,7 +170,7 @@ actor {
 
   public query func profile_rb_tree() : async () {
     let r = RNG();
-    let t = ArrayWithInverse<Blob>(Blob.compare);
+    let t = ArrayWithInverse();
     var first = r.blob();
     var middle = r.blob();
     var last = r.blob();
