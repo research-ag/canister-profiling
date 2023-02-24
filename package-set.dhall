@@ -8,7 +8,7 @@
   {
     name = "mrr",
     repo = "https://github.com/research-ag/motoko-lib",
-    version = "0.2",
+    version = "master",
     dependencies = [ "base" ]
   },
   {

@@ -1,9 +1,9 @@
 {
   "version": 1,
   "canisters": {
-    "RBTree_bench": {
+    "enumeration_bench": {
       "type": "motoko",
-      "main": "src/RBTreeBench.mo"
+      "main": "src/enumerationBench.mo"
     },
     "vector_bench": {
       "type": "motoko",
