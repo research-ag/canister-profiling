@@ -1,14 +1,26 @@
 {
   "version": 1,
   "canisters": {
-    "RBTree_bench": {
+    "enumeration_bench": {
       "type": "motoko",
-      "main": "src/RBTreeBench.mo"
+      "main": "src/enumerationBench.mo"
+    },
+    "vector_bench": {
+      "type": "motoko",
+      "main": "src/vectorBench.mo"
+    },
+    "sha2_bench": {
+      "type": "motoko",
+      "main": "src/sha2Bench.mo"
+    },
+    "LLRBTree_bench": {
+      "type": "motoko",
+      "main": "src/LLRBTreeBench.mo"
     }
   },
   "defaults": {
     "build": {
-      "packtool": "",
+      "packtool": "vessel sources",
       "args": ""
     }
   }

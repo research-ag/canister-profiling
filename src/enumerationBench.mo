@@ -8,9 +8,17 @@ import Blob "mo:base/Blob";
 import Nat8 "mo:base/Nat8";
 import Option "mo:base/Option";
 import Buffer "mo:base/Buffer";
+import Order "mo:base/Order";
 import Prim "mo:⛔";
+import Vector "mo:mrr/Vector";
+import Enumeration "mo:mrr/Enumeration";
 
 actor {
+  type Tree = {
+    #node : ({ #R; #B }, Tree, Nat, Tree);
+    #leaf;
+  };
+
   class RNG() {
     var seed = 234234;
 
@@ -30,16 +38,16 @@ actor {
       Blob.fromArray(a);
     };
   };
-
+  
   let n = 2 ** 12;
 
   func print(message : Text, f : () -> ()) {
     Debug.print(message # ": " # Nat64.toText(E.countInstructions(f)));
   };
-  
+
   public query func profile_rb_tree() : async () {
     let r = RNG();
-    let t = RBTree.RBTree<Blob, Nat>(Blob.compare);
+    let t = Enumeration.Enumeration();
     var first = r.blob();
     var middle = r.blob();
     var last = r.blob();
@@ -50,91 +58,92 @@ actor {
       if (i == 0) first := b;
       if (i == 2 ** 11) middle := b;
       if (i == n - 1) last := b;
-      t.put(b, i);
+      t.add(b);
       i += 1;
     };
 
-    print("first", func() = ignore(t.get(first)));
-    print("middle", func() = ignore(t.get(middle)));
-    print("last", func() = ignore(t.get(last)));
-    
-    var key = root(t.share());
-    print("root", func() = ignore(t.get(key)));
+    print("first", func() = ignore (t.lookup(first)));
+    print("middle", func() = ignore (t.lookup(middle)));
+    print("last", func() = ignore (t.lookup(last)));
 
-    let (max_d, max_key) = max_leaf(t.share());
-    print("max leaf " # Nat.toText(max_d), func() = ignore(t.get(max_key)));
+    var key = t.get(root(t.tree));
+    print("root", func() = ignore (t.lookup(key)));
 
-    let (min_d, min_key) = min_leaf(t.share());
-    print("min leaf " # Nat.toText(min_d), func() = ignore(t.get(min_key)));
+    let (max_d, max_key1) = max_leaf(t.tree);
+    let max_key = t.get(max_key1);
+    print("max leaf " # Nat.toText(max_d), func() = ignore (t.lookup(max_key)));
 
-    key := leftmost(t.share());
-    print("leftmost", func() = ignore(t.get(key)));
+    let (min_d, min_key1) = min_leaf(t.tree);
+    let min_key = t.get(min_key1);
+    print("min leaf " # Nat.toText(min_d), func() = ignore (t.lookup(min_key)));
 
-    key := rightmost(t.share());
-    print("rightmost", func() = ignore(t.get(key)));
+    key := t.get(leftmost(t.tree));
+    print("leftmost", func() = ignore (t.lookup(key)));
+
+    key := t.get(rightmost(t.tree));
+    print("rightmost", func() = ignore (t.lookup(key)));
 
     key := r.with_byte(255);
-    print("max blob", func() = ignore(t.get(key)));
+    print("max blob", func() = ignore (t.lookup(key)));
 
     key := r.with_byte(0);
-    print("min blob", func() = ignore(t.get(key)));
-
-
-    key := r.blob();
-    print("random blob", func() = ignore(t.get(key)));
+    print("min blob", func() = ignore (t.lookup(key)));
 
     key := r.blob();
-    print("random blob", func() = ignore(t.get(key)));
+    print("random blob", func() = ignore (t.lookup(key)));
 
     key := r.blob();
-    print("random blob", func() = ignore(t.get(key)));
+    print("random blob", func() = ignore (t.lookup(key)));
 
     key := r.blob();
-    print("random blob", func() = ignore(t.get(key)));
+    print("random blob", func() = ignore (t.lookup(key)));
 
     key := r.blob();
-    print("random blob", func() = ignore(t.get(key)));
+    print("random blob", func() = ignore (t.lookup(key)));
 
     key := r.blob();
-    print("random blob", func() = ignore(t.get(key)));
+    print("random blob", func() = ignore (t.lookup(key)));
 
     key := r.blob();
-    print("random blob", func() = ignore(t.get(key)));
+    print("random blob", func() = ignore (t.lookup(key)));
+
+    key := r.blob();
+    print("random blob", func() = ignore (t.lookup(key)));
   };
 
-  func root<K, V>(t : RBTree.Tree<K, V>) : K {
+  func root(t : Tree) : Nat {
     switch (t) {
-      case (#node(_, _, (key, _), _)) key;
+      case (#node(_, _, key, _)) key;
       case (#leaf) Prim.trap("ff");
     };
   };
 
-  func leftmost<K, V>(t : RBTree.Tree<K, V>) : K {
+  func leftmost(t : Tree) : Nat {
     switch (t) {
-      case (#node(_, #leaf, (key, _), _)) key;
+      case (#node(_, #leaf, key, _)) key;
       case (#node(_, left, _, _)) leftmost(left);
       case (#leaf) Prim.trap("");
     };
   };
 
-  func rightmost<K, V>(t : RBTree.Tree<K, V>) : K {
+  func rightmost(t : Tree) : Nat {
     switch (t) {
-      case (#node(_, _, (key, _), #leaf)) key;
+      case (#node(_, _, key, #leaf)) key;
       case (#node(_, _, _, right)) rightmost(right);
       case (#leaf) Prim.trap("");
     };
   };
 
-  func max_leaf<K, V>(t : RBTree.Tree<K, V>) : (Nat, K) {
+  func max_leaf(t : Tree) : (Nat, Nat) {
     switch (t) {
-      case (#node(_, #leaf, (key, _), #leaf)) {
+      case (#node(_, #leaf, key, #leaf)) {
         (1, key);
       };
-      case (#node(_, left, (key, _), #leaf)) {
+      case (#node(_, left, key, #leaf)) {
         let (x, y) = max_leaf(left);
         (x + 1, y);
       };
-      case (#node(_, #leaf, (key, _), right)) {
+      case (#node(_, #leaf, key, right)) {
         let (x, y) = max_leaf(right);
         (x + 1, y);
       };
@@ -147,16 +156,16 @@ actor {
     };
   };
 
-  func min_leaf<K, V>(t : RBTree.Tree<K, V>) : (Nat, K) {
+  func min_leaf(t : Tree) : (Nat, Nat) {
     switch (t) {
-      case (#node(_, #leaf, (key, _), #leaf)) {
+      case (#node(_, #leaf, key, #leaf)) {
         (1, key);
       };
-      case (#node(_, left, (key, _), #leaf)) {
+      case (#node(_, left, key, #leaf)) {
         let (x, y) = min_leaf(left);
         (x + 1, y);
       };
-      case (#node(_, #leaf, (key, _), right)) {
+      case (#node(_, #leaf, key, right)) {
         let (x, y) = min_leaf(right);
         (x + 1, y);
       };
