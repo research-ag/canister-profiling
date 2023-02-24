@@ -10,5 +10,11 @@
     repo = "https://github.com/research-ag/motoko-lib",
     version = "0.2",
     dependencies = [ "base" ]
+  },
+  {
+    name = "wip",
+    repo = "https://github.com/research-ag/motoko-wip",
+    version = "master",
+    dependencies = [ "base" ]
   }
 ]
