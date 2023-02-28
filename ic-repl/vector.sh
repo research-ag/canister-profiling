@@ -13,3 +13,4 @@ let canister = id.canister_id;
 call canister.profile_vector();
 call canister.profile_buffer();
 call canister.profile_array();
+call canister.profile_add_many();

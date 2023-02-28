@@ -10,8 +10,8 @@ actor {
   let sqrt = 1000;
   let n = 1_000_000;
 
-  func print(f : () -> ()) {
-    Debug.print(Nat64.toText(E.countInstructions(f)));
+  func print(message : Text, f : () -> ()) {
+    Debug.print(message # " " # Nat64.toText(E.countInstructions(f)));
   };
 
   func vector_bench() {
@@ -71,4 +71,31 @@ actor {
   public query func profile_buffer() : async Nat64 = async E.countInstructions(buffer_bench);
 
   public query func profile_array() : async Nat64 = async E.countInstructions(array_bench);
+
+  public query func profile_add_many() : async () {
+    print(
+      "Vector new + add 1 by 1",
+      func() {
+        let v = Vector.new<Nat>();
+        var i = 0;
+        while (i < n) {
+          Vector.add(v, 0);
+          i += 1;
+        };
+      },
+    );
+    print(
+      "Vector new + addMany",
+      func() {
+        let v = Vector.new<Nat>();
+        Vector.addMany(v, n, 0);
+      },
+    );
+    print(
+      "Vector init",
+      func() {
+        let v = Vector.init<Nat>(n, 0);
+      },
+    );
+  };
 };

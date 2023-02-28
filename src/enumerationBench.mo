@@ -53,7 +53,7 @@ actor {
       if (i == 0) first := b;
       if (i == 2 ** 11) middle := b;
       if (i == n - 1) last := b;
-      t.add(b);
+      ignore t.add(b);
       i += 1;
     };
 
