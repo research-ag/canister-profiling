@@ -14,7 +14,7 @@ actor {
     Debug.print(message # " " # Nat64.toText(E.countInstructions(f)));
   };
 
-  func vector_bench() {
+  func vector() {
     let a = Vector.new<Nat>();
     var i = 0;
     while (i < n) {
@@ -66,7 +66,7 @@ actor {
     };
   };
 
-  public query func profile_vector() : async Nat64 = async E.countInstructions(vector_bench);
+  public query func profile_vector() : async Nat64 = async E.countInstructions(vector);
 
   public query func profile_buffer() : async Nat64 = async E.countInstructions(buffer_bench);
 

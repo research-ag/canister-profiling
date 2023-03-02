@@ -1,21 +1,21 @@
 {
   "version": 1,
   "canisters": {
-    "enumeration_bench": {
+    "enumeration": {
       "type": "motoko",
-      "main": "src/enumerationBench.mo"
+      "main": "src/enumeration.mo"
     },
-    "vector_bench": {
+    "vector": {
       "type": "motoko",
-      "main": "src/vectorBench.mo"
+      "main": "src/vector.mo"
     },
-    "sha2_bench": {
+    "sha2": {
       "type": "motoko",
-      "main": "src/sha2Bench.mo"
+      "main": "src/sha2.mo"
     },
-    "LLRBTree_bench": {
+    "LLRBTree": {
       "type": "motoko",
-      "main": "src/LLRBTreeBench.mo"
+      "main": "src/LLRBTree.mo"
     }
   },
   "defaults": {
