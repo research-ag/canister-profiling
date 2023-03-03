@@ -8,13 +8,13 @@
   {
     name = "mrr",
     repo = "https://github.com/research-ag/motoko-lib",
-    version = "master",
+    version = "main",
     dependencies = [ "base" ]
   },
   {
     name = "wip",
     repo = "https://github.com/research-ag/motoko-wip",
-    version = "master",
+    version = "main",
     dependencies = [ "base" ]
   }
 ]

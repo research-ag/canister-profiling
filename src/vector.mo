@@ -5,97 +5,469 @@ import Array "mo:base/Array";
 import Option "mo:base/Option";
 import Debug "mo:base/Debug";
 import Nat64 "mo:base/Nat64";
+import Nat "mo:base/Nat";
 
 actor {
-  let sqrt = 1000;
-  let n = 1_000_000;
+  let n = 1000;
 
   func print(message : Text, f : () -> ()) {
     Debug.print(message # " " # Nat64.toText(E.countInstructions(f)));
   };
 
-  func vector() {
-    let a = Vector.new<Nat>();
-    var i = 0;
-    while (i < n) {
-      Vector.add(a, i);
-      i += 1;
-    };
-    i := 0;
-    while (i < n) {
-      assert (Vector.get(a, i) == i);
-      i += 1;
-    };
+  let stats = Buffer.Buffer<(Text, Nat, Nat)>(0);
+
+  func stat(method : Text, vector : () -> (() -> ()), buffer : () -> (() -> ())) {
+    stats.add((method, Nat64.toNat(E.countInstructions(vector())), Nat64.toNat(E.countInstructions(buffer()))));
   };
 
-  func buffer_bench() {
-    let a = Buffer.Buffer<Nat>(0);
-    var i = 0;
-    while (i < n) {
-      a.add(i);
-      i += 1;
-    };
-    i := 0;
-    while (i < n) {
-      assert (a.get(i) == i);
-      i += 1;
-    };
-  };
-
-  func array_bench() {
-    let a = Array.init<?[var ?Nat]>(sqrt, null);
-    var i = 0;
-    var x = 0;
-    while (i < sqrt) {
-      a[i] := ?Array.init<?Nat>(sqrt, null);
-      var j = 0;
-      while (j < sqrt) {
-        Option.unwrap(a[i])[j] := ?x;
-        x += 1;
-        j += 1;
-      };
-      i += 1;
-    };
-
-    x := 0;
-    while (x < sqrt * sqrt) {
-      let i = x / sqrt;
-      let j = x % sqrt;
-      assert (Option.unwrap(Option.unwrap(a[i])[j]) == x);
-      x += 1;
-    };
-  };
-
-  public query func profile_vector() : async Nat64 = async E.countInstructions(vector);
-
-  public query func profile_buffer() : async Nat64 = async E.countInstructions(buffer_bench);
-
-  public query func profile_array() : async Nat64 = async E.countInstructions(array_bench);
-
-  public query func profile_add_many() : async () {
-    print(
-      "Vector new + add 1 by 1",
+  public query func profile() : async () {
+    stat(
+      "init",
       func() {
-        let v = Vector.new<Nat>();
-        var i = 0;
-        while (i < n) {
-          Vector.add(v, 0);
-          i += 1;
+        func() {
+          ignore Vector.init<Nat>(n, 0);
+        };
+      },
+      func() = func() = ignore Buffer.Buffer<Nat>(n),
+    );
+
+    stat(
+      "addMany",
+      func() {
+        let a = Vector.new<Nat>();
+        func() {
+          Vector.addMany(a, n, 0);
+        };
+      },
+      func() = func() = (),
+    );
+
+    stat(
+      "clone",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          ignore Vector.clone(a);
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        func() = ignore Buffer.clone(a);
+      },
+    );
+
+    stat(
+      "add",
+      func() {
+        let a = Vector.new<Nat>();
+        func() {
+          var i = 0;
+          while (i < n) {
+            Vector.add(a, 0);
+            i += 1;
+          };
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        func() {
+          var i = 0;
+          while (i < n) {
+            a.add(0);
+            i += 1;
+          };
         };
       },
     );
-    print(
-      "Vector new + addMany",
+
+    stat(
+      "get",
       func() {
-        let v = Vector.new<Nat>();
-        Vector.addMany(v, n, 0);
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore Vector.get(a, i);
+            i += 1;
+          };
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore a.get(i);
+            i += 1;
+          };
+        };
       },
     );
-    print(
-      "Vector init",
+
+    stat(
+      "getOpt",
       func() {
-        let v = Vector.init<Nat>(n, 0);
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore Vector.getOpt(a, i);
+            i += 1;
+          };
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore a.getOpt(i);
+            i += 1;
+          };
+        };
       },
     );
+
+    stat(
+      "put",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          var i = 0;
+          while (i < n) {
+            Vector.put(a, i, 0);
+            i += 1;
+          };
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          var i = 0;
+          while (i < n) {
+            a.put(i, 0);
+            i += 1;
+          };
+        };
+      },
+    );
+
+    stat(
+      "size",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore Vector.size(a);
+            i += 1;
+          };
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore a.size();
+            i += 1;
+          };
+        };
+      },
+    );
+
+    stat(
+      "removeLast",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore Vector.removeLast(a);
+            i += 1;
+          };
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore a.removeLast();
+            i += 1;
+          };
+        };
+      },
+    );
+
+    stat(
+      "clear",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          Vector.clear(a);
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          a.clear();
+        };
+      },
+    );
+
+    stat(
+      "indexOf",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          ignore Vector.indexOf(1, a, Nat.equal);
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          ignore Buffer.indexOf(1, a, Nat.equal);
+        };
+      },
+    );
+
+    stat(
+      "lastIndexOf",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          ignore Vector.lastIndexOf(1, a, Nat.equal);
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          ignore Buffer.lastIndexOf(1, a, Nat.equal);
+        };
+      },
+    );
+
+    stat(
+      "vals",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          for (x in Vector.vals(a)) {
+            ignore x;
+          };
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          for (x in a.vals()) {
+            ignore x;
+          };
+        };
+      },
+    );
+
+    stat(
+      "items",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          for (x in Vector.items(a)) {
+            ignore x;
+          };
+        };
+      },
+      func() = func() = (),
+    );
+
+    stat(
+      "valsRev",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          for (x in Vector.valsRev(a)) {
+            ignore x;
+          };
+        };
+      },
+      func() = func() = (),
+    );
+
+    stat(
+      "itemsRev",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          for (x in Vector.itemsRev(a)) {
+            ignore x;
+          };
+        };
+      },
+      func() = func() = (),
+    );
+
+    stat(
+      "keys",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          for (x in Vector.keys(a)) {
+            ignore x;
+          };
+        };
+      },
+      func() = func() = (),
+    );
+
+    stat(
+      "append",
+      func() {
+        let a = Vector.new<Nat>();
+        let b = Array.vals(Array.freeze(Array.init<Nat>(n, 0)));
+        func() {
+          Vector.append(a, b);
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        let b = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          b.add(0);
+          i += 1;
+        };
+        func() {
+          a.append(b);
+        };
+      },
+    );
+
+    stat(
+      "toArray",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          ignore Vector.toArray(a);
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          ignore Buffer.toArray(a);
+        };
+      },
+    );
+
+    stat(
+
+      "fromArray",
+      func() {
+        let a = Array.freeze(Array.init<Nat>(n, 0));
+        func() {
+          ignore Vector.fromArray(a);
+        };
+      },
+      func() {
+        let a = Array.freeze(Array.init<Nat>(n, 0));
+        func() {
+          ignore Buffer.fromArray(a);
+        };
+      },
+    );
+
+    stat(
+      "toArray",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          ignore Vector.toVarArray(a);
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          ignore Buffer.toVarArray(a);
+        };
+      },
+    );
+
+    stat(
+      "fromArray",
+      func() {
+        let a = Array.init<Nat>(n, 0);
+        func() {
+          ignore Vector.fromVarArray(a);
+        };
+      },
+      func() {
+        let a = Array.init<Nat>(n, 0);
+        func() {
+          ignore Buffer.fromVarArray(a);
+        };
+      },
+    );
+
+    var result = "\n|method|vector|buffer|\n|---|---|\n";
+    for ((method, vector, buffer) in stats.vals()) {
+      result #= "|" # method # "|" # Nat.toText(vector) # "|" # Nat.toText(buffer) # "|\n";
+    };
+    Debug.print(result);
   };
 };
