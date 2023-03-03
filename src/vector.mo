@@ -428,7 +428,7 @@ actor {
     );
 
     stat(
-      "toArray",
+      "toVarArray",
       func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
@@ -449,7 +449,7 @@ actor {
     );
 
     stat(
-      "fromArray",
+      "fromVarArray",
       func() {
         let a = Array.init<Nat>(n, 0);
         func() {

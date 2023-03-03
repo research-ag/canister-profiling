@@ -38,5 +38,5 @@ DFX_MOC_PATH="$(vessel bin)/moc" dfx build && ic-repl ic-repl/vector.sh
 |append|487227|321530|
 |toArray|201245|105158|
 |fromArray|487698|207403|
-|toArray|266461|162081|
-|fromArray|487728|207373|
+|toVarArray|266461|162081|
+|fromVarArray|487728|207373|
