@@ -2,7 +2,7 @@
 
 Profiling things in the canister.
 
-# Run
+## Run
 
 On the first run:
 ```
@@ -14,7 +14,7 @@ On the next ones:
 DFX_MOC_PATH="$(vessel bin)/moc" dfx build && ic-repl ic-repl/vector.sh
 ```
 
-# Bench Vector against Buffer
+## Bench Vector against Buffer
 
 |method|vector|buffer|
 |---|---|---|
