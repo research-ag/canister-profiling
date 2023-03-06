@@ -14,21 +14,23 @@ actor {
     Debug.print(message # " " # Nat64.toText(E.countInstructions(f)));
   };
 
-  let stats = Buffer.Buffer<(Text, Nat, Nat)>(0);
+  let stats = Buffer.Buffer<(Text, Nat, Nat, Nat)>(0);
 
-  func stat(method : Text, vector : () -> (() -> ()), buffer : () -> (() -> ())) {
-    stats.add((method, Nat64.toNat(E.countInstructions(vector())), Nat64.toNat(E.countInstructions(buffer()))));
+  func stat(method : Text, vector : () -> (() -> ()), buffer : () -> (() -> ()), array : () -> (() -> ())) {
+    stats.add((
+      method,
+      Nat64.toNat(E.countInstructions(vector())),
+      Nat64.toNat(E.countInstructions(buffer())),
+      Nat64.toNat(E.countInstructions(array())),
+    ));
   };
 
   public query func profile() : async () {
     stat(
       "init",
-      func() {
-        func() {
-          ignore Vector.init<Nat>(n, 0);
-        };
-      },
+      func() = func() = ignore Vector.init<Nat>(n, 0),
       func() = func() = ignore Buffer.Buffer<Nat>(n),
+      func() = func() = ignore Array.init<Nat>(n, 0),
     );
 
     stat(
@@ -39,6 +41,7 @@ actor {
           Vector.addMany(a, n, 0);
         };
       },
+      func() = func() = (),
       func() = func() = (),
     );
 
@@ -52,8 +55,14 @@ actor {
       },
       func() {
         let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
         func() = ignore Buffer.clone(a);
       },
+      func() = func() = (),
     );
 
     stat(
@@ -78,6 +87,7 @@ actor {
           };
         };
       },
+      func() = func() = (),
     );
 
     stat(
@@ -103,6 +113,16 @@ actor {
           var i = 0;
           while (i < n) {
             ignore a.get(i);
+            i += 1;
+          };
+        };
+      },
+      func() {
+        let a = Array.init<Nat>(n, 0);
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore a[i];
             i += 1;
           };
         };
@@ -136,6 +156,7 @@ actor {
           };
         };
       },
+      func() = func() = (),
     );
 
     stat(
@@ -165,6 +186,16 @@ actor {
           };
         };
       },
+      func() {
+        let a = Array.init<Nat>(n, 0);
+        func() {
+          var i = 0;
+          while (i < n) {
+            a[i] := 0;
+            i += 1;
+          };
+        };
+      },
     );
 
     stat(
@@ -186,6 +217,16 @@ actor {
           a.add(0);
           i += 1;
         };
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore a.size();
+            i += 1;
+          };
+        };
+      },
+      func() {
+        let a = Array.init<Nat>(n, 0);
         func() {
           var i = 0;
           while (i < n) {
@@ -223,6 +264,7 @@ actor {
           };
         };
       },
+      func() = func() = (),
     );
 
     stat(
@@ -244,6 +286,7 @@ actor {
           a.clear();
         };
       },
+      func() = func() = (),
     );
 
     stat(
@@ -264,6 +307,10 @@ actor {
         func() {
           ignore Buffer.indexOf(1, a, Nat.equal);
         };
+      },
+      func() {
+        let a = Array.freeze(Array.init<Nat>(n, 0));
+        func() = ignore Array.find(a, func(x : Nat) : Bool = x == 1);
       },
     );
 
@@ -286,6 +333,7 @@ actor {
           ignore Buffer.lastIndexOf(1, a, Nat.equal);
         };
       },
+      func() = func() = (),
     );
 
     stat(
@@ -311,6 +359,14 @@ actor {
           };
         };
       },
+      func() {
+        let a = Array.init<Nat>(n, 0);
+        func() {
+          for (x in a.vals()) {
+            ignore x;
+          };
+        };
+      },
     );
 
     stat(
@@ -323,6 +379,7 @@ actor {
           };
         };
       },
+      func() = func() = (),
       func() = func() = (),
     );
 
@@ -337,6 +394,7 @@ actor {
         };
       },
       func() = func() = (),
+      func() = func() = (),
     );
 
     stat(
@@ -350,6 +408,7 @@ actor {
         };
       },
       func() = func() = (),
+      func() = func() = (),
     );
 
     stat(
@@ -362,6 +421,7 @@ actor {
           };
         };
       },
+      func() = func() = (),
       func() = func() = (),
     );
 
@@ -387,6 +447,7 @@ actor {
           a.append(b);
         };
       },
+      func() = func() = (),
     );
 
     stat(
@@ -408,10 +469,10 @@ actor {
           ignore Buffer.toArray(a);
         };
       },
+      func() = func() = (),
     );
 
     stat(
-
       "fromArray",
       func() {
         let a = Array.freeze(Array.init<Nat>(n, 0));
@@ -425,6 +486,7 @@ actor {
           ignore Buffer.fromArray(a);
         };
       },
+      func() = func() = (),
     );
 
     stat(
@@ -446,6 +508,12 @@ actor {
           ignore Buffer.toVarArray(a);
         };
       },
+      func() {
+        let a = Array.freeze(Array.init<Nat>(n, 0));
+        func() {
+          ignore Array.thaw(a);
+        };
+      },
     );
 
     stat(
@@ -462,11 +530,17 @@ actor {
           ignore Buffer.fromVarArray(a);
         };
       },
+      func() {
+        let a = Array.init<Nat>(n, 0);
+        func() {
+          ignore Array.freeze(a);
+        };
+      },
     );
 
-    var result = "\n|method|vector|buffer|\n|---|---|\n";
-    for ((method, vector, buffer) in stats.vals()) {
-      result #= "|" # method # "|" # Nat.toText(vector) # "|" # Nat.toText(buffer) # "|\n";
+    var result = "\n|method|vector|buffer|array|\n|---|---|---|---|\n";
+    for ((method, vector, buffer, array) in stats.vals()) {
+      result #= "|" # method # "|" # Nat.toText(vector) # "|" # Nat.toText(buffer) # "|" # Nat.toText(array) # "|\n";
     };
     Debug.print(result);
   };
