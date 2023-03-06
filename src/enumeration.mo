@@ -176,7 +176,7 @@ actor {
     stat("min leaf", min_leaf(enumertion_tree).1, min_leaf(rb_tree).1);
     stat("max leaf", max_leaf(enumertion_tree).1, max_leaf(rb_tree).1);
 
-    var result = "\n|method|enumeration|red-black tree|\n|---|---|---|\n";
+    var result = "Testing for n = " # Nat.toText(n) # "\n\n|method|enumeration|red-black tree|\n|---|---|---|\n";
     for ((method, enumertion, rb) in stats.vals()) {
       result #= "|" # method # "|" # Nat.toText(enumertion) # "|" # Nat.toText(rb) # "|\n";
     };

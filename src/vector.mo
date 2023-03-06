@@ -8,7 +8,7 @@ import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 
 actor {
-  let n = 1000;
+  let n = 10000;
 
   func print(message : Text, f : () -> ()) {
     Debug.print(message # " " # Nat64.toText(E.countInstructions(f)));
@@ -25,15 +25,24 @@ actor {
     ));
   };
 
+  func stat_average(method : Text, vector : () -> (() -> ()), buffer : () -> (() -> ()), array : () -> (() -> ())) {
+    stats.add((
+      method,
+      Nat64.toNat(E.countInstructions(vector())) / n,
+      Nat64.toNat(E.countInstructions(buffer())) / n,
+      Nat64.toNat(E.countInstructions(array())) / n,
+    ));
+  };
+
   public query func profile() : async () {
-    stat(
+    stat_average(
       "init",
       func() = func() = ignore Vector.init<Nat>(n, 0),
       func() = func() = ignore Buffer.Buffer<Nat>(n),
       func() = func() = ignore Array.init<Nat>(n, 0),
     );
 
-    stat(
+    stat_average(
       "addMany",
       func() {
         let a = Vector.new<Nat>();
@@ -45,7 +54,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "clone",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -65,7 +74,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "add",
       func() {
         let a = Vector.new<Nat>();
@@ -90,7 +99,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "get",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -129,7 +138,7 @@ actor {
       },
     );
 
-    stat(
+    stat_average(
       "getOpt",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -159,7 +168,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "put",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -198,7 +207,7 @@ actor {
       },
     );
 
-    stat(
+    stat_average(
       "size",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -237,7 +246,7 @@ actor {
       },
     );
 
-    stat(
+    stat_average(
       "removeLast",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -267,29 +276,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
-      "clear",
-      func() {
-        let a = Vector.init<Nat>(n, 0);
-        func() {
-          Vector.clear(a);
-        };
-      },
-      func() {
-        let a = Buffer.Buffer<Nat>(0);
-        var i = 0;
-        while (i < n) {
-          a.add(0);
-          i += 1;
-        };
-        func() {
-          a.clear();
-        };
-      },
-      func() = func() = (),
-    );
-
-    stat(
+    stat_average(
       "indexOf",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -314,7 +301,7 @@ actor {
       },
     );
 
-    stat(
+    stat_average(
       "lastIndexOf",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -336,7 +323,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "vals",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -369,7 +356,7 @@ actor {
       },
     );
 
-    stat(
+    stat_average(
       "items",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -383,7 +370,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "valsRev",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -397,7 +384,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "itemsRev",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -411,7 +398,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "keys",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -425,7 +412,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "append",
       func() {
         let a = Vector.new<Nat>();
@@ -450,7 +437,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "toArray",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -472,7 +459,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "fromArray",
       func() {
         let a = Array.freeze(Array.init<Nat>(n, 0));
@@ -489,7 +476,7 @@ actor {
       func() = func() = (),
     );
 
-    stat(
+    stat_average(
       "toVarArray",
       func() {
         let a = Vector.init<Nat>(n, 0);
@@ -516,7 +503,7 @@ actor {
       },
     );
 
-    stat(
+    stat_average(
       "fromVarArray",
       func() {
         let a = Array.init<Nat>(n, 0);
@@ -536,6 +523,28 @@ actor {
           ignore Array.freeze(a);
         };
       },
+    );
+
+    stat(
+      "clear",
+      func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          Vector.clear(a);
+        };
+      },
+      func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          a.clear();
+        };
+      },
+      func() = func() = (),
     );
 
     var result = "\n|method|vector|buffer|array|\n|---|---|---|---|\n";

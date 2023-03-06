@@ -18,31 +18,33 @@ DFX_MOC_PATH="$(vessel bin)/moc" dfx build && ic-repl ic-repl/vector.sh
 
 |method|vector|buffer|array|
 |---|---|---|---|
-|init|26741|13154|12086|
-|addMany|40968|0|0|
-|clone|212841|310260|0|
-|add|406178|484168|0|
-|get|218025|123025|74025|
-|getOpt|238617|124025|0|
-|put|245617|131025|75025|
-|size|159025|76025|101025|
-|removeLast|354234|367814|0|
+|init|16|12|12|
+|addMany|21|0|0|
+|clone|191|310|0|
+|add|365|516|0|
+|get|218|123|74|
+|getOpt|238|124|0|
+|put|245|131|75|
+|size|159|76|101|
+|removeLast|317|376|0|
+|indexOf|544|143|35|
+|lastIndexOf|371|150|0|
+|vals|416|122|14|
+|items|517|0|0|
+|valsRev|198|0|0|
+|itemsRev|344|0|0|
+|keys|97|0|0|
+|append|446|321|0|
+|toArray|201|105|0|
+|fromArray|446|206|0|
+|toVarArray|266|162|114|
+|fromVarArray|446|206|57|
 |clear|161|269|0|
-|indexOf|546397|143062|35027|
-|lastIndexOf|375900|150076|0|
-|vals|418334|122238|14019|
-|items|519390|0|0|
-|valsRev|202687|0|0|
-|itemsRev|348863|0|0|
-|keys|97403|0|0|
-|append|487227|321560|0|
-|toArray|201245|105158|0|
-|fromArray|487728|207373|0|
-|toVarArray|266461|162081|114208|
-|fromVarArray|487698|207373|57183|
 
 
 ## Becnh Enumeration against RBTree
+
+Testing for n = 4096
 
 |method|enumeration|red-black tree|
 |---|---|---|
@@ -63,3 +65,4 @@ min leaf in red-black tree: 9
 max leaf in enumeration: 16
 
 max leaf in red-black tree: 16
+
