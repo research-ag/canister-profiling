@@ -40,3 +40,26 @@ DFX_MOC_PATH="$(vessel bin)/moc" dfx build && ic-repl ic-repl/vector.sh
 |fromArray|487728|207373|0|
 |toVarArray|266461|162081|114208|
 |fromVarArray|487698|207373|57183|
+
+
+## Becnh Enumeration against RBTree
+
+|method|enumeration|red-black tree|
+|---|---|---|
+|random blobs inside average|4304|4028|
+|random blobs average|3201|2867|
+|root|1873|1798|
+|leftmost|4459|4143|
+|rightmost|5037|4753|
+|min blob|2971|2618|
+|max blob|3653|3334|
+|min leaf|3892|3609|
+|max leaf|5868|5566|
+
+min leaf in enumeration: 9
+
+min leaf in red-black tree: 9
+
+max leaf in enumeration: 16
+
+max leaf in red-black tree: 16
