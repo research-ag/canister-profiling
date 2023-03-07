@@ -48,6 +48,10 @@ Any item in this table is a pair of the instructions count and the memory size d
 
 Testing for n = 4096
 
+Memory usage of Enumeration: 49
+
+Memory usage of RBTree: 63
+
 |method|enumeration|red-black tree|
 |---|---|---|
 |random blobs inside average|4304|4028|
@@ -67,4 +71,3 @@ min leaf in red-black tree: 9
 max leaf in enumeration: 16
 
 max leaf in red-black tree: 16
-

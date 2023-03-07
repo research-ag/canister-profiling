@@ -111,6 +111,14 @@ actor {
     };
   };
 
+  func memory(f : () -> ()) : Nat {
+    let before = Prim.rts_memory_size();
+    f();
+    let after = Prim.rts_memory_size();
+    assert (after - before) % 65536 == 0;
+    (after - before) / 65536;
+  };
+
   let n = 2 ** 12;
   let m = 2 ** 6;
   type Tree = RBTree.Tree<Blob, Nat>;
@@ -140,12 +148,26 @@ actor {
       ));
     };
 
-    var i = 0;
-    while (i < n) {
-      ignore enumertion.add(blobs[i]);
-      rb.put(blobs[i], i);
-      i += 1;
-    };
+    let mem = (
+      memory(
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore enumertion.add(blobs[i]);
+            i += 1;
+          };
+        },
+      ),
+      memory(
+        func() {
+          var i = 0;
+          while (i < n) {
+            rb.put(blobs[i], i);
+            i += 1;
+          };
+        },
+      ),
+    );
 
     let random = Array.tabulate<Blob>(m, func(i) = blobs[i * m]);
     stats.add((
@@ -176,7 +198,10 @@ actor {
     stat("min leaf", min_leaf(enumertion_tree).1, min_leaf(rb_tree).1);
     stat("max leaf", max_leaf(enumertion_tree).1, max_leaf(rb_tree).1);
 
-    var result = "Testing for n = " # Nat.toText(n) # "\n\n|method|enumeration|red-black tree|\n|---|---|---|\n";
+    var result = "\nTesting for n = " # Nat.toText(n) # "\n\n";
+    result #= "Memory usage of Enumeration: " # Nat.toText(mem.0) # "\n\n";
+    result #= "Memory usage of RBTree: " # Nat.toText(mem.1) # "\n\n";
+    result #= "|method|enumeration|red-black tree|\n|---|---|---|\n";
     for ((method, enumertion, rb) in stats.vals()) {
       result #= "|" # method # "|" # Nat.toText(enumertion) # "|" # Nat.toText(rb) # "|\n";
     };
