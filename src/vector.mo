@@ -17,11 +17,11 @@ actor {
 
   func bench_one(a : () -> (() -> ())) : (Nat, Nat) {
     var b = a();
-    let before = Prim.rts_memory_size();
+    let before = Prim.rts_heap_size();
     b();
-    let after = Prim.rts_memory_size();
-    assert (after - before) % 65536 == 0;
-    (Nat64.toNat(E.countInstructions(a())), (after - before) / 65536);
+    let after = Prim.rts_heap_size();
+    // assert (after - before) % 65536 == 0;
+    (Nat64.toNat(E.countInstructions(a())), (after - before));
   };
 
   func becnh_average(a : () -> (() -> ())) : (Nat, Nat) {
