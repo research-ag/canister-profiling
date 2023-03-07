@@ -428,12 +428,12 @@ actor {
     );
 
     stat_average(
-      "append",
+      "addFromIter",
       func() {
         let a = Vector.new<Nat>();
         let b = Array.vals(Array.freeze(Array.init<Nat>(n, 0)));
         func() {
-          Vector.append(a, b);
+          Vector.addFromIter(a, b);
         };
       },
       func() {
