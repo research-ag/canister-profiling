@@ -16,30 +16,32 @@ DFX_MOC_PATH="$(vessel bin)/moc" dfx build && ic-repl ic-repl/vector.sh
 
 ## Bench Vector against Buffer
 
+Any item in this table is a pair of the instructions count and the memory size divided by 65536.
+
 |method|vector|buffer|array|
 |---|---|---|---|
-|init|16|12|12|
-|addMany|21|0|0|
-|clone|191|310|0|
-|add|365|516|0|
-|get|218|123|74|
-|getOpt|238|124|0|
-|put|245|131|75|
-|size|159|76|101|
-|removeLast|317|376|0|
-|indexOf|544|143|35|
-|lastIndexOf|371|150|0|
-|vals|416|122|14|
-|items|517|0|0|
-|valsRev|198|0|0|
-|itemsRev|344|0|0|
-|keys|97|0|0|
-|append|446|321|0|
-|toArray|201|105|0|
-|fromArray|446|206|0|
-|toVarArray|266|162|114|
-|fromVarArray|446|206|57|
-|clear|161|269|0|
+|init|(13,6)|(12,6)|(12,6)|
+|addMany|(14,6)|(0,0)|(0,0)|
+|clone|(181,7)|(312,32)|(0,0)|
+|add|(350,31)|(557,50)|(0,0)|
+|get|(218,0)|(123,0)|(74,0)|
+|getOpt|(238,0)|(124,0)|(0,0)|
+|put|(245,0)|(131,0)|(75,0)|
+|size|(159,0)|(76,0)|(101,25)|
+|removeLast|(302,1)|(387,33)|(0,0)|
+|indexOf|(544,98)|(143,0)|(35,0)|
+|lastIndexOf|(370,24)|(150,0)|(0,0)|
+|vals|(416,73)|(122,0)|(14,0)|
+|items|(517,97)|(0,0)|(0,0)|
+|valsRev|(197,1)|(0,0)|(0,0)|
+|itemsRev|(343,25)|(0,0)|(0,0)|
+|keys|(97,0)|(0,0)|(0,0)|
+|append|(431,31)|(321,18)|(0,0)|
+|toArray|(201,6)|(105,6)|(0,0)|
+|fromArray|(431,31)|(206,34)|(0,0)|
+|toVarArray|(266,6)|(162,6)|(114,6)|
+|fromVarArray|(431,31)|(206,34)|(57,6)|
+|clear|(161,0)|(269,0)|(0,0)|
 
 
 ## Becnh Enumeration against RBTree

@@ -6,31 +6,46 @@ import Option "mo:base/Option";
 import Debug "mo:base/Debug";
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
+import Prim "mo:⛔";
 
 actor {
-  let n = 10000;
+  let n = 100000;
 
   func print(message : Text, f : () -> ()) {
     Debug.print(message # " " # Nat64.toText(E.countInstructions(f)));
   };
 
-  let stats = Buffer.Buffer<(Text, Nat, Nat, Nat)>(0);
+  func bench_one(a : () -> (() -> ())) : (Nat, Nat) {
+    var b = a();
+    let before = Prim.rts_memory_size();
+    b();
+    let after = Prim.rts_memory_size();
+    assert (after - before) % 65536 == 0;
+    (Nat64.toNat(E.countInstructions(a())), (after - before) / 65536);
+  };
+
+  func becnh_average(a : () -> (() -> ())) : (Nat, Nat) {
+    let (x, y) = bench_one(a);
+    (x / n, y);
+  };
+
+  let stats = Buffer.Buffer<(Text, (Nat, Nat), (Nat, Nat), (Nat, Nat))>(0);
 
   func stat(method : Text, vector : () -> (() -> ()), buffer : () -> (() -> ()), array : () -> (() -> ())) {
     stats.add((
       method,
-      Nat64.toNat(E.countInstructions(vector())),
-      Nat64.toNat(E.countInstructions(buffer())),
-      Nat64.toNat(E.countInstructions(array())),
+      bench_one(vector),
+      bench_one(buffer),
+      bench_one(array),
     ));
   };
 
   func stat_average(method : Text, vector : () -> (() -> ()), buffer : () -> (() -> ()), array : () -> (() -> ())) {
     stats.add((
       method,
-      Nat64.toNat(E.countInstructions(vector())) / n,
-      Nat64.toNat(E.countInstructions(buffer())) / n,
-      Nat64.toNat(E.countInstructions(array())) / n,
+      becnh_average(vector),
+      becnh_average(buffer),
+      becnh_average(array),
     ));
   };
 
@@ -547,9 +562,13 @@ actor {
       func() = func() = (),
     );
 
+    func toText((a, b) : (Nat, Nat)) : Text {
+      "(" # Nat.toText(a) # "," # Nat.toText(b) # ")";
+    };
+
     var result = "\n|method|vector|buffer|array|\n|---|---|---|---|\n";
     for ((method, vector, buffer, array) in stats.vals()) {
-      result #= "|" # method # "|" # Nat.toText(vector) # "|" # Nat.toText(buffer) # "|" # Nat.toText(array) # "|\n";
+      result #= "|" # method # "|" # toText(vector) # "|" # toText(buffer) # "|" # toText(array) # "|\n";
     };
     Debug.print(result);
   };
