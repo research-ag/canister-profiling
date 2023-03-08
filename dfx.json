@@ -16,6 +16,10 @@
     "LLRBTree": {
       "type": "motoko",
       "main": "src/LLRBTree.mo"
+    },
+    "stable": {
+      "type": "motoko",
+      "main": "src/stable.mo"
     }
   },
   "defaults": {

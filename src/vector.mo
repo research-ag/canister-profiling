@@ -788,13 +788,20 @@ actor {
   };
 
   let m = 1_000_000;
-  stable var state = null : ?Vector.Vector<Nat>;
 
-  public shared func profile_stable() : async () {
+  func measure_stable(f : () -> ()) : async Text {
     let memoryUsage = StableMemory.stableVarQuery();
     let before = (await memoryUsage()).size;
-    state := ?Vector.init<Nat>(m, m);
+    f();
     let after = (await memoryUsage()).size;
-    Debug.print(debug_show (after - before));
+    debug_show (after - before);
+  };
+
+  stable var state_vector = Vector.new<Nat>();
+  stable var state_array = [var] : [var Nat];
+
+  public shared func profile_stable() : async () {
+    Debug.print(await measure_stable(func() = state_vector := Vector.init<Nat>(m, 0)));
+    Debug.print(await measure_stable(func() = state_array := Array.init<Nat>(m, 0)));
   };
 };
