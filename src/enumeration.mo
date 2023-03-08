@@ -112,11 +112,10 @@ actor {
   };
 
   func memory(f : () -> ()) : Nat {
-    let before = Prim.rts_memory_size();
+    let before = Prim.rts_heap_size();
     f();
-    let after = Prim.rts_memory_size();
-    assert (after - before) % 65536 == 0;
-    (after - before) / 65536;
+    let after = Prim.rts_heap_size();
+    after - before;
   };
 
   let n = 2 ** 12;

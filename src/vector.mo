@@ -11,27 +11,29 @@ import Prim "mo:⛔";
 actor {
   let n = 100000;
 
+  type Func = ?(() -> (() -> ()));
+
   func print(message : Text, f : () -> ()) {
     Debug.print(message # " " # Nat64.toText(E.countInstructions(f)));
   };
 
-  func bench_one(a : () -> (() -> ())) : (Nat, Nat) {
-    var b = a();
+  func bench_one(a : Func) : ?(Nat, Nat) {
+    let ?f = a else return null;
+    var b = f();
     let before = Prim.rts_heap_size();
     b();
     let after = Prim.rts_heap_size();
-    // assert (after - before) % 65536 == 0;
-    (Nat64.toNat(E.countInstructions(a())), (after - before));
+    ?(Nat64.toNat(E.countInstructions(f())), after - before);
   };
 
-  func becnh_average(a : () -> (() -> ())) : (Nat, Nat) {
-    let (x, y) = bench_one(a);
-    (x / n, y);
+  func becnh_average(a : Func) : ?(Nat, Nat) {
+    let ?(x, y) = bench_one(a) else return null;
+    ?(x / n, y);
   };
 
-  let stats = Buffer.Buffer<(Text, (Nat, Nat), (Nat, Nat), (Nat, Nat))>(0);
+  let stats = Buffer.Buffer<(Text, ?(Nat, Nat), ?(Nat, Nat), ?(Nat, Nat))>(0);
 
-  func stat(method : Text, vector : () -> (() -> ()), buffer : () -> (() -> ()), array : () -> (() -> ())) {
+  func stat(method : Text, vector : Func, buffer : Func, array : Func) {
     stats.add((
       method,
       bench_one(vector),
@@ -40,7 +42,7 @@ actor {
     ));
   };
 
-  func stat_average(method : Text, vector : () -> (() -> ()), buffer : () -> (() -> ()), array : () -> (() -> ())) {
+  func stat_average(method : Text, vector : Func, buffer : Func, array : Func) {
     stats.add((
       method,
       becnh_average(vector),
@@ -52,32 +54,32 @@ actor {
   public query func profile() : async () {
     stat_average(
       "init",
-      func() = func() = ignore Vector.init<Nat>(n, 0),
-      func() = func() = ignore Buffer.Buffer<Nat>(n),
-      func() = func() = ignore Array.init<Nat>(n, 0),
+      ?(func() = func() = ignore Vector.init<Nat>(n, 0)),
+      ?(func() = func() = ignore Buffer.Buffer<Nat>(n)),
+      ?(func() = func() = ignore Array.init<Nat>(n, 0)),
     );
 
     stat_average(
       "addMany",
-      func() {
+      ?(func() {
         let a = Vector.new<Nat>();
         func() {
           Vector.addMany(a, n, 0);
         };
-      },
-      func() = func() = (),
-      func() = func() = (),
+      }),
+      null,
+      null,
     );
 
     stat_average(
       "clone",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           ignore Vector.clone(a);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -85,13 +87,13 @@ actor {
           i += 1;
         };
         func() = ignore Buffer.clone(a);
-      },
-      func() = func() = (),
+      }),
+      null,
     );
 
     stat_average(
       "add",
-      func() {
+      ?(func() {
         let a = Vector.new<Nat>();
         func() {
           var i = 0;
@@ -100,8 +102,8 @@ actor {
             i += 1;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         func() {
           var i = 0;
@@ -110,13 +112,13 @@ actor {
             i += 1;
           };
         };
-      },
-      func() = func() = (),
+      }),
+      null,
     );
 
     stat_average(
       "get",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           var i = 0;
@@ -125,8 +127,8 @@ actor {
             i += 1;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -140,8 +142,8 @@ actor {
             i += 1;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Array.init<Nat>(n, 0);
         func() {
           var i = 0;
@@ -150,12 +152,12 @@ actor {
             i += 1;
           };
         };
-      },
+      }),
     );
 
     stat_average(
       "getOpt",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           var i = 0;
@@ -164,8 +166,8 @@ actor {
             i += 1;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -179,13 +181,13 @@ actor {
             i += 1;
           };
         };
-      },
-      func() = func() = (),
+      }),
+      null,
     );
 
     stat_average(
       "put",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           var i = 0;
@@ -194,8 +196,8 @@ actor {
             i += 1;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -209,8 +211,8 @@ actor {
             i += 1;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Array.init<Nat>(n, 0);
         func() {
           var i = 0;
@@ -219,12 +221,12 @@ actor {
             i += 1;
           };
         };
-      },
+      }),
     );
 
     stat_average(
       "size",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           var i = 0;
@@ -233,8 +235,8 @@ actor {
             i += 1;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -248,8 +250,8 @@ actor {
             i += 1;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Array.init<Nat>(n, 0);
         func() {
           var i = 0;
@@ -258,12 +260,12 @@ actor {
             i += 1;
           };
         };
-      },
+      }),
     );
 
     stat_average(
       "removeLast",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           var i = 0;
@@ -272,8 +274,8 @@ actor {
             i += 1;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -287,19 +289,19 @@ actor {
             i += 1;
           };
         };
-      },
-      func() = func() = (),
+      }),
+      null,
     );
 
     stat_average(
       "indexOf",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           ignore Vector.indexOf(1, a, Nat.equal);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -309,22 +311,34 @@ actor {
         func() {
           ignore Buffer.indexOf(1, a, Nat.equal);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Array.freeze(Array.init<Nat>(n, 0));
         func() = ignore Array.find(a, func(x : Nat) : Bool = x == 1);
-      },
+      }),
+    );
+
+    stat_average(
+      "firstIndexWith",
+      ?(func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          ignore Vector.firstIndexWith(a, func(x : Nat) : Bool = x == 1);
+        };
+      }),
+      null,
+      null,
     );
 
     stat_average(
       "lastIndexOf",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           ignore Vector.lastIndexOf(1, a, Nat.equal);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -334,21 +348,99 @@ actor {
         func() {
           ignore Buffer.lastIndexOf(1, a, Nat.equal);
         };
-      },
-      func() = func() = (),
+      }),
+      null,
+    );
+
+    stat_average(
+      "lastIndexWith",
+      ?(func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          ignore Vector.lastIndexWith(a, func(x : Nat) : Bool = x == 1);
+        };
+      }),
+      null,
+      null,
+    );
+
+    stat_average(
+      "forAll",
+      ?(func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          ignore Vector.forAll(a, func(x : Nat) : Bool = x == 0);
+        };
+      }),
+      ?(func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          ignore Buffer.forAll(a, func(x : Nat) : Bool = x == 0);
+        };
+      }),
+      null,
+    );
+
+    stat_average(
+      "forSome",
+      ?(func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          ignore Vector.forSome(a, func(x : Nat) : Bool = x == 1);
+        };
+      }),
+      ?(func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          ignore Buffer.forSome(a, func(x : Nat) : Bool = x == 1);
+        };
+      }),
+      null,
+    );
+
+    stat_average(
+      "forNone",
+      ?(func() {
+        let a = Vector.init<Nat>(n, 0);
+        func() {
+          ignore Vector.forNone(a, func(x : Nat) : Bool = x == 1);
+        };
+      }),
+      ?(func() {
+        let a = Buffer.Buffer<Nat>(0);
+        var i = 0;
+        while (i < n) {
+          a.add(0);
+          i += 1;
+        };
+        func() {
+          ignore Buffer.forNone(a, func(x : Nat) : Bool = x == 1);
+        };
+      }),
+      null,
     );
 
     stat_average(
       "vals",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           for (x in Vector.vals(a)) {
             ignore x;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -360,83 +452,83 @@ actor {
             ignore x;
           };
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Array.init<Nat>(n, 0);
         func() {
           for (x in a.vals()) {
             ignore x;
           };
         };
-      },
+      }),
     );
 
     stat_average(
       "items",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           for (x in Vector.items(a)) {
             ignore x;
           };
         };
-      },
-      func() = func() = (),
-      func() = func() = (),
+      }),
+      null,
+      null,
     );
 
     stat_average(
       "valsRev",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           for (x in Vector.valsRev(a)) {
             ignore x;
           };
         };
-      },
-      func() = func() = (),
-      func() = func() = (),
+      }),
+      null,
+      null,
     );
 
     stat_average(
       "itemsRev",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           for (x in Vector.itemsRev(a)) {
             ignore x;
           };
         };
-      },
-      func() = func() = (),
-      func() = func() = (),
+      }),
+      null,
+      null,
     );
 
     stat_average(
       "keys",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           for (x in Vector.keys(a)) {
             ignore x;
           };
         };
-      },
-      func() = func() = (),
-      func() = func() = (),
+      }),
+      null,
+      null,
     );
 
     stat_average(
       "addFromIter",
-      func() {
+      ?(func() {
         let a = Vector.new<Nat>();
         let b = Array.vals(Array.freeze(Array.init<Nat>(n, 0)));
         func() {
           Vector.addFromIter(a, b);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         let b = Buffer.Buffer<Nat>(0);
         var i = 0;
@@ -448,19 +540,19 @@ actor {
         func() {
           a.append(b);
         };
-      },
-      func() = func() = (),
+      }),
+      null,
     );
 
     stat_average(
       "toArray",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           ignore Vector.toArray(a);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -470,36 +562,36 @@ actor {
         func() {
           ignore Buffer.toArray(a);
         };
-      },
-      func() = func() = (),
+      }),
+      null,
     );
 
     stat_average(
       "fromArray",
-      func() {
+      ?(func() {
         let a = Array.freeze(Array.init<Nat>(n, 0));
         func() {
           ignore Vector.fromArray(a);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Array.freeze(Array.init<Nat>(n, 0));
         func() {
           ignore Buffer.fromArray(a);
         };
-      },
-      func() = func() = (),
+      }),
+      null,
     );
 
     stat_average(
       "toVarArray",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           ignore Vector.toVarArray(a);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -509,46 +601,46 @@ actor {
         func() {
           ignore Buffer.toVarArray(a);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Array.freeze(Array.init<Nat>(n, 0));
         func() {
           ignore Array.thaw(a);
         };
-      },
+      }),
     );
 
     stat_average(
       "fromVarArray",
-      func() {
+      ?(func() {
         let a = Array.init<Nat>(n, 0);
         func() {
           ignore Vector.fromVarArray(a);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Array.init<Nat>(n, 0);
         func() {
           ignore Buffer.fromVarArray(a);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Array.init<Nat>(n, 0);
         func() {
           ignore Array.freeze(a);
         };
-      },
+      }),
     );
 
     stat(
       "clear",
-      func() {
+      ?(func() {
         let a = Vector.init<Nat>(n, 0);
         func() {
           Vector.clear(a);
         };
-      },
-      func() {
+      }),
+      ?(func() {
         let a = Buffer.Buffer<Nat>(0);
         var i = 0;
         while (i < n) {
@@ -558,17 +650,34 @@ actor {
         func() {
           a.clear();
         };
-      },
-      func() = func() = (),
+      }),
+      null,
     );
 
-    func toText((a, b) : (Nat, Nat)) : Text {
-      "(" # Nat.toText(a) # "," # Nat.toText(b) # ")";
+    func first(x : ?(Nat, Nat)) : Text {
+      switch (x) {
+        case (null) "-";
+        case (?value) Nat.toText(value.0);
+      }
     };
 
-    var result = "\n|method|vector|buffer|array|\n|---|---|---|---|\n";
+    func second(x : ?(Nat, Nat)) : Text {
+      switch (x) {
+        case (null) "-";
+        case (?value) Nat.toText(value.1);
+      }
+    };
+
+    var result = "\nn = " # Nat.toText(n) # "\n";
+
+    result #= "\nTime:\n\n|method|vector|buffer|array|\n|---|---|---|---|\n";
     for ((method, vector, buffer, array) in stats.vals()) {
-      result #= "|" # method # "|" # toText(vector) # "|" # toText(buffer) # "|" # toText(array) # "|\n";
+      result #= "|" # method # "|" # first(vector) # "|" # first(buffer) # "|" # first(array) # "|\n";
+    };
+
+    result #= "\nMemory:\n\n|method|vector|buffer|array|\n|---|---|---|---|\n";
+    for ((method, vector, buffer, array) in stats.vals()) {
+      result #= "|" # method # "|" # second(vector) # "|" # second(buffer) # "|" # second(array) # "|\n";
     };
     Debug.print(result);
   };

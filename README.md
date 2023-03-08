@@ -16,39 +16,80 @@ DFX_MOC_PATH="$(vessel bin)/moc" dfx build && ic-repl ic-repl/vector.sh
 
 ## Bench Vector against Buffer
 
+n = 100000
+
+Time:
+
 |method|vector|buffer|array|
 |---|---|---|---|
-|init|(13,408688)|(12,400504)|(12,400008)|
-|addMany|(14,408672)|(0,0)|(0,0)|
-|clone|(181,437380)|(312,2153584)|(0,0)|
-|add|(350,2036732)|(557,3259680)|(0,0)|
-|get|(218,0)|(123,0)|(74,0)|
-|getOpt|(238,0)|(124,0)|(0,0)|
-|put|(245,0)|(131,0)|(75,0)|
-|size|(159,0)|(76,0)|(101,1600000)|
-|removeLast|(302,38604)|(387,2153368)|(0,0)|
-|indexOf|(170,10380)|(143,0)|(35,0)|
-|lastIndexOf|(370,1610388)|(150,0)|(0,0)|
-|vals|(171,10524)|(122,48)|(14,0)|
-|items|(272,1610456)|(0,0)|(0,0)|
-|valsRev|(197,10376)|(0,0)|(0,0)|
-|itemsRev|(343,1610388)|(0,0)|(0,0)|
-|keys|(97,44)|(0,0)|(0,0)|
-|addFromIter|(431,2036732)|(321,1200024)|(0,0)|
-|toArray|(159,410532)|(105,400024)|(0,0)|
-|fromArray|(154,408732)|(206,2200520)|(0,0)|
-|toVarArray|(223,410532)|(162,400008)|(114,400024)|
-|fromVarArray|(154,408732)|(206,2200520)|(57,400040)|
-|clear|(161,20)|(269,40)|(0,0)|
+|init|13|12|12|
+|addMany|14|-|-|
+|clone|181|312|-|
+|add|350|557|-|
+|get|218|123|74|
+|getOpt|238|124|-|
+|put|245|131|75|
+|size|159|76|101|
+|removeLast|302|387|-|
+|indexOf|170|143|35|
+|firstIndexWith|158|-|-|
+|lastIndexOf|198|150|-|
+|lastIndexWith|186|-|-|
+|forAll|161|137|-|
+|forSome|158|143|-|
+|forNone|158|143|-|
+|vals|171|122|14|
+|items|272|-|-|
+|valsRev|146|-|-|
+|itemsRev|291|-|-|
+|keys|97|-|-|
+|addFromIter|431|321|-|
+|toArray|159|105|-|
+|fromArray|154|206|-|
+|toVarArray|223|162|114|
+|fromVarArray|154|206|57|
+|clear|161|269|-|
+
+Memory:
+
+|method|vector|buffer|array|
+|---|---|---|---|
+|init|408688|400504|400008|
+|addMany|408672|-|-|
+|clone|437380|2153584|-|
+|add|2036732|3259680|-|
+|get|0|0|0|
+|getOpt|0|0|-|
+|put|0|0|0|
+|size|0|0|1600000|
+|removeLast|38604|2153368|-|
+|indexOf|10380|0|0|
+|firstIndexWith|10360|-|-|
+|lastIndexOf|10356|0|-|
+|lastIndexWith|10336|-|-|
+|forAll|10376|48|-|
+|forSome|10360|48|-|
+|forNone|10360|48|-|
+|vals|10524|48|0|
+|items|1610456|-|-|
+|valsRev|10404|-|-|
+|itemsRev|1610416|-|-|
+|keys|44|-|-|
+|addFromIter|2036732|1200024|-|
+|toArray|410532|400024|-|
+|fromArray|408732|2200520|-|
+|toVarArray|410532|400008|400024|
+|fromVarArray|408732|2200520|400040|
+|clear|20|40|-|
 
 
 ## Becnh Enumeration against RBTree
 
 Testing for n = 4096
 
-Memory usage of Enumeration: 49
+Memory usage of Enumeration: 3213932
 
-Memory usage of RBTree: 63
+Memory usage of RBTree: 4093244
 
 |method|enumeration|red-black tree|
 |---|---|---|
