@@ -17,15 +17,19 @@
       "type": "motoko",
       "main": "src/LLRBTree.mo"
     },
-    "stable": {
+    "stable_enumeration": {
       "type": "motoko",
-      "main": "src/stable.mo"
+      "main": "src/stable/enumeration.mo"
+    },
+    "stable_vector": {
+      "type": "motoko",
+      "main": "src/stable/vector.mo"
     }
   },
   "defaults": {
     "build": {
       "packtool": "vessel sources",
-      "args": "--force-gc"
+      "args": ""
     }
   }
 }
