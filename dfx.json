@@ -25,7 +25,7 @@
   "defaults": {
     "build": {
       "packtool": "vessel sources",
-      "args": ""
+      "args": "--force-gc"
     }
   }
 }
