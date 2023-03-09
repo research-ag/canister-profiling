@@ -29,7 +29,7 @@
   "defaults": {
     "build": {
       "packtool": "vessel sources",
-      "args": ""
+      "args": "--compacting-gc"
     }
   }
 }
