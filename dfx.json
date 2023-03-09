@@ -24,6 +24,10 @@
     "stable_vector": {
       "type": "motoko",
       "main": "src/stable/vector.mo"
+    },
+    "simple": {
+      "type": "motoko",
+      "main": "src/simple.mo"
     }
   },
   "defaults": {
