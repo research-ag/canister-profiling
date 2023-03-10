@@ -126,7 +126,7 @@ actor {
     let stats = Buffer.Buffer<(Text, Nat, Nat)>(0);
     let r = RNG();
     var blobs = Array.tabulate<Blob>(n, func(i) = r.blob());
-    let enumertion = Enumeration.Enumeration();
+    let enumeration = Enumeration.Enumeration();
     let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
 
     func average(blobs : [Blob], get : (Blob) -> ()) : Nat {
@@ -142,7 +142,7 @@ actor {
     func stat(method : Text, enum_key : Blob, rb_key : Blob) {
       stats.add((
         method,
-        Nat64.toNat(E.countInstructions(func() = ignore enumertion.lookup(enum_key))),
+        Nat64.toNat(E.countInstructions(func() = ignore enumeration.lookup(enum_key))),
         Nat64.toNat(E.countInstructions(func() = ignore rb.get(rb_key))),
       ));
     };
@@ -152,7 +152,7 @@ actor {
         func() {
           var i = 0;
           while (i < n) {
-            ignore enumertion.add(blobs[i]);
+            ignore enumeration.add(blobs[i]);
             i += 1;
           };
         },
@@ -171,47 +171,74 @@ actor {
     let random = Array.tabulate<Blob>(m, func(i) = blobs[i * m]);
     stats.add((
       "random blobs inside average",
-      average(random, func(b) = ignore enumertion.lookup(b)),
+      average(random, func(b) = ignore enumeration.lookup(b)),
       average(random, func(b) = ignore rb.get(b)),
     ));
 
     let others = Array.tabulate<Blob>(m, func(i) = r.blob());
     stats.add((
       "random blobs average",
-      average(others, func(b) = ignore enumertion.lookup(b)),
+      average(others, func(b) = ignore enumeration.lookup(b)),
       average(others, func(b) = ignore rb.get(b)),
     ));
 
-    let (t, a, _) = enumertion.share();
-    let enumertion_tree = toRBTree(t, a);
+    let (t, a, _) = enumeration.share();
+    let enumeration_tree = toRBTree(t, a);
     let rb_tree = rb.share();
 
-    stat("root", root(enumertion_tree), root(rb_tree));
+    stat("root", root(enumeration_tree), root(rb_tree));
 
-    stat("leftmost", leftmost(enumertion_tree), leftmost(rb_tree));
-    stat("rightmost", rightmost(enumertion_tree), rightmost(rb_tree));
+    stat("leftmost", leftmost(enumeration_tree), leftmost(rb_tree));
+    stat("rightmost", rightmost(enumeration_tree), rightmost(rb_tree));
 
     stat("min blob", r.with_byte(0), r.with_byte(0));
     stat("max blob", r.with_byte(255), r.with_byte(255));
 
-    stat("min leaf", min_leaf(enumertion_tree).1, min_leaf(rb_tree).1);
-    stat("max leaf", max_leaf(enumertion_tree).1, max_leaf(rb_tree).1);
+    stat("min leaf", min_leaf(enumeration_tree).1, min_leaf(rb_tree).1);
+    stat("max leaf", max_leaf(enumeration_tree).1, max_leaf(rb_tree).1);
 
     var result = "\nTesting for n = " # Nat.toText(n) # "\n\n";
     result #= "Memory usage of Enumeration: " # Nat.toText(mem.0) # "\n\n";
     result #= "Memory usage of RBTree: " # Nat.toText(mem.1) # "\n\n";
     result #= "|method|enumeration|red-black tree|\n|---|---|---|\n";
-    for ((method, enumertion, rb) in stats.vals()) {
-      result #= "|" # method # "|" # Nat.toText(enumertion) # "|" # Nat.toText(rb) # "|\n";
+    for ((method, enumeration, rb) in stats.vals()) {
+      result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|\n";
     };
 
     result #= "\n";
 
-    result #= "min leaf in enumeration: " # Nat.toText(min_leaf(enumertion_tree).0) # "\n\n";
+    result #= "min leaf in enumeration: " # Nat.toText(min_leaf(enumeration_tree).0) # "\n\n";
     result #= "min leaf in red-black tree: " # Nat.toText(min_leaf(rb_tree).0) # "\n\n";
-    result #= "max leaf in enumeration: " # Nat.toText(max_leaf(enumertion_tree).0) # "\n\n";
+    result #= "max leaf in enumeration: " # Nat.toText(max_leaf(enumeration_tree).0) # "\n\n";
     result #= "max leaf in red-black tree: " # Nat.toText(max_leaf(rb_tree).0) # "\n\n";
 
     Debug.print(result);
+  };
+
+  let rb1 = RBTree.RBTree<Blob, Nat>(Blob.compare);
+  let enumeration1 = Enumeration.Enumeration();
+
+  public query func create_rb() : async () {
+    let r = RNG();
+    var i = 0;
+    while (i < n) {
+      rb1.put(r.blob(), i);
+      i += 1;
+    };
+    Debug.print(debug_show Prim.rts_heap_size());
+  };
+
+  public query func create_enumeration() : async () {
+    let r = RNG();
+    var i = 0;
+    while (i < n) {
+      ignore enumeration1.add(r.blob());
+      i += 1;
+    };
+    Debug.print(debug_show Prim.rts_heap_size());
+  };
+
+  public query func heap_size() : async () {
+    Debug.print(debug_show Prim.rts_heap_size());
   };
 };

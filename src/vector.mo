@@ -494,6 +494,28 @@ actor {
     );
 
     stat_average(
+      "iterate",
+      ?(
+        func() {
+          let a = Vector.init<Nat>(n, 0);
+          func() = Vector.iterate(a, func(x : Nat) = ());
+        },
+      ),
+      ?(
+        func() {
+          let a = Buffer.Buffer<Nat>(0);
+          var i = 0;
+          while (i < n) {
+            a.add(0);
+            i += 1;
+          };
+          func() = Buffer.iterate(a, func(x : Nat) = ());
+        },
+      ),
+      null,
+    );
+
+    stat_average(
       "vals",
       ?(
         func() {

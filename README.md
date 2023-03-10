@@ -38,6 +38,7 @@ Time:
 |forAll|161|137|-|
 |forSome|158|143|-|
 |forNone|158|143|-|
+|iterate|113|128|-|
 |vals|171|122|14|
 |items|272|-|-|
 |valsRev|146|-|-|
@@ -70,6 +71,7 @@ Memory:
 |forAll|10376|48|-|
 |forSome|10360|48|-|
 |forNone|10360|48|-|
+|iterate|10360|48|-|
 |vals|10524|48|0|
 |items|1610456|-|-|
 |valsRev|10404|-|-|
