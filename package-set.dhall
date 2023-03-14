@@ -2,7 +2,7 @@
   {
     name = "base",
     repo = "https://github.com/dfinity/motoko-base",
-    version = "moc-0.8.2",
+    version = "moc-0.8.4",
     dependencies = [] : List Text
   },
   {
