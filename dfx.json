@@ -17,6 +17,10 @@
       "type": "motoko",
       "main": "src/LLRBTree.mo"
     },
+    "prng": {
+      "type": "motoko",
+      "main": "src/prng.mo"
+    },
     "stable_enumeration": {
       "type": "motoko",
       "main": "src/stable/enumeration.mo"
