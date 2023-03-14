@@ -86,26 +86,25 @@ Memory:
 |fromVarArray|408716|409104|600504|400024|
 |clear|20|20|40|-|
 
-
 ## Becnh Enumeration against RBTree
 
 Testing for n = 4096
 
-Memory usage of Enumeration: 3050092
+Memory usage of Enumeration: 3268028
 
 Memory usage of RBTree: 4027708
 
 |method|enumeration|red-black tree|
 |---|---|---|
-|random blobs inside average|4250|3999|
-|random blobs average|3127|2835|
-|root|1866|1795|
-|leftmost|4402|4114|
-|rightmost|4973|4717|
-|min blob|2901|2589|
-|max blob|3575|3297|
-|min leaf|3841|3586|
-|max leaf|5795|5521|
+|random blobs inside average|4236|3999|
+|random blobs average|3100|2835|
+|root|1860|1795|
+|leftmost|4413|4114|
+|rightmost|4958|4717|
+|min blob|2895|2589|
+|max blob|3543|3297|
+|min leaf|3787|3586|
+|max leaf|5832|5521|
 
 min leaf in enumeration: 9
 

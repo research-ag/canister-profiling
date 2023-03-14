@@ -38,9 +38,9 @@ actor {
 
   func toRBTree(t : Enumeration.Tree, a : [var Blob]) : Tree {
     switch (t) {
-      case (#red(left, key, right)) #node(#R, toRBTree(left, a), (a[key], ?key), toRBTree(right, a));
-      case (#black(left, key, right)) #node(#B, toRBTree(left, a), (a[key], ?key), toRBTree(right, a));
-      case (#leaf) #leaf;
+      case (?(#R, left, key, right)) #node(#R, toRBTree(left, a), (a[key], ?key), toRBTree(right, a));
+      case (?(#B, left, key, right)) #node(#B, toRBTree(left, a), (a[key], ?key), toRBTree(right, a));
+      case (null) #leaf;
     };
   };
 
