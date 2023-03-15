@@ -1,5 +1,4 @@
 #!/usr/local/bin/ic-repl
-
 let id = call ic.provisional_create_canister_with_cycles(record { settings = null; amount = null });
 call ic.install_code(
     record {
@@ -10,4 +9,8 @@ call ic.install_code(
     },
 );
 let canister = id.canister_id;
-call canister.profile1();
+call canister.profile();
+call canister.measure_enumeration();
+call canister.measure_rb_tree();
+call canister.measure_stable_enumeration();
+call canister.measure_stable_rb_tree();

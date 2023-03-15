@@ -15,7 +15,7 @@ import Prng "mo:mrr/Prng";
 import Enumeration "mo:mrr/Enumeration";
 import Float "mo:base/Float";
 import Int "mo:base/Int";
-import Mesaure "measure";
+import Measure "tools/measure";
 
 actor {
   class RNG() {
@@ -200,8 +200,6 @@ actor {
     stat("max leaf", max_leaf(enumeration_tree).1, max_leaf(rb_tree).1);
 
     var result = "\nTesting for n = " # Nat.toText(n) # "\n\n";
-    result #= "Memory usage of Enumeration: " # Nat.toText(mem.0) # "\n\n";
-    result #= "Memory usage of RBTree: " # Nat.toText(mem.1) # "\n\n";
     result #= "|method|enumeration|red-black tree|\n|---|---|---|\n";
     for ((method, enumeration, rb) in stats.vals()) {
       result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|\n";
@@ -228,10 +226,6 @@ actor {
     enumeration;
   };
 
-  public shared func measure_enumeration() : async () {
-    await Mesaure.measure(create_enumeration);
-  };
-
   public shared func create_rb() : async {} {
     let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
     let r = RNG();
@@ -242,8 +236,20 @@ actor {
     };
     rb;
   };
+  
+  public shared func measure_enumeration() : async () {
+    await Measure.measure(create_enumeration);
+  };
 
   public shared func measure_rb_tree() : async () {
-    await Mesaure.measure(create_rb);
+    await Measure.measure(create_rb);
+  };
+
+  public shared func measure_stable_enumeration() : async () {
+    await Measure.measure_stable(create_enumeration);
+  };
+
+  public shared func measure_stable_rb_tree() : async () {
+    await Measure.measure_stable(create_rb);
   };
 };

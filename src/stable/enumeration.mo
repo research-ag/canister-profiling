@@ -5,8 +5,9 @@ import Nat8 "mo:base/Nat8";
 import Int "mo:base/Int";
 import Debug "mo:base/Debug";
 import Prim "mo:⛔";
+import Measure "../tools/measure";
 
-actor class EnumerationStable() {
+actor {
   func create(left : Int, right : Int) : Enumeration.Tree {
     if (left > right) {
       null;
@@ -15,6 +16,8 @@ actor class EnumerationStable() {
       ?(#R, create(left, middle - 1), Int.abs(middle), create(middle + 1, right));
     };
   };
+
+  Measure.print_in_stable("before constructor");
 
   let n = 2 ** 24;
   let array = Array.init<Nat8>(29, 0);
@@ -25,9 +28,17 @@ actor class EnumerationStable() {
     n,
   );
 
-  Debug.print(debug_show Prim.rts_heap_size());
+  Measure.print_in_stable("after constructor");
 
-  public query func init() : async () {
-    Debug.print(debug_show Prim.rts_heap_size());
+  system func preupgrade() {
+    Measure.print_in_stable("preupgrade");
+  };
+
+  system func postupgrade() {
+    Measure.print_in_stable("postupgrade");
+  };
+
+  public query func test() : async () {
+    Measure.print_in_stable("test");
   };
 };

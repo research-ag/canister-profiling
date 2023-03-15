@@ -1,6 +1,5 @@
 import Vector "mo:mrr/Vector";
 import E "mo:base/ExperimentalInternetComputer";
-import StableMemory "mo:base/ExperimentalStableMemory";
 import Buffer "mo:base/Buffer";
 import Array "mo:base/Array";
 import Option "mo:base/Option";
@@ -9,11 +8,11 @@ import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 import Prim "mo:⛔";
 import Table "table";
+import Measure "tools/measure";
 
 actor {
-  let n = 100_000;
-
   public query func profile() : async () {
+    let n = 100_000;
     let t = Table.Table(n, 4);
     t.stat_average(
       "init",
@@ -1028,21 +1027,29 @@ actor {
     Debug.print(t.output(["vector", "vector class", "buffer", "array"]));
   };
 
-  let m = 1_000_000;
+  let n = 1_000_000;
 
-  func measure_stable(f : () -> ()) : async Text {
-    let memoryUsage = StableMemory.stableVarQuery();
-    let before = (await memoryUsage()).size;
-    f();
-    let after = (await memoryUsage()).size;
-    debug_show (after - before);
+  public shared func create_array() : async {} {
+    { a = Array.init<Nat>(n, 0) };
   };
 
-  stable var state_vector = Vector.new<Nat>();
-  stable var state_array = [var] : [var Nat];
+  public shared func create_vector() :async {} {
+    { a = Vector.init<Nat>(n, 0) };
+  };
 
-  public shared func profile_stable() : async () {
-    Debug.print(await measure_stable(func() = state_vector := Vector.init<Nat>(m, 0)));
-    Debug.print(await measure_stable(func() = state_array := Array.init<Nat>(m, 0)));
+  public shared func measure_array() : async () {
+    await Measure.measure_stable(create_array);
+  };
+  
+  public shared func measure_vector() : async () {
+    await Measure.measure_stable(create_vector);
+  };
+
+  public shared func measure_stable_array() : async () {
+    await Measure.measure_stable(create_array);
+  };
+
+  public shared func measure_stable_vector() : async () {
+    await Measure.measure_stable(create_vector);
   };
 };

@@ -9,7 +9,5 @@ import Cycles "mo:base/ExperimentalCycles";
 
 actor {
   public shared func profile() : async () {
-    Cycles.add(3_000_000_000_000);
-    let a = await Enumeration.EnumerationStable();
   };
 };

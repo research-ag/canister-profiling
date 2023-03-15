@@ -90,10 +90,6 @@ Memory:
 
 Testing for n = 4096
 
-Memory usage of Enumeration: 3268028
-
-Memory usage of RBTree: 4027708
-
 |method|enumeration|red-black tree|
 |---|---|---|
 |random blobs inside average|4236|3999|
