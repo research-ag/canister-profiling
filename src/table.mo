@@ -10,7 +10,9 @@ import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Prim "mo:⛔";
 
-class Table(n_ : Nat, columns : Nat) {
+module {
+
+public class Table(n_ : Nat, columns : Nat) {
   let n = n_;
   let cols = columns;
   let stats = Buffer.Buffer<(Text, [?(Nat, Nat)])>(0);
@@ -79,4 +81,6 @@ class Table(n_ : Nat, columns : Nat) {
 
     result;
   };
+};
+
 };
