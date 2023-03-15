@@ -5,39 +5,102 @@ import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
 import Nat8 "mo:base/Nat8";
 import Blob "mo:base/Blob";
+import Debug "mo:base/Debug";
+import Table "table";
 
 actor {
-  let block48 = Array.tabulate<Nat8>(48, func(i) { Nat8.fromNat(0xff -i) });
-  let block55 = Array.tabulate<Nat8>(55, func(i) { Nat8.fromNat(0xff -i) });
-  let block64 = Array.tabulate<Nat8>(64, func(i) { Nat8.fromNat(0xff -i) });
-  let block128 = Array.tabulate<Nat8>(128, func(i) { Nat8.fromNat(0xff -i) });
-  let blob0 = Blob.fromArray([] : [Nat8]);
-  let blob48 = Blob.fromArray(block48);
-  let blob55 = Blob.fromArray(block55);
-  let blob64 = Blob.fromArray(block64);
-  let blob128 = Blob.fromArray(block128);
-
-  public query func profile32() : async [Nat64] {
-    var res = Buffer.Buffer<Nat64>(10);
-    for (i in [0, 1, 2, 5, 10, 100, 1000].vals()) {
-      let len = if (i == 0) 0 else 64*i-9;
-      let arr = Array.freeze(Array.init<Nat8>(len, 0));
-      let b = Blob.fromArray(arr);
-      let x = E.countInstructions(func() { ignore Sha256.fromBlob(#sha256, b) });
-      res.add(x);
-    };
-    Buffer.toArray(res);
+  func zero_blocks_64(n : Nat) : Blob {
+    let len = if (n == 0) 0 else (64 * n - 9 : Nat);
+    let arr = Array.freeze(Array.init<Nat8>(len, 0));
+    Blob.fromArray(arr);
+  };
+  func zero_blocks_128(n : Nat) : Blob {
+    let len = if (n == 0) 0 else (128 * n - 17 : Nat);
+    let arr = Array.freeze(Array.init<Nat8>(len, 0));
+    Blob.fromArray(arr);
   };
 
-  public query func profile64() : async [Nat64] {
-    var res = Buffer.Buffer<Nat64>(10);
-    for (i in [0, 1, 2, 5, 10, 100, 1000].vals()) {
-      let len = if (i == 0) 0 else 128*i-17;
-      let arr = Array.freeze(Array.init<Nat8>(len, 0));
-      let b = Blob.fromArray(arr);
-      let x = E.countInstructions(func() { ignore Sha512.fromBlob(#sha512, b) });
-      res.add(x);
-    };
-    Buffer.toArray(res);
+  let inputs_64 = Array.map<Nat, Blob>([1,10,100,1000], zero_blocks_64);
+  let inputs_128 = Array.map<Nat, Blob>([1,10,100,1000], zero_blocks_128);
+
+  public query func profile() : async () {
+    let t = Table.Table(2, 2);
+    t.stat_one(
+      "empty",
+      [
+        ?(
+          func() {
+            func() = ignore Sha256.fromBlob(#sha256, "");
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Sha512.fromBlob(#sha512, "");
+          }
+        ),
+      ],
+    );
+    t.stat_one(
+      "1 block",
+      [
+        ?(
+          func() {
+            func() = ignore Sha256.fromBlob(#sha256, inputs_64[0]);
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Sha512.fromBlob(#sha512, inputs_128[0]);
+          }
+        ),
+      ],
+    );
+    t.stat_one(
+      "10 blocks",
+      [
+        ?(
+          func() {
+            func() = ignore Sha256.fromBlob(#sha256, inputs_64[1]);
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Sha512.fromBlob(#sha512, inputs_128[1]);
+          }
+        ),
+      ],
+    );
+    t.stat_one(
+      "100 blocks",
+      [
+        ?(
+          func() {
+            func() = ignore Sha256.fromBlob(#sha256, inputs_64[2]);
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Sha512.fromBlob(#sha512, inputs_128[2]);
+          }
+        ),
+      ],
+    );
+    t.stat_one(
+      "1000 blocks",
+      [
+        ?(
+          func() {
+            func() = ignore Sha256.fromBlob(#sha256, inputs_64[3]);
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Sha512.fromBlob(#sha512, inputs_128[3]);
+          }
+        ),
+      ],
+    );
+
+    Debug.print(t.output(["Sha256", "Sha512"]));
   };
 };
