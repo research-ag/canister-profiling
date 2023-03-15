@@ -20,7 +20,7 @@ actor {
   public query func profile32() : async [Nat64] {
     var res = Buffer.Buffer<Nat64>(10);
     for (i in [0, 1, 2, 5, 10, 100, 1000].vals()) {
-      let len = if (i == 0) 0 else 64*i-9;
+      let len = if (i == 0) 0 else 64 * i - 9;
       let arr = Array.freeze(Array.init<Nat8>(len, 0));
       let b = Blob.fromArray(arr);
       let x = E.countInstructions(func() { ignore Sha256.fromBlob(#sha256, b) });
@@ -32,7 +32,7 @@ actor {
   public query func profile64() : async [Nat64] {
     var res = Buffer.Buffer<Nat64>(10);
     for (i in [0, 1, 2, 5, 10, 100, 1000].vals()) {
-      let len = if (i == 0) 0 else 128*i-17;
+      let len = if (i == 0) 0 else 128 * i - 17;
       let arr = Array.freeze(Array.init<Nat8>(len, 0));
       let b = Blob.fromArray(arr);
       let x = E.countInstructions(func() { ignore Sha512.fromBlob(#sha512, b) });

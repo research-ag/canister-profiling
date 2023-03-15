@@ -6,13 +6,13 @@ import Int "mo:base/Int";
 import Debug "mo:base/Debug";
 import Prim "mo:⛔";
 
-actor {
+actor class EnumerationStable() {
   func create(left : Int, right : Int) : Enumeration.Tree {
     if (left > right) {
-      #leaf;
+      null;
     } else {
       let middle = (left + right) / 2;
-      #red(create(left, middle - 1), Int.abs(middle), create(middle + 1, right));
+      ?(#R, create(left, middle - 1), Int.abs(middle), create(middle + 1, right));
     };
   };
 

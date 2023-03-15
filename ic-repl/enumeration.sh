@@ -10,8 +10,4 @@ call ic.install_code(
     },
 );
 let canister = id.canister_id;
-call canister.profile();
-call canister.create_rb();
-call canister.heap_size();
-call canister.create_enumeration();
-call canister.heap_size();
+call canister.profile1();
