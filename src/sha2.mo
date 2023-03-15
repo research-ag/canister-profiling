@@ -1,12 +1,12 @@
-import E "mo:base/ExperimentalInternetComputer";
 import Sha256 "mo:mrr/Sha256";
 import Sha512 "mo:mrr/Sha512";
 import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
-import Nat8 "mo:base/Nat8";
 import Blob "mo:base/Blob";
 import Debug "mo:base/Debug";
 import Table "table";
+import Sha2 "mo:motoko-sha2";
+import Crypto "mo:crypto.mo/SHA/SHA256";
 
 actor {
   func zero_blocks_64(n : Nat) : Blob {
@@ -24,7 +24,7 @@ actor {
   let inputs_128 = Array.map<Nat, Blob>([1,10,100,1000], zero_blocks_128);
 
   public query func profile() : async () {
-    let t = Table.Table(2, 2);
+    let t = Table.Table(2, 4);
     t.stat_one(
       "empty",
       [
@@ -36,6 +36,16 @@ actor {
         ?(
           func() {
             func() = ignore Sha512.fromBlob(#sha512, "");
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Sha2.fromBlob(#sha256, "");
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Crypto.sum([]);
           }
         ),
       ],
@@ -53,6 +63,16 @@ actor {
             func() = ignore Sha512.fromBlob(#sha512, inputs_128[0]);
           }
         ),
+        ?(
+          func() {
+            func() = ignore Sha2.fromBlob(#sha256, inputs_64[0]);
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Crypto.sum(Blob.toArray(inputs_64[0]));
+          }
+        ),
       ],
     );
     t.stat_one(
@@ -66,6 +86,16 @@ actor {
         ?(
           func() {
             func() = ignore Sha512.fromBlob(#sha512, inputs_128[1]);
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Sha2.fromBlob(#sha256, inputs_64[1]);
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Crypto.sum(Blob.toArray(inputs_64[1]));
           }
         ),
       ],
@@ -83,6 +113,16 @@ actor {
             func() = ignore Sha512.fromBlob(#sha512, inputs_128[2]);
           }
         ),
+        ?(
+          func() {
+            func() = ignore Sha2.fromBlob(#sha256, inputs_64[2]);
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Crypto.sum(Blob.toArray(inputs_64[2]));
+          }
+        ),
       ],
     );
     t.stat_one(
@@ -98,9 +138,19 @@ actor {
             func() = ignore Sha512.fromBlob(#sha512, inputs_128[3]);
           }
         ),
+        ?(
+          func() {
+            func() = ignore Sha2.fromBlob(#sha256, inputs_64[3]);
+          }
+        ),
+        ?(
+          func() {
+            func() = ignore Crypto.sum(Blob.toArray(inputs_64[3]));
+          }
+        ),
       ],
     );
 
-    Debug.print(t.output(["Sha256", "Sha512"]));
+    Debug.print(t.output(["Sha256", "Sha512", "timohanke", "aviate-labs"]));
   };
 };
