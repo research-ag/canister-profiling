@@ -6,14 +6,14 @@ import Debug "mo:base/Debug";
 import Prim "mo:⛔";
 
 module {
-  public func measure(f : shared () -> async {}) : async () {
+  public func measure(f : shared () -> async Any) : async () {
     Cycles.add(3_000_000_000_000);
     let m = await A.Measure(f);
     await m.init();
     await m.test();
   };
 
-  public func measure_stable(f : shared () -> async {}) : async () {
+  public func measure_stable(f : shared () -> async Any) : async () {
     Cycles.add(3_000_000_000_000);
     let m = await Stable.MeasureStable(f);
     await m.init();
