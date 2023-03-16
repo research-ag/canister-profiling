@@ -12,11 +12,7 @@ On the next ones:
 ```
 make vector
 ```
-or 
-```
-make enumeration
-```
-or etc.
+or enumeration, etc.
 
 ## Bench Vector against Buffer
 
@@ -114,20 +110,6 @@ max leaf in enumeration: 16
 
 max leaf in red-black tree: 16
 
-## Bench Prng
-
-Time:
-
-|method|Seiran128|SFC64|SFC32|
-|---|---|---|---|
-|init|172|267|225|
-
-Memory:
-
-|method|Seiran128|SFC64|SFC32|
-|---|---|---|---|
-|init|0|0|0|
-
 ## Bench Sha2
 
 The columns refer to the following code:
@@ -160,3 +142,16 @@ Memory:
 |100 blocks|4200|11528|50924|42608|
 |1_000 blocks|33048|97928|334012|392080|
 
+## Bench PRNG
+
+Time:
+
+|method|Seiran128|SFC64|SFC32|
+|---|---|---|---|
+|init|172|267|225|
+
+Memory:
+
+|method|Seiran128|SFC64|SFC32|
+|---|---|---|---|
+|init|0|0|0|
