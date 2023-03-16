@@ -1029,11 +1029,11 @@ actor {
 
   let n = 1_000_000;
 
-  public shared func create_array() : async {} {
+  public shared func create_array() : async Any {
     { a = Array.init<Nat>(n, 0) };
   };
 
-  public shared func create_vector() :async {} {
+  public shared func create_vector() :async Any {
     { a = Vector.init<Nat>(n, 0) };
   };
 

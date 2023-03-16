@@ -215,7 +215,7 @@ actor {
     Debug.print(result);
   };
 
-  public shared func create_enumeration() : async {} {
+  public shared func create_enumeration() : async Any {
     let enumeration = Enumeration.Enumeration();
     let r = RNG();
     var i = 0;
@@ -226,7 +226,7 @@ actor {
     enumeration;
   };
 
-  public shared func create_rb() : async {} {
+  public shared func create_rb() : async Any {
     let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
     let r = RNG();
     var i = 0;
