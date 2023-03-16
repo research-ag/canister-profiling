@@ -1,43 +1,48 @@
-import E "mo:base/ExperimentalInternetComputer";
 import Sha256 "mo:mrr/Sha256";
 import Sha512 "mo:mrr/Sha512";
 import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
-import Nat8 "mo:base/Nat8";
 import Blob "mo:base/Blob";
+import Debug "mo:base/Debug";
+import Table "tools/table";
+import Sha2 "mo:motoko-sha2";
+import Crypto "mo:crypto.mo/SHA/SHA256";
+import Nat "mo:base/Nat";
 
 actor {
-  let block48 = Array.tabulate<Nat8>(48, func(i) { Nat8.fromNat(0xff -i) });
-  let block55 = Array.tabulate<Nat8>(55, func(i) { Nat8.fromNat(0xff -i) });
-  let block64 = Array.tabulate<Nat8>(64, func(i) { Nat8.fromNat(0xff -i) });
-  let block128 = Array.tabulate<Nat8>(128, func(i) { Nat8.fromNat(0xff -i) });
-  let blob0 = Blob.fromArray([] : [Nat8]);
-  let blob48 = Blob.fromArray(block48);
-  let blob55 = Blob.fromArray(block55);
-  let blob64 = Blob.fromArray(block64);
-  let blob128 = Blob.fromArray(block128);
-
-  public query func profile32() : async [Nat64] {
-    var res = Buffer.Buffer<Nat64>(10);
-    for (i in [0, 1, 2, 5, 10, 100, 1000].vals()) {
-      let len = if (i == 0) 0 else 64 * i - 9;
-      let arr = Array.freeze(Array.init<Nat8>(len, 0));
-      let b = Blob.fromArray(arr);
-      let x = E.countInstructions(func() { ignore Sha256.fromBlob(#sha256, b) });
-      res.add(x);
-    };
-    Buffer.toArray(res);
+  func zero_blocks_64(n : Nat) : Blob {
+    let len = if (n == 0) 0 else (64 * n - 9 : Nat);
+    let arr = Array.freeze(Array.init<Nat8>(len, 0));
+    Blob.fromArray(arr);
+  };
+  
+  func zero_blocks_128(n : Nat) : Blob {
+    let len = if (n == 0) 0 else (128 * n - 17 : Nat);
+    let arr = Array.freeze(Array.init<Nat8>(len, 0));
+    Blob.fromArray(arr);
   };
 
-  public query func profile64() : async [Nat64] {
-    var res = Buffer.Buffer<Nat64>(10);
-    for (i in [0, 1, 2, 5, 10, 100, 1000].vals()) {
-      let len = if (i == 0) 0 else 128 * i - 17;
-      let arr = Array.freeze(Array.init<Nat8>(len, 0));
-      let b = Blob.fromArray(arr);
-      let x = E.countInstructions(func() { ignore Sha512.fromBlob(#sha512, b) });
-      res.add(x);
+  let lengths = [0, 1, 10, 100, 1000];
+  let inputs_64 = Array.map<Nat, Blob>(lengths, zero_blocks_64);
+  let inputs_128 = Array.map<Nat, Blob>(lengths, zero_blocks_128);
+
+  public query func profile() : async () {
+    let t = Table.Table(0, 4);
+    var i = 0;
+    while (i < lengths.size()) {
+      t.stat_average_n(
+        (debug_show lengths[i]) # " blocks",
+        Nat.max(lengths[i], 1),
+        [
+          ?(func() = func() = ignore Sha256.fromBlob(#sha256, inputs_64[i])),
+          ?(func() = func() = ignore Sha512.fromBlob(#sha512, inputs_128[i])),
+          ?(func() = func() = ignore Sha2.fromBlob(#sha256, inputs_64[i])),
+          ?(func() = func() = ignore Crypto.sum(Blob.toArray(inputs_64[i]))),
+        ],
+      );
+      i += 1;
     };
-    Buffer.toArray(res);
+
+    Debug.print(t.output(["Sha256", "Sha512", "timohanke", "aviate-labs"]));
   };
 };

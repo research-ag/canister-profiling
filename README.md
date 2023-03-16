@@ -127,3 +127,36 @@ Memory:
 |method|Seiran128|SFC64|SFC32|
 |---|---|---|---|
 |init|0|0|0|
+
+## Bench Sha2
+
+The columns refer to the following code:
+
+* Sha256, Sha512: https://github.com/research-ag/motoko-lib
+* timohanke: https://github.com/timohanke/motoko-sha2
+* aviate-labs: https://github.com/skilesare/crypto.mo
+
+Columns 1,3,4 are comparable because they all perform Sha256. 1 block refers to 64 bytes.
+
+Column 2 performs Sha512 and 1 block refers to 128 bytes.
+
+Time:
+
+|method|Sha256|Sha512|timohanke|aviate-labs|
+|---|---|---|---|---|
+|0 blocks|35047|52840|492622|98430|
+|1 blocks|40003|62723|325539|93319|
+|10 blocks|34299|53480|97391|53067|
+|100 blocks|33697|52555|51238|48421|
+|1_000 blocks|33640|52463|48362|47990|
+
+Memory:
+
+|method|Sha256|Sha512|timohanke|aviate-labs|
+|---|---|---|---|---|
+|0 blocks|1032|2024|26508|4376|
+|1 blocks|1048|2024|17516|3720|
+|10 blocks|1416|2888|32072|8172|
+|100 blocks|4200|11528|50924|42608|
+|1_000 blocks|33048|97928|334012|392080|
+
