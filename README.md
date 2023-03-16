@@ -4,11 +4,11 @@ Profiling things in canisters.
 
 ## Run
 
-On the first run:
+It's better to run `dfx` in background to see debug outputs and ic-repl calls in the same terminal and to clean everything happened before.
 ```
-dfx start --background
+dfx start --background --clean
 ```
-On the next ones:
+Use make to run a separate benchmark:
 ```
 make vector
 ```
