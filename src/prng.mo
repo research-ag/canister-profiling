@@ -1,6 +1,6 @@
 import Debug "mo:base/Debug";
 import Prng "mo:mrr/Prng";
-import Table "tools/table";
+import Table "utils/table";
 
 actor {
   public query func profile() : async () {

@@ -7,8 +7,8 @@ import Debug "mo:base/Debug";
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 import Prim "mo:⛔";
-import Table "tools/table";
-import Measure "tools/measure";
+import Table "utils/table";
+import Measure "utils/measure";
 
 actor {
   public query func profile() : async () {

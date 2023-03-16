@@ -15,7 +15,7 @@ import Prng "mo:mrr/Prng";
 import Enumeration "mo:mrr/Enumeration";
 import Float "mo:base/Float";
 import Int "mo:base/Int";
-import Measure "tools/measure";
+import Measure "utils/measure";
 
 actor {
   class RNG() {

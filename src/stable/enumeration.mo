@@ -5,7 +5,7 @@ import Nat8 "mo:base/Nat8";
 import Int "mo:base/Int";
 import Debug "mo:base/Debug";
 import Prim "mo:⛔";
-import Measure "../tools/measure";
+import Measure "../utils/measure";
 
 actor {
   func create(left : Int, right : Int) : Enumeration.Tree {

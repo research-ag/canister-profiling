@@ -4,7 +4,7 @@ import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
 import Blob "mo:base/Blob";
 import Debug "mo:base/Debug";
-import Table "tools/table";
+import Table "utils/table";
 import Sha2 "mo:motoko-sha2";
 import Crypto "mo:crypto.mo/SHA/SHA256";
 import Nat "mo:base/Nat";

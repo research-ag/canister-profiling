@@ -1,7 +1,7 @@
 import Vector "mo:mrr/Vector";
 import Prim "mo:⛔";
 import Debug "mo:base/Debug";
-import Measure "../tools/measure";
+import Measure "../utils/measure";
 
 actor {
   Measure.print_in_stable("before constructor");
