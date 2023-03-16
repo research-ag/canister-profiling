@@ -7,7 +7,7 @@ import Debug "mo:base/Debug";
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 import Prim "mo:⛔";
-import Table "table";
+import Table "tools/table";
 import Measure "tools/measure";
 
 actor {
@@ -1038,11 +1038,11 @@ actor {
   };
 
   public shared func measure_array() : async () {
-    await Measure.measure_stable(create_array);
+    await Measure.measure(create_array);
   };
   
   public shared func measure_vector() : async () {
-    await Measure.measure_stable(create_vector);
+    await Measure.measure(create_vector);
   };
 
   public shared func measure_stable_array() : async () {
