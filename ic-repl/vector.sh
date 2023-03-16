@@ -11,4 +11,7 @@ call ic.install_code(
 );
 let canister = id.canister_id;
 call canister.profile();
-call canister.profile_stable();
+call canister.measure_array();
+call canister.measure_vector();
+call canister.measure_stable_array();
+call canister.measure_stable_vector();

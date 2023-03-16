@@ -7,3 +7,5 @@ call ic.install_code(
         canister_id = id.canister_id;
     },
 );
+let canister = id.canister_id;
+call canister.profile();

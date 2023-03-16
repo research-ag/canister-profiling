@@ -11,9 +11,11 @@ import Buffer "mo:base/Buffer";
 import Order "mo:base/Order";
 import Prim "mo:⛔";
 import Vector "mo:mrr/Vector";
+import Prng "mo:mrr/Prng";
 import Enumeration "mo:mrr/Enumeration";
 import Float "mo:base/Float";
 import Int "mo:base/Int";
+import Measure "tools/measure";
 
 actor {
   class RNG() {
@@ -35,6 +37,10 @@ actor {
       Blob.fromArray(a);
     };
   };
+
+  type Tree = RBTree.Tree<Blob, Nat>;
+  let n = 2 ** 12;
+  let m = 2 ** 6;
 
   func toRBTree(t : Enumeration.Tree, a : [var Blob]) : Tree {
     switch (t) {
@@ -118,10 +124,6 @@ actor {
     after - before;
   };
 
-  let n = 2 ** 12;
-  let m = 2 ** 6;
-  type Tree = RBTree.Tree<Blob, Nat>;
-
   public shared func profile() : async () {
     let stats = Buffer.Buffer<(Text, Nat, Nat)>(0);
     let r = RNG();
@@ -155,7 +157,7 @@ actor {
             ignore enumeration.add(blobs[i]);
             i += 1;
           };
-        },
+        }
       ),
       memory(
         func() {
@@ -164,7 +166,7 @@ actor {
             rb.put(blobs[i], i);
             i += 1;
           };
-        },
+        }
       ),
     );
 
@@ -198,8 +200,6 @@ actor {
     stat("max leaf", max_leaf(enumeration_tree).1, max_leaf(rb_tree).1);
 
     var result = "\nTesting for n = " # Nat.toText(n) # "\n\n";
-    result #= "Memory usage of Enumeration: " # Nat.toText(mem.0) # "\n\n";
-    result #= "Memory usage of RBTree: " # Nat.toText(mem.1) # "\n\n";
     result #= "|method|enumeration|red-black tree|\n|---|---|---|\n";
     for ((method, enumeration, rb) in stats.vals()) {
       result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|\n";
@@ -215,30 +215,41 @@ actor {
     Debug.print(result);
   };
 
-  let rb1 = RBTree.RBTree<Blob, Nat>(Blob.compare);
-  let enumeration1 = Enumeration.Enumeration();
-
-  public query func create_rb() : async () {
+  public shared func create_enumeration() : async {} {
+    let enumeration = Enumeration.Enumeration();
     let r = RNG();
     var i = 0;
     while (i < n) {
-      rb1.put(r.blob(), i);
+      ignore enumeration.add(r.blob());
       i += 1;
     };
-    Debug.print(debug_show Prim.rts_heap_size());
+    enumeration;
   };
 
-  public query func create_enumeration() : async () {
+  public shared func create_rb() : async {} {
+    let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
     let r = RNG();
     var i = 0;
     while (i < n) {
-      ignore enumeration1.add(r.blob());
+      rb.put(r.blob(), i);
       i += 1;
     };
-    Debug.print(debug_show Prim.rts_heap_size());
+    rb;
+  };
+  
+  public shared func measure_enumeration() : async () {
+    await Measure.measure(create_enumeration);
   };
 
-  public query func heap_size() : async () {
-    Debug.print(debug_show Prim.rts_heap_size());
+  public shared func measure_rb_tree() : async () {
+    await Measure.measure(create_rb);
+  };
+
+  public shared func measure_stable_enumeration() : async () {
+    await Measure.measure_stable(create_enumeration);
+  };
+
+  public shared func measure_stable_rb_tree() : async () {
+    await Measure.measure_stable(create_rb);
   };
 };

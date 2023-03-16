@@ -1,18 +1,22 @@
 # canister-profiling
 
-Profiling things in the canister.
+Profiling things in canisters.
 
 ## Run
 
 On the first run:
 ```
 dfx start --background
-DFX_MOC_PATH="$(vessel bin)/moc" dfx deploy
 ```
 On the next ones:
 ```
-DFX_MOC_PATH="$(vessel bin)/moc" dfx build && ic-repl ic-repl/vector.sh
+make vector
 ```
+or 
+```
+make enumeration
+```
+or etc.
 
 ## Bench Vector against Buffer
 
@@ -89,10 +93,6 @@ Memory:
 ## Becnh Enumeration against RBTree
 
 Testing for n = 4096
-
-Memory usage of Enumeration: 3268028
-
-Memory usage of RBTree: 4027708
 
 |method|enumeration|red-black tree|
 |---|---|---|

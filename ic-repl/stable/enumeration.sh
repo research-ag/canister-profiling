@@ -8,7 +8,7 @@ call ic.install_code(
     },
 );
 let canister = id.canister_id;
-call canister.init();
+call canister.test();
 call ic.install_code(
     record {
         arg = encode ();
@@ -17,5 +17,4 @@ call ic.install_code(
         canister_id = id.canister_id;
     },
 );
-call canister.init();
-call canister.init();
+call canister.test();
