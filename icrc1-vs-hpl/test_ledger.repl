@@ -1,0 +1,231 @@
+#!/usr/local/bin/ic-repl
+
+identity ftController;
+
+// create canisters
+let id = call ic.provisional_create_canister_with_cycles(record { settings = null; amount = null });
+call ic.install_code(
+  record {
+    arg = encode (record {
+      name = "ICRC1";
+      symbol = "I";
+      decimals = 6 : nat8;
+      fee = 0 : nat;
+      max_supply = 1_000_000_000_000 : nat;
+      minting_account = record { owner = ftController; subaccount = null };
+      min_burn_amount = 500 : nat;
+      advanced_settings = opt null;
+      initial_balances = vec {}
+    });
+    wasm_module = file("icrc1/.dfx/local/canisters/icrc1/icrc1.wasm");
+    mode = variant { install };
+    canister_id = id.canister_id;
+  },
+);
+let icrc1 = id.canister_id;
+let id = call ic.provisional_create_canister_with_cycles(record { settings = null; amount = null });
+call ic.install_code(
+  record {
+    arg = encode (vec { }, (65536 : nat) );
+    wasm_module = file("hpl/test/.dfx/local/canisters/ledger_test/ledger_test.wasm");
+    mode = variant { install };
+    canister_id = id.canister_id;
+  },
+);
+let hpl = id.canister_id;
+
+output("stats.md", stringify("| Test case | ICRC1 | ICRC1 GC | HPL | HPL GC |\n"));
+output("stats.md", stringify("| --- | --- | --- | --- | --- |\n"));
+identity user1;
+identity user2;
+// prepare some icrc1 subaccount id-s
+let icrc1sub1 = call icrc1.subaccountFromIndex(1);
+let icrc1sub2 = call icrc1.subaccountFromIndex(2);
+
+// TODO check if stats in ICRC1 better with lower subaccounts amount
+// register 10,000 principals, generated from sequent Nat-s (0 - 9,999), each has 64 subaccounts
+call icrc1.registerMany(0, 1000, 64, 500);
+call icrc1.registerMany(1000, 1000, 64, 500);
+call icrc1.registerMany(2000, 1000, 64, 500);
+call icrc1.registerMany(3000, 1000, 64, 500);
+call icrc1.registerMany(4000, 1000, 64, 500);
+call icrc1.registerMany(5000, 1000, 64, 500);
+call icrc1.registerMany(6000, 1000, 64, 500);
+call icrc1.registerMany(7000, 1000, 64, 500);
+call icrc1.registerMany(8000, 1000, 64, 500);
+call icrc1.registerMany(9000, 1000, 64, 500);
+call hpl.profileRegister(0, 10000, 64, 500);
+
+identity ftController;
+// create token in HPL
+call hpl.createFungibleToken();
+let hplAsset = _.ok;
+call hpl.openNewAccounts(2, hplAsset);
+call hpl.issueTokens(ftController, 0, variant { ft = record { hplAsset; 500 } });
+call hpl.issueTokens(ftController, 1, variant { ft = record { hplAsset; 500 } });
+// register users 1 and 2 in HPL
+identity user1;
+call hpl.openNewAccounts(2, hplAsset);
+identity user2;
+call hpl.openNewAccounts(3, hplAsset);
+call hpl.issueTokens(user2, 0, variant { ft = record { hplAsset; 800 } });
+call hpl.issueTokens(user2, 1, variant { ft = record { hplAsset; 800 } });
+
+// ICRC1 transaction id counter
+let i = (0 : nat);
+function assertIcrc1TransactionWentOk(i) {
+  assert _.Ok == i;
+  (add(i, 1) : nat);
+};
+
+
+// ============= TEST MINT TO SUBACCOUNT NULL
+identity ftController;
+call icrc1.mint(record { to = record { owner = user2; subaccount = null }; amount = 1000; memo = null; created_at_time = null });
+let i = assertIcrc1TransactionWentOk(i);
+let icrc1Stats = call icrc1.getLastMutationStats();
+call hpl.submitAndExecute(record { map = vec {
+   record {
+     owner = opt user2; inflow = vec { record { variant { sub = 0 }; variant { ft = record { hplAsset; 1000 } } } };
+     outflow = vec { }; mints = vec { }; burns = vec { }; memo = null;
+   };
+   record {
+     owner = null; mints = vec { variant { ft = record { hplAsset; 1000 } } };
+     inflow = vec { }; outflow = vec { }; burns = vec { }; memo = null;
+   }
+} });
+assert _.ok != null;
+let hplStats = call hpl.getLastMutationStats();
+output("stats.md", stringify("| mint to null subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+
+// ============= TEST MINT TO SUBACCOUNT
+identity ftController;
+call icrc1.mint(record { to = record { owner = user1; subaccount = opt icrc1sub1 }; amount = 800; memo = null; created_at_time = null });
+let i = assertIcrc1TransactionWentOk(i);
+let icrc1Stats = call icrc1.getLastMutationStats();
+call hpl.submitAndExecute(record { map = vec {
+   record {
+     owner = opt user2; inflow = vec { record { variant { sub = 1 }; variant { ft = record { hplAsset; 1000 } } } };
+     outflow = vec { }; mints = vec { }; burns = vec { }; memo = null;
+   };
+   record {
+     owner = null; mints = vec { variant { ft = record { hplAsset; 1000 } } };
+     inflow = vec { }; outflow = vec { }; burns = vec { }; memo = null;
+   }
+} });
+assert _.ok != null;
+let hplStats = call hpl.getLastMutationStats();
+output("stats.md", stringify("| mint to subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+
+
+// ============= TEST TRANSFER FROM NULL TO NOT-NULL OWN SUBACCOUNT
+identity user2;
+call icrc1.icrc1_transfer(record { from_subaccount = null; to = record { owner = user2; subaccount = opt icrc1sub1 }; amount = 500; fee = null; memo = null; created_at_time = null; });
+let i = assertIcrc1TransactionWentOk(i);
+let icrc1Stats = call icrc1.getLastMutationStats();
+call hpl.submitAndExecute(record { map = vec {
+   record {
+     owner = null;
+     inflow = vec { record { variant { sub = 1 }; variant { ft = record { hplAsset; 500 } } } };
+     outflow = vec { record { variant { sub = 0 }; variant { ft = record { hplAsset; 500 } } } };
+     mints = vec { }; burns = vec { }; memo = null;
+   };
+} });
+assert _.ok != null;
+let hplStats = call hpl.getLastMutationStats();
+output("stats.md", stringify("| transfer between subaccounts (one of them null) | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+
+
+// ============= TEST TRANSFER BETWEEN OWN NOT_NULL SUBACCOUNTS
+identity user2;
+call icrc1.icrc1_transfer(record { from_subaccount = opt icrc1sub1; to = record { owner = user2; subaccount = opt icrc1sub2 }; amount = 10; fee = null; memo = null; created_at_time = null; });
+let i = assertIcrc1TransactionWentOk(i);
+let icrc1Stats = call icrc1.getLastMutationStats();
+call hpl.submitAndExecute(record { map = vec {
+   record {
+     owner = null;
+     inflow = vec { record { variant { sub = 2 }; variant { ft = record { hplAsset; 10 } } } };
+     outflow = vec { record { variant { sub = 1 }; variant { ft = record { hplAsset; 10 } } } };
+     mints = vec { }; burns = vec { }; memo = null;
+   };
+} });
+assert _.ok != null;
+let hplStats = call hpl.getLastMutationStats();
+output("stats.md", stringify("| transfer between subaccounts | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+
+
+// ============= TEST TRANSFER TO ANOTHER USER NULL SUBACCOUNT
+identity user2;
+call icrc1.icrc1_transfer(record { from_subaccount = null; to = record { owner = user1; subaccount = null }; amount = 500; fee = null; memo = null; created_at_time = null; });
+let i = assertIcrc1TransactionWentOk(i);
+let icrc1Stats = call icrc1.getLastMutationStats();
+call hpl.submitAndExecute(record { map = vec {
+   record {
+     owner = null; outflow = vec { record { variant { sub = 0 }; variant { ft = record { hplAsset; 500 } } } };
+     inflow = vec { }; mints = vec { }; burns = vec { }; memo = null;
+   };
+   record {
+     owner = opt user1; inflow = vec { record { variant { sub = 0 }; variant { ft = record { hplAsset; 500 } } } };
+     outflow = vec { }; mints = vec { }; burns = vec { }; memo = null;
+   };
+} });
+assert _.ok != null;
+let hplStats = call hpl.getLastMutationStats();
+output("stats.md", stringify("| transfer between users (null subaccounts) | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+
+
+// ============= TEST TRANSFER TO ANOTHER USER NOT-NULL SUBACCOUNT
+identity user2;
+call icrc1.icrc1_transfer(record { from_subaccount = opt icrc1sub1; to = record { owner = user1; subaccount = opt icrc1sub1 }; amount = 10; fee = null; memo = null; created_at_time = null; });
+let i = assertIcrc1TransactionWentOk(i);
+let icrc1Stats = call icrc1.getLastMutationStats();
+call hpl.submitAndExecute(record { map = vec {
+   record {
+     owner = null; outflow = vec { record { variant { sub = 1 }; variant { ft = record { hplAsset; 10 } } } };
+     inflow = vec { }; mints = vec { }; burns = vec { }; memo = null;
+   };
+   record {
+     owner = opt user1; inflow = vec { record { variant { sub = 1 }; variant { ft = record { hplAsset; 10 } } } };
+     outflow = vec { }; mints = vec { }; burns = vec { }; memo = null;
+   };
+} });
+assert _.ok != null;
+let hplStats = call hpl.getLastMutationStats();
+output("stats.md", stringify("| transfer between users | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+
+
+// ============= TEST BURN FROM NULL SUBACCOUNT
+identity user1;
+call icrc1.burn(record { from_subaccount = null; amount = 500; memo = null; created_at_time = null });
+let i = assertIcrc1TransactionWentOk(i);
+let icrc1Stats = call icrc1.getLastMutationStats();
+// we have to change identity, because ICRC1 does not allow to burn from the same subaccount, HPL does not allow to burn by anyone but controller
+identity ftController;
+call hpl.submitAndExecute(record { map = vec {
+   record {
+     owner = null; outflow = vec { record { variant { sub = 0 }; variant { ft = record { hplAsset; 500 } } } };
+     burns = vec { variant { ft = record { hplAsset; 500 } } };
+     inflow = vec { }; mints = vec { }; memo = null;
+   };
+} });
+assert _.ok != null;
+let hplStats = call hpl.getLastMutationStats();
+output("stats.md", stringify("| burn from null subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+
+
+// ============= TEST BURN FROM NOT-NULL SUBACCOUNT
+identity user1;
+call icrc1.burn(record { from_subaccount = opt icrc1sub1; amount = 500; memo = null; created_at_time = null });
+let i = assertIcrc1TransactionWentOk(i);
+let icrc1Stats = call icrc1.getLastMutationStats();
+identity ftController;
+call hpl.submitAndExecute(record { map = vec {
+   record {
+     owner = null; outflow = vec { record { variant { sub = 1 }; variant { ft = record { hplAsset; 500 } } } };
+     burns = vec { variant { ft = record { hplAsset; 500 } } };
+     inflow = vec { }; mints = vec { }; memo = null;
+   };
+} });
+assert _.ok != null;
+let hplStats = call hpl.getLastMutationStats();
+output("stats.md", stringify("| burn from subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
