@@ -15,7 +15,6 @@ import Prng "mo:mrr/Prng";
 import Enumeration "mo:mrr/Enumeration";
 import Float "mo:base/Float";
 import Int "mo:base/Int";
-import Measure "utils/measure";
 
 actor {
   class RNG() {
@@ -213,43 +212,5 @@ actor {
     result #= "max leaf in red-black tree: " # Nat.toText(max_leaf(rb_tree).0) # "\n\n";
 
     Debug.print(result);
-  };
-
-  public shared func create_enumeration() : async Any {
-    let enumeration = Enumeration.Enumeration();
-    let r = RNG();
-    var i = 0;
-    while (i < n) {
-      ignore enumeration.add(r.blob());
-      i += 1;
-    };
-    enumeration;
-  };
-
-  public shared func create_rb() : async Any {
-    let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
-    let r = RNG();
-    var i = 0;
-    while (i < n) {
-      rb.put(r.blob(), i);
-      i += 1;
-    };
-    rb;
-  };
-  
-  public shared func measure_enumeration() : async () {
-    await Measure.measure(create_enumeration);
-  };
-
-  public shared func measure_rb_tree() : async () {
-    await Measure.measure(create_rb);
-  };
-
-  public shared func measure_stable_enumeration() : async () {
-    await Measure.measure_stable(create_enumeration);
-  };
-
-  public shared func measure_stable_rb_tree() : async () {
-    await Measure.measure_stable(create_rb);
   };
 };

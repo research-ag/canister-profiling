@@ -1,13 +1,21 @@
 {
   "version": 1,
   "canisters": {
+    "heap": {
+      "type": "motoko",
+      "main": "src/measure/heap.mo"
+    },
+    "stable": {
+      "type": "motoko",
+      "main": "src/measure/stable.mo"
+    },
     "enumeration": {
       "type": "motoko",
-      "main": "src/enumeration.mo"
+      "main": "src/enumeration/main.mo"
     },
     "vector": {
       "type": "motoko",
-      "main": "src/vector.mo"
+      "main": "src/vector/main.mo"
     },
     "sha2": {
       "type": "motoko",
@@ -20,18 +28,6 @@
     "prng": {
       "type": "motoko",
       "main": "src/prng.mo"
-    },
-    "stable_enumeration": {
-      "type": "motoko",
-      "main": "src/stable/enumeration.mo"
-    },
-    "stable_vector": {
-      "type": "motoko",
-      "main": "src/stable/vector.mo"
-    },
-    "simple": {
-      "type": "motoko",
-      "main": "src/simple.mo"
     }
   },
   "defaults": {

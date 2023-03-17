@@ -7,8 +7,7 @@ import Debug "mo:base/Debug";
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 import Prim "mo:⛔";
-import Table "utils/table";
-import Measure "utils/measure";
+import Table "../utils/table";
 
 actor {
   public query func profile() : async () {
@@ -1025,31 +1024,5 @@ actor {
       ],
     );
     Debug.print(t.output(["vector", "vector class", "buffer", "array"]));
-  };
-
-  let n = 1_000_000;
-
-  public shared func create_array() : async Any {
-    { a = Array.init<Nat>(n, 0) };
-  };
-
-  public shared func create_vector() :async Any {
-    { a = Vector.init<Nat>(n, 0) };
-  };
-
-  public shared func measure_array() : async () {
-    await Measure.measure(create_array);
-  };
-  
-  public shared func measure_vector() : async () {
-    await Measure.measure(create_vector);
-  };
-
-  public shared func measure_stable_array() : async () {
-    await Measure.measure_stable(create_array);
-  };
-
-  public shared func measure_stable_vector() : async () {
-    await Measure.measure_stable(create_vector);
   };
 };

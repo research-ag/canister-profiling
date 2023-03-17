@@ -1,18 +1,9 @@
-vector:
-	dfx canister create vector
-	DFX_MOC_PATH="$(shell vessel bin)/moc" dfx build vector
-	ic-repl ic-repl/vector.sh
-	dfx canister create stable_vector
-	DFX_MOC_PATH="$(shell vessel bin)/moc" dfx build stable_vector
-	ic-repl ic-repl/stable/vector.sh
+root:
+	chmod +x src/measure/run.sh
 
-enumeration:
-	dfx canister create enumeration
-	DFX_MOC_PATH="$(shell vessel bin)/moc" dfx build enumeration
-	ic-repl ic-repl/enumeration.sh
-	dfx canister create stable_enumeration
-	DFX_MOC_PATH="$(shell vessel bin)/moc" dfx build stable_enumeration
-	ic-repl ic-repl/stable/enumeration.sh
+vector: root
+	chmod +x src/vector/run.sh
+	./src/vector/run.sh
 
 sha2:
 	dfx canister create sha2
