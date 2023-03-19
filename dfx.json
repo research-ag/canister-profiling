@@ -9,25 +9,9 @@
       "type": "motoko",
       "main": "src/measure/stable.mo"
     },
-    "enumeration": {
+    "profile": {
       "type": "motoko",
-      "main": "src/enumeration/main.mo"
-    },
-    "vector": {
-      "type": "motoko",
-      "main": "src/vector/main.mo"
-    },
-    "sha2": {
-      "type": "motoko",
-      "main": "src/sha2.mo"
-    },
-    "LLRBTree": {
-      "type": "motoko",
-      "main": "src/LLRBTree.mo"
-    },
-    "prng": {
-      "type": "motoko",
-      "main": "src/prng.mo"
+      "main": "src/measure/profile.mo"
     }
   },
   "defaults": {

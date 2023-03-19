@@ -1,5 +1,5 @@
 import Vector "mo:mrr/Vector";
-import Measure "measure";
+import Measure "../utils/measure";
 import Create "create";
 
 actor {

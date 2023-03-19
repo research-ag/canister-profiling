@@ -7,10 +7,22 @@ import Debug "mo:base/Debug";
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 import Prim "mo:⛔";
-import Table "../utils/table";
+import Table "utils/table";
 
-actor {
-  public query func profile() : async () {
+module {
+  public func create_heap() : Any {
+    let n = 10_000_000;
+    Vector.init<Nat>(n, 0);
+  };
+
+  public func create_stable() : Any {
+    let n = 10_000_000;
+    Vector.init<Nat>(n, 0);
+  };
+
+  public func profile() : Any {
+    return 25;
+    
     let n = 100_000;
     let t = Table.Table(n, 4);
     t.stat_average(
