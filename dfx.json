@@ -1,37 +1,17 @@
 {
   "version": 1,
   "canisters": {
-    "enumeration": {
+    "heap": {
       "type": "motoko",
-      "main": "src/enumeration.mo"
+      "main": "src/measure/heap.mo"
     },
-    "vector": {
+    "stable": {
       "type": "motoko",
-      "main": "src/vector.mo"
+      "main": "src/measure/stable.mo"
     },
-    "sha2": {
+    "profile": {
       "type": "motoko",
-      "main": "src/sha2.mo"
-    },
-    "LLRBTree": {
-      "type": "motoko",
-      "main": "src/LLRBTree.mo"
-    },
-    "prng": {
-      "type": "motoko",
-      "main": "src/prng.mo"
-    },
-    "stable_enumeration": {
-      "type": "motoko",
-      "main": "src/stable/enumeration.mo"
-    },
-    "stable_vector": {
-      "type": "motoko",
-      "main": "src/stable/vector.mo"
-    },
-    "simple": {
-      "type": "motoko",
-      "main": "src/simple.mo"
+      "main": "src/measure/profile.mo"
     }
   },
   "defaults": {

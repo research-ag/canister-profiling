@@ -4,15 +4,24 @@ Profiling things in canisters.
 
 ## Run
 
-It's better to run `dfx` in background to see debug outputs and ic-repl calls in the same terminal and to clean everything happened before.
+It's better to run `dfx` in background to see debug outputs and ic-repl calls in the same terminal and to clean everything happened before, allow the scripts to run.
 ```
 dfx start --background --clean
+chmod +x profile.sh profile_heap.sh profile_stable.sh
 ```
-Use make to run a separate benchmark:
+To run a separate benchmark:
 ```
-make vector
+./profile.sh vector
 ```
-or enumeration, etc.
+```
+./profile_heap.sh vector
+./profile_heap.sh array
+```
+```
+./profile_stable.sh vector
+./profile_stable.sh array
+```
+or enumeration in comparison with rb_tree, etc.
 
 ## Bench Vector against Buffer
 

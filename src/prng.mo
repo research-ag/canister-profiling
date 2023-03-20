@@ -2,8 +2,8 @@ import Debug "mo:base/Debug";
 import Prng "mo:mrr/Prng";
 import Table "utils/table";
 
-actor {
-  public query func profile() : async () {
+module {
+  public func profile() {
     let t = Table.Table(1, 3);
     t.stat_one(
       "next",
