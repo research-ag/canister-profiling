@@ -5,12 +5,12 @@ import Create "create";
 actor {
   Measure.header();
   Measure.test("before constructor");
-  var vector = null : ?Any;
+  var vector = null : Any;
 
   public shared func init(name : Text) : async () {
     let f = Create.get_heap(name);
     await Measure.test_async("before init");
-    vector := ?f();
+    vector := f();
     Measure.test("after init");
     await Measure.test_async("after init collected");
   };
