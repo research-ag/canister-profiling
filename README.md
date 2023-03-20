@@ -39,7 +39,7 @@ Time:
 |forSome|136|-|137|-|
 |forNone|136|-|137|-|
 |iterate|93|93|123|-|
-|iterateRev|150|150|-|-|
+|iterateRev|114|114|-|-|
 |vals|148|148|117|14|
 |items|248|248|-|-|
 |valsRev|140|140|-|-|
