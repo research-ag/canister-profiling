@@ -6,7 +6,7 @@ actor {
   public query func profile() : async () {
     let t = Table.Table(1, 3);
     t.stat_one(
-      "init",
+      "next",
       [
         ?(
           func() {
