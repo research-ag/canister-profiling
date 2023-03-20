@@ -86,15 +86,16 @@ Memory:
 |fromVarArray|408716|409104|600504|400024|
 |clear|20|20|40|-|
 
-Notes on cycles (Time):
+Notes on Time:
 
-* Buffer is an array of an option type where Array is a plain array. One can see in the `get/put` rows how unwrapping the Option makes random access a little more expensive in cycles.  
+* Time is measured in Wasm instructions per call. For most functions each call takes eaxactly the same amount of instructions. But in some cases there can be component to it that occurs sporadically. For example, `add` and `removeLast` for Buffer are vastly more expensive when the Buffer grows or shrinks its capacity. In those case the displayed value is the average over `n` calls, i.e. the sporadic overhead is amortized over `n` calls. 
 * Vector is a 2-dimensional array, hence we expect random access to be roughly twice as expensive as for Buffer/Array. More precisely, the outer array of a Vector is plain and the inner array is of an option type. Matching this fact, we can see in the `get/put` rows that the Vector cost is roughly the sum of the Buffer cost plus the Array cost.
 * Functions that iterate through a vector take advantage of the inner structure and eliminate the overhead a 2-step lookup. This can be seen in the rows `indexOf, lastIndexOf, forAll, forSome, forNone, iterate, vals, addFromIter, toArray, fromArray, toVarArray, fromVarArray` where Vector is performing close to Buffer.
 * The `add` row is an average over many additions. The reason that Vector performs better is that Buffer has an expensive O(n) allocation and copying operation each time the Buffer grows its capacity. Vector avoids copying of data blocks entirely. Vector only does allocation and copying in the order of O(sqrt(n)) for its index block.
 
-Notes on memory:
+Notes on Memory:
 
+* Memory is measured in bytes of heap size increase due to the call to the function or, in some cases, to `n` calls to the function. 
 * The `add` row shows the garbage created by Buffer's growth events when the entire data is copied into a newly allocated array. Similarly `removeLast` produces garbage on shrink events.
 * The `items` function returns pairs. This leads to a heap allocations of 16 bytes per entry as we can see in the table.
 
