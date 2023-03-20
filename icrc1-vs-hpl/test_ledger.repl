@@ -34,8 +34,8 @@ call ic.install_code(
 );
 let hpl = id.canister_id;
 
-output("stats.md", stringify("| Test case | ICRC1 | ICRC1 GC | HPL | HPL GC |\n"));
-output("stats.md", stringify("| --- | --- | --- | --- | --- |\n"));
+output("stats.md", stringify("| Test case | ICRC1 | ICRC1 GC | ICRC1 HEAP SIZE | HPL | HPL GC | HPL HEAP SIZE |\n"));
+output("stats.md", stringify("| --- | --- | --- | --- | --- | --- | --- |\n"));
 identity user1;
 identity user2;
 // prepare some icrc1 subaccount id-s
@@ -89,7 +89,7 @@ call hpl.submitAndExecute(record { map = vec {
 } });
 assert _.ok != null;
 let hplStats = call hpl.getLastMutationStats();
-output("stats.md", stringify("| mint to null subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+output("stats.md", stringify("| mint to null subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", icrc1Stats[2], " | ", hplStats[0], " | ", hplStats[1], " | ", hplStats[2], " |\n"));
 
 // ============= TEST MINT TO SUBACCOUNT
 identity ftController;
@@ -108,7 +108,7 @@ call hpl.submitAndExecute(record { map = vec {
 } });
 assert _.ok != null;
 let hplStats = call hpl.getLastMutationStats();
-output("stats.md", stringify("| mint to subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+output("stats.md", stringify("| mint to subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", icrc1Stats[2], " | ", hplStats[0], " | ", hplStats[1], " | ", hplStats[2], " |\n"));
 
 
 // ============= TEST TRANSFER FROM NULL TO NOT-NULL OWN SUBACCOUNT
@@ -126,7 +126,7 @@ call hpl.submitAndExecute(record { map = vec {
 } });
 assert _.ok != null;
 let hplStats = call hpl.getLastMutationStats();
-output("stats.md", stringify("| transfer between subaccounts (one of them null) | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+output("stats.md", stringify("| transfer between subaccounts (one of them null) | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", icrc1Stats[2], " | ", hplStats[0], " | ", hplStats[1], " | ", hplStats[2], " |\n"));
 
 
 // ============= TEST TRANSFER BETWEEN OWN NOT_NULL SUBACCOUNTS
@@ -144,7 +144,7 @@ call hpl.submitAndExecute(record { map = vec {
 } });
 assert _.ok != null;
 let hplStats = call hpl.getLastMutationStats();
-output("stats.md", stringify("| transfer between subaccounts | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+output("stats.md", stringify("| transfer between subaccounts | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", icrc1Stats[2], " | ", hplStats[0], " | ", hplStats[1], " | ", hplStats[2], " |\n"));
 
 
 // ============= TEST TRANSFER TO ANOTHER USER NULL SUBACCOUNT
@@ -164,7 +164,7 @@ call hpl.submitAndExecute(record { map = vec {
 } });
 assert _.ok != null;
 let hplStats = call hpl.getLastMutationStats();
-output("stats.md", stringify("| transfer between users (null subaccounts) | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+output("stats.md", stringify("| transfer between users (null subaccounts) | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", icrc1Stats[2], " | ", hplStats[0], " | ", hplStats[1], " | ", hplStats[2], " |\n"));
 
 
 // ============= TEST TRANSFER TO ANOTHER USER NOT-NULL SUBACCOUNT
@@ -184,7 +184,7 @@ call hpl.submitAndExecute(record { map = vec {
 } });
 assert _.ok != null;
 let hplStats = call hpl.getLastMutationStats();
-output("stats.md", stringify("| transfer between users | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+output("stats.md", stringify("| transfer between users | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", icrc1Stats[2], " | ", hplStats[0], " | ", hplStats[1], " | ", hplStats[2], " |\n"));
 
 
 // ============= TEST BURN FROM NULL SUBACCOUNT
@@ -203,7 +203,7 @@ call hpl.submitAndExecute(record { map = vec {
 } });
 assert _.ok != null;
 let hplStats = call hpl.getLastMutationStats();
-output("stats.md", stringify("| burn from null subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+output("stats.md", stringify("| burn from null subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", icrc1Stats[2], " | ", hplStats[0], " | ", hplStats[1], " | ", hplStats[2], " |\n"));
 
 
 // ============= TEST BURN FROM NOT-NULL SUBACCOUNT
@@ -221,4 +221,4 @@ call hpl.submitAndExecute(record { map = vec {
 } });
 assert _.ok != null;
 let hplStats = call hpl.getLastMutationStats();
-output("stats.md", stringify("| burn from subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", hplStats[0], " | ", hplStats[1], " |\n"));
+output("stats.md", stringify("| burn from subaccount | ", icrc1Stats[0], " | ", icrc1Stats[1], " | ", icrc1Stats[2], " | ", hplStats[0], " | ", hplStats[1], " | ", hplStats[2], " |\n"));
