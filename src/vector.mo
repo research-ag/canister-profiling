@@ -20,9 +20,17 @@ module {
     Vector.init<Nat>(n, 0);
   };
 
-  public func profile() : Any {
-    return 25;
-    
+  public func array_heap() : Any {
+    let n = 10_000_000;
+    Array.init<Nat>(n, 0);
+  };
+
+  public func array_stable() : Any {
+    let n = 10_000_000;
+    Array.init<Nat>(n, 0);
+  };
+
+  public func profile() {
     let n = 100_000;
     let t = Table.Table(n, 4);
     t.stat_average(

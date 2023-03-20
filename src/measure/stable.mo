@@ -5,11 +5,11 @@ import Create "create";
 actor {
   Measure.test("before constructor");
   stable var data = null : ?Any;
-  Measure.test("after constructor");
 
   public shared func init(name : Text) : async () {
+    let f = Create.get_stable(name);
     await Measure.test_async("before init");
-    data := ?Create.get(name)();
+    data := ?f();
     await Measure.test_async("after init");
   };
 

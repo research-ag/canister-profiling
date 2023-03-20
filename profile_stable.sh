@@ -1,4 +1,4 @@
-set -x
+set -ex
 DFX_MOC_PATH="$(vessel bin)/moc" dfx deploy stable --quiet
 dfx canister call stable init "(\"$1\")"
 dfx canister call stable test
