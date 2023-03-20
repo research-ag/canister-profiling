@@ -12,7 +12,13 @@ import Table "utils/table";
 module {
   public func create_heap() : Any {
     let n = 10_000_000;
-    Vector.init<Nat>(n, 0);
+    let a = Vector.new<Nat>();
+    var i = 0;
+    while (i < n) {
+      Vector.add(a, i);
+      i += 1;
+    };
+    a
   };
 
   public func create_stable() : Any {
@@ -28,6 +34,17 @@ module {
   public func array_stable() : Any {
     let n = 10_000_000;
     Array.init<Nat>(n, 0);
+  };
+
+  public func buffer_heap() : Any {
+    let n = 10_000_000;
+    let a = Buffer.Buffer<Nat>(0);
+    var i = 0;
+    while (i < n) {
+      a.add(i);
+      i += 1;
+    };
+    a
   };
 
   public func profile() {

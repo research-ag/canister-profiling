@@ -9,6 +9,7 @@ module {
     switch (name) {
       case "vector" return Vector.create_heap;
       case "array" return Vector.array_heap;
+      case "buffer" return Vector.buffer_heap;
       case "enumeration" return Enumeration.create_heap;
       case "rb_tree" return Enumeration.rb_tree_heap;
       case _ Prim.trap("");

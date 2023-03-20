@@ -11,7 +11,8 @@ actor {
     let f = Create.get_stable(name);
     await Measure.test_async("before init");
     data := ?f();
-    await Measure.test_async("after init");
+    Measure.test("after init");
+    await Measure.test_async("after init collected");
   };
 
   system func preupgrade() = Measure.test("preupgrade");

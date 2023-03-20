@@ -11,7 +11,8 @@ actor {
     let f = Create.get_heap(name);
     await Measure.test_async("before init");
     vector := ?f();
-    await Measure.test_async("after init");
+    Measure.test("after init");
+    await Measure.test_async("after init collected");
   };
 
   public shared func test() : async () = async await Measure.test_async("test");
