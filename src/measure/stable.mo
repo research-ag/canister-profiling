@@ -3,6 +3,7 @@ import Measure "../utils/measure";
 import Create "create";
 
 actor {
+  Measure.header();
   Measure.test("before constructor");
   stable var data = null : ?Any;
 
