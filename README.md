@@ -23,6 +23,10 @@ To run a separate benchmark:
 ```
 or enumeration in comparison with rb_tree, etc.
 
+### Note
+
+`--force-gc` dfx option is required for heap and stable profiling.
+
 ## Bench Vector against Buffer
 
 n = 100000
