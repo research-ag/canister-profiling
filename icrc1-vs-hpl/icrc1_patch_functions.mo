@@ -11,7 +11,7 @@
         natToBlob(32, index);
     };
 
-    public shared ({ caller }) func registerMany(startPrincipalNumber: Nat, amount: Nat, subaccountsAmount: Nat, initialBalance: Nat): async () {
+    public shared ({ caller }) func registerMany(startPrincipalNumber: Nat, amount: Nat, subaccountsAmount: Nat, initialBalance: Nat): async { #ok; #err: ICRC1.TransferError } {
         let principalFromNat = func (n : Nat) : Principal {
             let blobLength = 16;
             Principal.fromBlob(Blob.fromArray(
@@ -27,11 +27,15 @@
         };
         for (p in Iter.map<Nat, Principal>(Iter.range(startPrincipalNumber, startPrincipalNumber + amount), func (i: Nat) : Principal = principalFromNat(i))) {
             for (i in Iter.range(0, subaccountsAmount)) {
-                ignore ICRC1.mint(token, { to = { owner = p; subaccount = ?natToBlob(32, i) }; amount = initialBalance; memo = null; created_at_time = null; }, caller);
-            };
+                switch (await* ICRC1.mint(token, { to = { owner = p; subaccount = ?natToBlob(32, i) }; amount = initialBalance; memo = null; created_at_time = null; }, caller)) {
+                    case (#Ok _) {};
+                    case (#Err err) return #err(err);
+                };
+            }
         };
+        #ok();
     };
 
-    public shared query func getLastMutationStats(): async (Nat, Nat) {
-        (Prim.rts_mutator_instructions(), Prim.rts_collector_instructions())
+    public shared query func getLastMutationStats(): async (Nat, Nat, Nat) {
+        (Prim.rts_mutator_instructions(), Prim.rts_collector_instructions(), Prim.rts_heap_size())
     };
