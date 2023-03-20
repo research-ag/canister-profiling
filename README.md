@@ -148,10 +148,10 @@ Time:
 
 |method|Seiran128|SFC64|SFC32|
 |---|---|---|---|
-|init|172|267|225|
+|next|172|267|225|
 
 Memory:
 
 |method|Seiran128|SFC64|SFC32|
 |---|---|---|---|
-|init|0|0|0|
+|next|0|0|0|
