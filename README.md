@@ -39,7 +39,7 @@ Time:
 |addMany|14|14|-|-|
 |clone|176|0|253|-|
 |add|291|321|490|-|
-|get|196|226|118|71|
+|get|195|225|118|71|
 |getOpt|230|260|120|-|
 |put|236|267|126|72|
 |size|153|182|74|49|
@@ -53,15 +53,15 @@ Time:
 |forNone|136|-|137|-|
 |iterate|93|93|123|-|
 |iterateRev|114|114|-|-|
-|vals|148|148|117|14|
-|items|248|248|-|-|
+|vals|147|147|117|14|
+|items|247|247|-|-|
 |valsRev|140|140|-|-|
-|itemsRev|268|268|-|-|
+|itemsRev|267|267|-|-|
 |keys|92|92|-|-|
 |addFromIter|368|368|311|-|
-|toArray|139|139|102|-|
+|toArray|138|138|102|-|
 |fromArray|148|148|152|-|
-|toVarArray|200|200|156|110|
+|toVarArray|199|199|156|110|
 |fromVarArray|148|148|152|56|
 |clear|161|189|266|-|
 
@@ -119,15 +119,15 @@ Testing for n = 4096
 
 |method|enumeration|red-black tree|
 |---|---|---|
-|random blobs inside average|4236|3999|
-|random blobs average|3100|2835|
-|root|1860|1795|
-|leftmost|4413|4114|
-|rightmost|4958|4717|
-|min blob|2895|2589|
-|max blob|3543|3297|
-|min leaf|3787|3586|
-|max leaf|5832|5521|
+|random blobs inside average|3829|3593|
+|random blobs average|2644|2379|
+|root|1823|1758|
+|leftmost|3895|3596|
+|rightmost|4514|4273|
+|min blob|2377|2071|
+|max blob|3099|2853|
+|min leaf|3454|3253|
+|max leaf|5240|4929|
 
 min leaf in enumeration: 9
 
@@ -153,21 +153,21 @@ Time:
 
 |method|Sha256|Sha512|timohanke|aviate-labs|
 |---|---|---|---|---|
-|0 blocks|35047|52840|492622|98430|
-|1 blocks|40003|62723|325539|93319|
-|10 blocks|34299|53480|97391|53067|
-|100 blocks|33697|52555|51238|48421|
-|1_000 blocks|33640|52463|48362|47990|
+|0 blocks|34973|52698|492507|98431|
+|1 blocks|39874|62470|325454|93320|
+|10 blocks|34228|53339|97347|53067|
+|100 blocks|33632|52426|51199|48422|
+|1_000 blocks|33576|52335|48323|47990|
 
 Memory:
 
 |method|Sha256|Sha512|timohanke|aviate-labs|
 |---|---|---|---|---|
-|0 blocks|1032|2024|26508|4376|
-|1 blocks|1048|2024|17516|3720|
-|10 blocks|1416|2888|32072|8172|
-|100 blocks|4200|11528|50924|42608|
-|1_000 blocks|33048|97928|334012|392080|
+|0 blocks|1008|1976|26472|4376|
+|1 blocks|1024|1976|17480|3720|
+|10 blocks|1392|2840|31928|8172|
+|100 blocks|4176|11480|49700|42608|
+|1_000 blocks|33024|97880|321988|392080|
 
 ## Bench PRNG
 
