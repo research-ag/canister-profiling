@@ -21,7 +21,7 @@ module {
     a
   };
 
-  public func create_stable() : Any {
+  public func create_stable() : Vector.Vector<Nat> {
     let n = 10_000_000;
     Vector.init<Nat>(n, 0);
   };
@@ -31,7 +31,7 @@ module {
     Array.init<Nat>(n, 0);
   };
 
-  public func array_stable() : Any {
+  public func array_stable() : [var Nat] {
     let n = 10_000_000;
     Array.init<Nat>(n, 0);
   };

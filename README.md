@@ -13,15 +13,19 @@ To run a separate benchmark:
 ```
 ./profile.sh vector
 ```
+
+To profile heap call:
 ```
 ./profile_heap.sh vector
 ./profile_heap.sh array
 ```
-```
-./profile_stable.sh vector
-./profile_stable.sh array
-```
 or enumeration in comparison with rb_tree, etc.
+
+To profile stable memory edit `src/measure/stable.mo` and call:
+```
+./profile_stable.sh
+```
+
 
 ### Note
 

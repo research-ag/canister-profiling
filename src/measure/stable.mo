@@ -1,16 +1,19 @@
 import Vector "mo:mrr/Vector";
+import V "../vector";
 import Measure "../utils/measure";
 import Create "create";
 
 actor {
+  type Type = Vector.Vector<Nat>; // Chnage Type
+  let f : () -> Type = V.create_stable; // Change f
+
   Measure.header();
   Measure.test("before constructor");
-  stable var data = null : Any;
+  stable var data = null : ?Type;
 
-  public shared func init(name : Text) : async () {
-    let f = Create.get_stable(name);
+  public shared func init() : async () {
     await Measure.test_async("before init");
-    data := f();
+    data := ?f();
     Measure.test("after init");
     await Measure.test_async("after init collected");
   };
