@@ -11,21 +11,21 @@ import Nat "mo:base/Nat";
 
 module {
   public func profile() {
-    func zero_blocks_64(n : Nat) : Blob {
+    func ff_blocks_64(n : Nat) : Blob {
       let len = if (n == 0) 0 else (64 * n - 9 : Nat);
-      let arr = Array.freeze(Array.init<Nat8>(len, 0));
+      let arr = Array.freeze(Array.init<Nat8>(len, 0xff));
       Blob.fromArray(arr);
     };
 
-    func zero_blocks_128(n : Nat) : Blob {
+    func ff_blocks_128(n : Nat) : Blob {
       let len = if (n == 0) 0 else (128 * n - 17 : Nat);
-      let arr = Array.freeze(Array.init<Nat8>(len, 0));
+      let arr = Array.freeze(Array.init<Nat8>(len, 0xff));
       Blob.fromArray(arr);
     };
 
     let lengths = [0, 1, 10, 100, 1000];
-    let inputs_64 = Array.map<Nat, Blob>(lengths, zero_blocks_64);
-    let inputs_128 = Array.map<Nat, Blob>(lengths, zero_blocks_128);
+    let inputs_64 = Array.map<Nat, Blob>(lengths, ff_blocks_64);
+    let inputs_128 = Array.map<Nat, Blob>(lengths, ff_blocks_128);
 
     let t = Table.Table(0, 4);
     var i = 0;
