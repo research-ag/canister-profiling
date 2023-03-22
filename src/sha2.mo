@@ -10,18 +10,19 @@ import Crypto "mo:crypto.mo/SHA/SHA256";
 import Nat "mo:base/Nat";
 
 module {
-  public func profile() {
-    func ff_blocks_64(n : Nat) : Blob {
-      let len = if (n == 0) 0 else (64 * n - 9 : Nat);
-      let arr = Array.freeze(Array.init<Nat8>(len, 0xff));
-      Blob.fromArray(arr);
-    };
+  func ff_blocks_64(n : Nat) : Blob {
+    let len = if (n == 0) 0 else (64 * n - 9 : Nat);
+    let arr = Array.freeze(Array.init<Nat8>(len, 0xff));
+    Blob.fromArray(arr);
+  };
 
-    func ff_blocks_128(n : Nat) : Blob {
-      let len = if (n == 0) 0 else (128 * n - 17 : Nat);
-      let arr = Array.freeze(Array.init<Nat8>(len, 0xff));
-      Blob.fromArray(arr);
-    };
+  func ff_blocks_128(n : Nat) : Blob {
+    let len = if (n == 0) 0 else (128 * n - 17 : Nat);
+    let arr = Array.freeze(Array.init<Nat8>(len, 0xff));
+    Blob.fromArray(arr);
+  };
+
+  public func profile() {
 
     let lengths = [0, 1, 10, 100, 1000];
     let inputs_64 = Array.map<Nat, Blob>(lengths, ff_blocks_64);
@@ -44,5 +45,19 @@ module {
     };
 
     Debug.print(t.output(["Sha256", "Sha512", "timohanke", "aviate-labs"]));
+  };
+
+  public func sha256_heap() : Any {
+    let size : Nat = 64 * 1000 - 7;
+
+    let iter = object {
+      var i = 0;
+      public func next() : ?Nat8 {
+        i += 1;
+        if (i <= size) ?0xff else null;
+      }
+    };
+
+    Sha256.fromIter(#sha256, iter);
   };
 };
