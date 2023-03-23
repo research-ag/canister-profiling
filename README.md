@@ -179,10 +179,10 @@ Time:
 
 |method|Seiran128|SFC64|SFC32|
 |---|---|---|---|
-|next|172|267|225|
+|next|251|377|253|
 
 Memory:
 
 |method|Seiran128|SFC64|SFC32|
 |---|---|---|---|
-|next|0|0|0|
+|next|36|48|8|

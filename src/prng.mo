@@ -11,18 +11,21 @@ module {
         ?(
           func() {
             let r = Prng.Seiran128();
+            r.init(0);
             func() = ignore r.next();
           }
         ),
         ?(
           func() {
             let r = Prng.SFC64a();
+            r.init();
             func() = ignore r.next();
           }
         ),
         ?(
           func() {
             let r = Prng.SFC32a();
+            r.init();
             func() = ignore r.next();
           }
         ),
