@@ -3,4 +3,4 @@ DFX_MOC_PATH="$(vessel bin)/moc" dfx deploy stable --quiet --mode=reinstall --ye
 dfx canister call stable init
 dfx canister call stable test
 dfx canister install stable --mode='upgrade' --upgrade-unchanged
-dfx canister call stable test
+dfx canister call stable summarize
