@@ -149,29 +149,29 @@ The columns refer to the following code:
 * timohanke: https://github.com/timohanke/motoko-sha2
 * aviate-labs: https://github.com/skilesare/crypto.mo
 
-Columns 1,3,4 are comparable because they all perform Sha256. 1 block refers to 64 bytes.
+Columns 1,3,4 are comparable because they all perform Sha256. 1 block refers to 64 bytes of all 0xff. 0 blocks refers to the empty message.
 
-Column 2 performs Sha512 and 1 block refers to 128 bytes.
+Column 2 performs Sha512 and 1 block refers to 128 bytes of all 0xff.
 
 Time:
 
 |method|Sha256|Sha512|timohanke|aviate-labs|
 |---|---|---|---|---|
-|0 blocks|34973|52698|492507|98431|
-|1 blocks|39874|62470|325454|93320|
-|10 blocks|34228|53339|97347|53067|
-|100 blocks|33632|52426|51199|48422|
-|1_000 blocks|33576|52335|48323|47990|
+|0 blocks|34973|52698|492537|98431|
+|1 blocks|41014|65660|434235|95601|
+|10 blocks|35820|58183|87277|53644|
+|100 blocks|35267|57433|53170|49325|
+|1_000 blocks|35212|57358|49218|48887|
 
 Memory:
 
 |method|Sha256|Sha512|timohanke|aviate-labs|
 |---|---|---|---|---|
 |0 blocks|1008|1976|26472|4376|
-|1 blocks|1024|1976|17480|3720|
-|10 blocks|1392|2840|31928|8172|
-|100 blocks|4176|11480|49700|42608|
-|1_000 blocks|33024|97880|321988|392080|
+|1 blocks|1328|3344|23424|4104|
+|10 blocks|5736|24944|28280|10092|
+|100 blocks|49008|240944|80836|68152|
+|1_000 blocks|482208|2400944|577836|648488|
 
 ## Bench PRNG
 
@@ -179,10 +179,10 @@ Time:
 
 |method|Seiran128|SFC64|SFC32|
 |---|---|---|---|
-|next|172|267|225|
+|next|251|377|253|
 
 Memory:
 
 |method|Seiran128|SFC64|SFC32|
 |---|---|---|---|
-|next|0|0|0|
+|next|36|48|8|
