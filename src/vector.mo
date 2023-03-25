@@ -1060,6 +1060,405 @@ module {
         null,
       ],
     );
+
+    t.stat_average(
+      "contains",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            func() {
+              ignore Vector.contains(a, 1, Nat.equal);
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(0);
+              i += 1;
+            };
+            func() {
+              ignore Buffer.contains(a, 1, Nat.equal);
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            func() = ignore Array.find(a, func(x : Nat) : Bool = x == 1);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "max",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            func() {
+              ignore Vector.max(a, Nat.compare);
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(0);
+              i += 1;
+            };
+            func() {
+              ignore Buffer.max(a, Nat.compare);
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            func() = ignore Array.foldLeft<Nat, Nat>(a, a[0], Nat.max);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "min",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            func() {
+              ignore Vector.min(a, Nat.compare);
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(i);
+              i += 1;
+            };
+            func() {
+              ignore Buffer.min(a, Nat.compare);
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            func() = ignore Array.foldLeft<Nat, Nat>(a, a[0], Nat.min);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "equal",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            let b = Vector.init<Nat>(n, 0);
+            func() {
+              ignore Vector.equal<Nat>(a, b, Nat.equal);
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            let b = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(i);
+              b.add(i);
+              i += 1;
+            };
+            func() {
+              ignore Buffer.equal(a, b, Nat.equal);
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            let b = Array.freeze(Array.init<Nat>(n, 0));
+            func() = ignore Array.equal<Nat>(a, b, Nat.equal);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "compare",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            let b = Vector.init<Nat>(n, 0);
+            func() {
+              ignore Vector.compare<Nat>(a, b, Nat.compare);
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            let b = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(i);
+              b.add(i);
+              i += 1;
+            };
+            func() {
+              ignore Buffer.compare(a, b, Nat.compare);
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            let b = Array.freeze(Array.init<Nat>(n, 0));
+            // TODO: not quite the same
+            func() = ignore Array.equal<Nat>(a, b, Nat.equal);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "toText",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            func() {
+              ignore Vector.toText<Nat>(a, Nat.toText);
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(0);
+              i += 1;
+            };
+            func() {
+              ignore Buffer.toText(a, Nat.toText);
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(10, 0));
+            // TODO: not quite the same, has extra comma
+            func() = ignore "[" # Array.foldRight<Nat, Text>(a, "", func(x, acc) = Nat.toText(x) # ", " # acc) # "]";
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "foldLeft",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            func() {
+              ignore Vector.foldLeft<Nat, Nat>(a, 0, func(acc, x) = acc + x );
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(0);
+              i += 1;
+            };
+            func() {
+              ignore Buffer.foldLeft<Nat, Nat>(a, 0, func(acc, x) = acc + x);
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            func() = ignore Array.foldLeft<Nat, Nat>(a, 0, func(acc, x) = acc + x);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "foldRight",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            func() {
+              ignore Vector.foldRight<Nat, Nat>(a, 0, func(x, acc) = x + acc);
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(0);
+              i += 1;
+            };
+            func() {
+              ignore Buffer.foldRight<Nat, Nat>(a, 0, func(x, acc) = x + acc);
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            func() = ignore Array.foldRight<Nat, Nat>(a, 0, func(x, acc) = x + acc);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "reverse",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            func() {
+              Vector.reverse(a);
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(0);
+              i += 1;
+            };
+            func() {
+              Buffer.reverse<Nat>(a);
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            func() = ignore Array.reverse<Nat>(a);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "reversed",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            func() {
+              ignore Vector.reversed(a);
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(0);
+              i += 1;
+            };
+            func() {
+              Buffer.reverse<Nat>(a);
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            func() = ignore Array.reverse<Nat>(a);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "isEmpty",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore Vector.isEmpty(a);
+                i += 1;
+              };
+            };
+          }
+        ),
+        null,
+        ?(
+          func() {
+            let a = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(0);
+              i += 1;
+            };
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore Buffer.isEmpty(a);
+                i += 1;
+              };
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.init<Nat>(n, 0);
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore a.size() == 0;
+                i += 1;
+              };
+            };
+          }
+        ),
+      ],
+    );
+
     Debug.print(t.output(["vector", "vector class", "buffer", "array"]));
   };
 };

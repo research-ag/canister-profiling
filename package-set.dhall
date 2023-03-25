@@ -7,8 +7,8 @@
   },
   {
     name = "mrr",
-    repo = "https://github.com/research-ag/motoko-lib",
-    version = "cb7b",
+    repo = "https://github.com/react0r-com/motoko-lib",
+    version = "main",
     dependencies = [ "base" ]
   },
   {
