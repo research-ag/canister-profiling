@@ -68,6 +68,17 @@ Time:
 |toVarArray|199|199|156|110|
 |fromVarArray|148|148|152|56|
 |clear|161|189|266|-|
+|contains|148|-|138|34|
+|max|147|-|163|37|
+|min|147|-|168|37|
+|equal|291|-|204|112|
+|compare|331|-|244|112|
+|toText|409|-|366|0|
+|foldLeft|137|-|153|50|
+|foldRight|158|-|159|113|
+|reverse|396|-|209|128|
+|reversed|365|-|209|128|
+|isEmpty|89|-|89|61|
 
 Memory:
 
@@ -102,6 +113,17 @@ Memory:
 |toVarArray|400180|400180|400008|400008|
 |fromVarArray|408716|409104|600504|400024|
 |clear|20|20|40|-|
+|contains|28|-|48|0|
+|max|36|-|48|0|
+|min|36|-|48|0|
+|equal|344|-|0|0|
+|compare|344|-|0|0|
+|toText|3200164|-|3199992|296|
+|foldLeft|36|-|48|0|
+|foldRight|28|-|0|0|
+|reverse|0|-|0|400028|
+|reversed|416144|-|0|400028|
+|isEmpty|0|-|0|0|
 
 Notes on Time:
 
