@@ -14,9 +14,10 @@ import RBTree "mo:base/RBTree";
 import Option "mo:base/Option";
 import Buffer "mo:base/Buffer";
 import Order "mo:base/Order";
+import RbTree "mo:base/RBTree";
 
 module {
-  public func create_stable() : Any {
+  public func create_stable() : (Enumeration.Tree, [var Blob], Nat) {
     func create(left : Int, right : Int) : Enumeration.Tree {
       if (left > right) {
         null;
@@ -25,15 +26,30 @@ module {
         ?(#R, create(left, middle - 1), Int.abs(middle), create(middle + 1, right));
       };
     };
-    let n = 2 ** 24;
+    let n = 2 ** 20;
     let array = Array.init<Nat8>(29, 0);
 
-    let e = Enumeration.Enumeration();
-    e.unsafeUnshare((
+    (
       create(0, n - 1),
       Array.tabulateVar<Blob>(n, func(i) = Blob.fromArrayMut(array)),
       n,
-    ));
+    );
+  };
+
+  public func rb_tree_stable() : RbTree.Tree<Blob, Nat> {
+    let array = Array.init<Nat8>(29, 0);
+
+    func create(left : Int, right : Int) : RbTree.Tree<Blob, Nat> {
+      if (left > right) {
+        #leaf;
+      } else {
+        let middle = (left + right) / 2;
+        #node(#R, create(left, middle - 1), (Blob.fromArrayMut(array), ?Int.abs(middle)), create(middle + 1, right));
+      };
+    };
+
+    let n = 2 ** 20;
+    create(0, n - 1);
   };
 
   public func create_heap() : Any {

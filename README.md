@@ -26,7 +26,6 @@ To profile stable memory edit `src/measure/stable.mo` and call:
 ./profile_stable.sh
 ```
 
-
 ### Note
 
 `--force-gc` dfx option is required for heap and stable profiling.
@@ -125,6 +124,21 @@ Memory:
 |reversed|416144|-|0|400028|
 |isEmpty|0|-|0|0|
 
+Heap profiling:
+
+|method|heap size|gc size|collector instructions|mutator instructions|
+|---|---|---|---|---|
+|vector|40_097_980|79_984|377_979_749|2_866_169_088|
+|buffer|47_835_248|95_669_512|460_218_016|4_462_255_651|
+|array|40_000_128|24|375_004_331|120_002_552|
+
+Stable profiling:
+
+|method|mutator instructions|stable var query|
+|---|---|---|
+|vector|5_843_585_345|20_082_525|
+|array|1_604_184_162|10_000_038|
+
 Notes on Time:
 
 * Time is measured in Wasm instructions per call. For most functions each call takes eaxactly the same amount of instructions. But in some cases there can be component to it that occurs sporadically. For example, `add` and `removeLast` for Buffer are vastly more expensive when the Buffer grows or shrinks its capacity. In those case the displayed value is the average over `n` calls, i.e. the sporadic overhead is amortized over `n` calls. 
@@ -163,6 +177,21 @@ max leaf in enumeration: 16
 
 max leaf in red-black tree: 16
 
+Heap profiling:
+
+|method|heap size|gc size|collector instructions|mutator instructions|
+|---|---|---|---|---|
+|enumeration|278_848|171_613_248|4_349_072|3_472_314_656|
+|rb_tree|377_172|172_176_312|7_690_532|3_471_603_610|
+
+Stable profiling:
+
+|method|mutator instructions|stable var query|
+|---|---|---|
+|enumeration|3_821_911_243|37_732_293|
+|rb_tree|5_799_815_192|38_780_862|
+
+
 ## Bench Sha2
 
 The columns refer to the following code:
@@ -194,6 +223,13 @@ Memory:
 |10 blocks|5736|24944|28280|10092|
 |100 blocks|49008|240944|80836|68152|
 |1_000 blocks|482208|2400944|577836|648488|
+
+Heap profiling:
+
+|method|heap size|gc size|collector instructions|mutator instructions|
+|---|---|---|---|---|
+|sha256|160|13_025_772|4_396|124_716_639|
+
 
 ## Bench PRNG
 

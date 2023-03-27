@@ -11,6 +11,16 @@ import Iter "mo:base/Iter";
 import Prim "mo:⛔";
 
 module {
+  public func format_table(name : Text, columns : [Text], iter : Iter.Iter<(Text, Iter.Iter<Text>)>) : Text {
+    let header = "\n|method|" # Text.join("|", columns.vals()) # "|";
+    let space = "\n|" # Text.join("|", Iter.map(Iter.range(0, columns.size()), func(i : Nat) : Text = "---")) # "|";
+    var result = "\n" # name # ":\n" # header # space # "\n";
+    for ((method, row) in iter) {
+      result #= "|" # method # "|" # Text.join("|", row) # "|\n";
+    };
+    result;
+  };
+
   public class Table(n_ : Nat, columns : Nat) {
     let n = n_;
     let cols = columns;
@@ -78,6 +88,11 @@ module {
       for ((method, row) in stats.vals()) {
         result #= "|" # method # "|" # Text.join("|", Iter.map(row.vals(), func(x : ?(Nat, Nat)) : Text = second(x))) # "|\n";
       };
+
+      // result #= format_table("Time", columns, Iter.map(stats.vals(), func ((method, row) : (Text, [?(Nat, Nat)])) : (Text, Iter.Iter<Text>) {
+      //   let y : Iter.Iter<Text> = Iter.map(row.vals(), func(x : ?(Nat, Nat)) : Text = first(x));
+      //   (method, y)
+      // }));
 
       result;
     };
