@@ -30,6 +30,24 @@ To profile stable memory edit `src/measure/stable.mo` and call:
 
 `--force-gc` dfx option is required for heap and stable profiling.
 
+## Notes on benches
+
+Time is measured in Wasm instructions per call. For most functions each call takes eaxactly the same amount of instructions. But in some cases there can be component to it that occurs sporadically. For example, `add` and `removeLast` for Buffer are vastly more expensive when the Buffer grows or shrinks its capacity. In those case the displayed value is the average over `n` calls, i.e. the sporadic overhead is amortized over `n` calls.
+
+Memory is measured in bytes of heap size increase due to the call to the function or, in some cases, to `n` calls to the function. 
+
+In heap profiling:
+
+* heap size is the size without the garbage of the data structure returned by the profiled function.
+* gc size is the size of the garbage produced by the profiled function.
+* collector instructions is the number of instructions required to collect the garbage of the profiled function.
+* mutator instructions is the number of instructions for execution of the profiled function without garbage collector.
+
+In stable profiling:
+
+* mutator instructions are the instructions for deserialization of data returned by the profiled function.
+* stable var query is the result of executing stableVarQuery function, the size of the serialized data.
+
 ## Bench Vector against Buffer, Array
 
 #### Instructions & heap
