@@ -30,9 +30,11 @@ To profile stable memory edit `src/measure/stable.mo` and call:
 
 `--force-gc` dfx option is required for heap and stable profiling.
 
-## Bench Vector against Buffer
+## Bench Vector against Buffer, Array
 
-n = 100000
+#### Instructions & heap
+
+Testing for n = 100,000
 
 Time:
 
@@ -124,21 +126,6 @@ Memory:
 |reversed|416144|-|0|400028|
 |isEmpty|0|-|0|0|
 
-Heap profiling:
-
-|method|heap size|gc size|collector instructions|mutator instructions|
-|---|---|---|---|---|
-|vector|40_097_980|79_984|377_979_749|2_866_169_088|
-|buffer|47_835_248|95_669_512|460_218_016|4_462_255_651|
-|array|40_000_128|24|375_004_331|120_002_552|
-
-Stable profiling:
-
-|method|mutator instructions|stable var query|
-|---|---|---|
-|vector|5_843_585_345|20_082_525|
-|array|1_604_184_162|10_000_038|
-
 Notes on Time:
 
 * Time is measured in Wasm instructions per call. For most functions each call takes eaxactly the same amount of instructions. But in some cases there can be component to it that occurs sporadically. For example, `add` and `removeLast` for Buffer are vastly more expensive when the Buffer grows or shrinks its capacity. In those case the displayed value is the average over `n` calls, i.e. the sporadic overhead is amortized over `n` calls. 
@@ -152,10 +139,26 @@ Notes on Memory:
 * The `add` row shows the garbage created by Buffer's growth events when the entire data is copied into a newly allocated array. Similarly `removeLast` produces garbage on shrink events.
 * The `items` function returns pairs. This leads to a heap allocations of 16 bytes per entry as we can see in the table.
 
+#### Heap & GC profiling
+
+|method|heap size|gc size|collector instructions|mutator instructions|
+|---|---|---|---|---|
+|vector|40_097_980|79_984|377_979_749|2_866_169_088|
+|buffer|47_835_248|95_669_512|460_218_016|4_462_255_651|
+|array|40_000_128|24|375_004_331|120_002_552|
+
+#### Serialization & Deserialization profiling
+
+|method|mutator instructions|stable var query|
+|---|---|---|
+|vector|5_843_585_345|20_082_525|
+|array|1_604_184_162|10_000_038|
 
 ## Bench Enumeration against RBTree
 
-Testing for n = 4096
+#### Instructions & heap
+
+Testing for n = 4,096
 
 |method|enumeration|red-black tree|
 |---|---|---|
@@ -177,14 +180,14 @@ max leaf in enumeration: 16
 
 max leaf in red-black tree: 16
 
-Heap profiling:
+#### Heap & GC profiling
 
 |method|heap size|gc size|collector instructions|mutator instructions|
 |---|---|---|---|---|
 |enumeration|278_848|171_613_248|4_349_072|3_472_314_656|
 |rb_tree|377_172|172_176_312|7_690_532|3_471_603_610|
 
-Stable profiling:
+#### Serialization & Deserialization profiling
 
 |method|mutator instructions|stable var query|
 |---|---|---|
@@ -193,6 +196,8 @@ Stable profiling:
 
 
 ## Bench Sha2
+
+#### Instructions & heap
 
 The columns refer to the following code:
 
@@ -224,7 +229,7 @@ Memory:
 |100 blocks|49008|240944|80836|68152|
 |1_000 blocks|482208|2400944|577836|648488|
 
-Heap profiling:
+#### Heap & GC profiling
 
 |method|heap size|gc size|collector instructions|mutator instructions|
 |---|---|---|---|---|
@@ -232,6 +237,8 @@ Heap profiling:
 
 
 ## Bench PRNG
+
+#### Instructions & heap
 
 Time:
 
