@@ -76,23 +76,30 @@ module {
     public func output(columns : [Text]) : Text {
       assert columns.size() == cols;
       var result = "\nn = " # Nat.toText(n) # "\n";
-      let header = "\n|method|" # Text.join("|", columns.vals()) # "|";
-      let space = "\n|" # Text.join("|", Iter.map(Iter.range(0, cols), func(i : Nat) : Text = "---")) # "|";
-      result #= "\nTime:\n" # header # space # "\n";
 
-      for ((method, row) in stats.vals()) {
-        result #= "|" # method # "|" # Text.join("|", Iter.map(row.vals(), func(x : ?(Nat, Nat)) : Text = first(x))) # "|\n";
-      };
+      result #= format_table(
+        "Time",
+        columns,
+        Iter.map(
+          stats.vals(),
+          func((method, row) : (Text, [?(Nat, Nat)])) : ((Text, Iter.Iter<Text>)) {
+            let y : Iter.Iter<Text> = Iter.map(row.vals(), func(x : ?(Nat, Nat)) : Text = first(x));
+            (method, y);
+          },
+        ),
+      );
 
-      result #= "\nMemory:\n" # header # space # "\n";
-      for ((method, row) in stats.vals()) {
-        result #= "|" # method # "|" # Text.join("|", Iter.map(row.vals(), func(x : ?(Nat, Nat)) : Text = second(x))) # "|\n";
-      };
-
-      // result #= format_table("Time", columns, Iter.map(stats.vals(), func ((method, row) : (Text, [?(Nat, Nat)])) : (Text, Iter.Iter<Text>) {
-      //   let y : Iter.Iter<Text> = Iter.map(row.vals(), func(x : ?(Nat, Nat)) : Text = first(x));
-      //   (method, y)
-      // }));
+      result #= format_table(
+        "Memory",
+        columns,
+        Iter.map(
+          stats.vals(),
+          func((method, row) : (Text, [?(Nat, Nat)])) : ((Text, Iter.Iter<Text>)) {
+            let y : Iter.Iter<Text> = Iter.map(row.vals(), func(x : ?(Nat, Nat)) : Text = second(x));
+            (method, y);
+          },
+        ),
+      );
 
       result;
     };
