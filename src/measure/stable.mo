@@ -28,7 +28,10 @@ actor {
   type Type = RbTree.Tree<Blob, Nat>;
   let f = E.rb_tree_stable;
 
-  let m = Measure.Measure(false);
+  stable var pre = 0 : Nat64;
+  stable var post = 0 : Nat64;
+
+  let m = Measure.Measure(true);
   m.header();
   m.test("before constructor");
   stable var data = null : ?Type;
@@ -39,28 +42,35 @@ actor {
     m.test("after init");
   };
 
-  system func preupgrade() = m.test("preupgrade");
+  system func preupgrade() {
+    m.test("preupgrade");
+    pre := Prim.performanceCounter(0);
+  };
 
-  system func postupgrade() = m.test("postupgrade");
+  system func postupgrade() {
+    m.test("postupgrade");
+    post := Prim.performanceCounter(0);
+  };
 
   public shared func test() : async () = async m.test("test");
 
   public shared func summarize() : async () = async {
-    let a = Prim.rts_mutator_instructions();
-    let b = (await Prim.stableVarQuery()()).size;
+    let svq = (await Prim.stableVarQuery()()).size;
 
     Debug.print(
       Table.format_table(
         "Stable profiling",
         [
-          "mutator instructions",
+          "serialization",
+          "deserialization",
           "stable var query",
         ],
         [(
           name,
           [
-            debug_show a,
-            debug_show b,
+            debug_show pre,
+            debug_show post,
+            debug_show svq,
           ].vals(),
         )].vals(),
       )
