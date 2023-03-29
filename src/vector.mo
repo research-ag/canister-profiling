@@ -10,15 +10,17 @@ import Prim "mo:⛔";
 import Table "utils/table";
 
 module {
-  public func create_heap() : Any {
-    let n = 10_000_000;
-    let a = Vector.new<Nat>();
-    var i = 0;
-    while (i < n) {
-      Vector.add(a, i);
-      i += 1;
+  public func create_heap() : () -> Any {
+    func() {
+      let n = 10_000_000;
+      let a = Vector.new<Nat>();
+      var i = 0;
+      while (i < n) {
+        Vector.add(a, i);
+        i += 1;
+      };
+      a;
     };
-    a
   };
 
   public func create_stable() : Vector.Vector<Nat> {
@@ -26,7 +28,7 @@ module {
     Vector.init<Nat>(n, 0);
   };
 
-  public func array_heap() : Any {
+  public func array_heap() : () -> Any = func() {
     let n = 10_000_000;
     Array.init<Nat>(n, 0);
   };
@@ -36,7 +38,7 @@ module {
     Array.init<Nat>(n, 0);
   };
 
-  public func buffer_heap() : Any {
+  public func buffer_heap() : () -> Any = func() {
     let n = 10_000_000;
     let a = Buffer.Buffer<Nat>(0);
     var i = 0;
@@ -44,7 +46,7 @@ module {
       a.add(i);
       i += 1;
     };
-    a
+    a;
   };
 
   public func profile() {
@@ -1282,7 +1284,7 @@ module {
           func() {
             let a = Vector.init<Nat>(n, 0);
             func() {
-              ignore Vector.foldLeft<Nat, Nat>(a, 0, func(acc, x) = acc + x );
+              ignore Vector.foldLeft<Nat, Nat>(a, 0, func(acc, x) = acc + x);
             };
           }
         ),

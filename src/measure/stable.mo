@@ -52,7 +52,10 @@ actor {
     Debug.print(
       Table.format_table(
         "Stable profiling",
-        ["mutator instructions", "stable var query"],
+        [
+          "mutator instructions",
+          "stable var query",
+        ],
         [(
           name,
           [

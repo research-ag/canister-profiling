@@ -5,7 +5,7 @@ import Vector "../vector";
 import Prim "mo:⛔";
 
 module {
-  public func get_heap(name : Text) : () -> Any {
+  public func get_heap(name : Text) : () -> () -> Any {
     switch (name) {
       case "vector" return Vector.create_heap;
       case "array" return Vector.array_heap;

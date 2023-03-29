@@ -10,6 +10,7 @@ import Crypto "mo:crypto.mo/SHA/SHA256";
 import Nat "mo:base/Nat";
 import Nat64 "mo:base/Nat64";
 import Nat8 "mo:base/Nat8";
+import Iter "mo:base/Iter";
 
 module {
   type RNG = { next : () -> ?Nat8; reset : () -> () };
@@ -73,8 +74,11 @@ module {
     Debug.print(t.output(["Sha256", "Sha512", "timohanke", "aviate-labs"]));
   };
 
-  public func sha256_heap() : Any {
+  public func sha256_heap() : () -> Any {
     let len : Nat = 64 * 1000 - 7;
-    Sha256.fromIter(#sha256, random_iter(len));
+    let iter = Iter.toArray(random_iter(len));
+    func() {
+      Sha256.fromArray(#sha256, iter);
+    };
   };
 };

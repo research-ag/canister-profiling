@@ -52,7 +52,7 @@ module {
     create(0, n - 1);
   };
 
-  public func create_heap() : Any {
+  public func create_heap() : () -> Any = func() {
     class RNG() {
       var seed = 234234;
 
@@ -84,7 +84,7 @@ module {
     enumeration;
   };
 
-  public func rb_tree_heap() : Any {
+  public func rb_tree_heap() : () -> Any = func() {
     class RNG() {
       var seed = 234234;
 
