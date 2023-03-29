@@ -24,6 +24,12 @@
     dependencies = [ "base", "iterext" ]
   },
   {
+    name = "zhus",
+    repo = "https://github.com/ZhenyaUsenko/motoko-hash-map",
+    version = "master",
+    dependencies = [ "base" ]
+  },
+  {
     name = "motoko-sha2",
     repo = "https://github.com/timohanke/motoko-sha2",
     version = "v2.0.0",

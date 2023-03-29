@@ -15,6 +15,7 @@ import Option "mo:base/Option";
 import Buffer "mo:base/Buffer";
 import Order "mo:base/Order";
 import RbTree "mo:base/RBTree";
+import Map "mo:zhus/Map";
 
 module {
   public func create_stable() : (Enumeration.Tree, [var Blob], Nat) {
@@ -223,11 +224,14 @@ module {
       after - before;
     };
 
-    let stats = Buffer.Buffer<(Text, Nat, Nat)>(0);
+    let stats = Buffer.Buffer<(Text, Nat, Nat, Nat)>(0);
     let r = RNG();
     var blobs = Array.tabulate<Blob>(n, func(i) = r.blob());
     let enumeration = Enumeration.Enumeration();
     let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
+
+    let { bhash } = Map;
+    let zhus = Map.new<Blob, Nat>(bhash);
 
     func average(blobs : [Blob], get : (Blob) -> ()) : Nat {
       var i = 0;
@@ -244,6 +248,7 @@ module {
         method,
         Nat64.toNat(E.countInstructions(func() = ignore enumeration.lookup(enum_key))),
         Nat64.toNat(E.countInstructions(func() = ignore rb.get(rb_key))),
+        0,
       ));
     };
 
@@ -266,6 +271,15 @@ module {
           };
         }
       ),
+      memory(
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore Map.put(zhus, bhash, blobs[i], i);
+            i += 1;
+          };
+        }
+      ),
     );
 
     let random = Array.tabulate<Blob>(m, func(i) = blobs[i * m]);
@@ -273,6 +287,7 @@ module {
       "random blobs inside average",
       average(random, func(b) = ignore enumeration.lookup(b)),
       average(random, func(b) = ignore rb.get(b)),
+      average(random, func(b) = ignore Map.get(zhus, bhash, b)),
     ));
 
     let others = Array.tabulate<Blob>(m, func(i) = r.blob());
@@ -280,6 +295,7 @@ module {
       "random blobs average",
       average(others, func(b) = ignore enumeration.lookup(b)),
       average(others, func(b) = ignore rb.get(b)),
+      average(random, func(b) = ignore Map.get(zhus, bhash, b)),
     ));
 
     let (t, a, _) = enumeration.share();
@@ -298,9 +314,9 @@ module {
     stat("max leaf", max_leaf(enumeration_tree).1, max_leaf(rb_tree).1);
 
     var result = "\nTesting for n = " # Nat.toText(n) # "\n\n";
-    result #= "|method|enumeration|red-black tree|\n|---|---|---|\n";
-    for ((method, enumeration, rb) in stats.vals()) {
-      result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|\n";
+    result #= "|method|enumeration|red-black tree|zhus|\n|---|---|---|---|\n";
+    for ((method, enumeration, rb, zh) in stats.vals()) {
+      result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|" # Nat.toText(zh) # "|\n";
     };
 
     result #= "\n";

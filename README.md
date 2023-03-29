@@ -176,19 +176,19 @@ Notes on Memory:
 
 #### Instructions & heap
 
-Testing for n = 4,096
+Testing for n = 4096
 
-|method|enumeration|red-black tree|
-|---|---|---|
-|random blobs inside average|3829|3593|
-|random blobs average|2644|2379|
-|root|1823|1758|
-|leftmost|3895|3596|
-|rightmost|4514|4273|
-|min blob|2377|2071|
-|max blob|3099|2853|
-|min leaf|3454|3253|
-|max leaf|5240|4929|
+|method|enumeration|red-black tree|zhus|
+|---|---|---|---|
+|random blobs inside average|3829|3593|2060|
+|random blobs average|2644|2379|2060|
+|root|1823|1758|0|
+|leftmost|3895|3596|0|
+|rightmost|4514|4273|0|
+|min blob|2377|2071|0|
+|max blob|3099|2853|0|
+|min leaf|3454|3253|0|
+|max leaf|5240|4929|0|
 
 min leaf in enumeration: 9
 
@@ -197,6 +197,7 @@ min leaf in red-black tree: 9
 max leaf in enumeration: 16
 
 max leaf in red-black tree: 16
+
 
 #### Heap & GC profiling
 
