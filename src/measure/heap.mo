@@ -14,11 +14,15 @@ actor {
   var data = null : Any;
   var work_f : () -> Any = func() = ();
 
-  let m = Measure.Measure(true);
+  // Numbers are more precise if verbose == false
+  let m = Measure.Measure(false);
   m.header();
   m.test("before constructor");
+  var init_heap_size = 0;
 
-  let init_heap_size = Prim.rts_heap_size();
+  public shared func pre_init() : async () {
+    init_heap_size := Prim.rts_heap_size();
+  };
 
   public shared func init(name : Text) : async () {
     name_ := name;
