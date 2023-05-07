@@ -1,0 +1,7 @@
+[dependencies]
+base = "0.8.7"
+mrr = "https://github.com/research-ag/motoko-lib#main"
+wip = "https://github.com/research-ag/motoko-wip#main"
+motoko-sha2 = "https://github.com/timohanke/motoko-sha2#v2.0.0"
+"crypto.mo" = "https://github.com/skilesare/crypto.mo#main"
+zhus = "https://github.com/ZhenyaUsenko/motoko-hash-map#master"
