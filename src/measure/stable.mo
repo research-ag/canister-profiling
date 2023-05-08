@@ -1,4 +1,4 @@
-import Vector "mo:mrr/Vector";
+import Vector "mo:vector";
 import V "../vector";
 import Enumeration "mo:mrr/Enumeration";
 import E "../enumeration";

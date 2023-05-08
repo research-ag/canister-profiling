@@ -1,4 +1,3 @@
-import Vector "mo:mrr/Vector";
 import Enumeration "mo:mrr/Enumeration";
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";

@@ -1,4 +1,5 @@
-import Vector "mo:mrr/Vector";
+import Vector "mo:vector";
+import VectorClass "mo:vector/Class";
 import E "mo:base/ExperimentalInternetComputer";
 import Buffer "mo:base/Buffer";
 import Array "mo:base/Array";
@@ -56,7 +57,7 @@ module {
       "init",
       [
         ?(func() = func() = ignore Vector.init<Nat>(n, 0)),
-        ?(func() = func() = ignore Vector.Class.init<Nat>(n, 0)),
+        ?(func() = func() = ignore VectorClass.init<Nat>(n, 0)),
         ?(func() = func() = ignore Buffer.Buffer<Nat>(n)),
         ?(func() = func() = ignore Array.init<Nat>(n, 0)),
       ],
@@ -73,7 +74,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.Vector<Nat>();
+            let a = VectorClass.Vector<Nat>();
             func() = a.addMany(n, 0);
           }
         ),
@@ -93,8 +94,8 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.Vector<Nat>();
-            func() = ignore Vector.Class.clone(a);
+            let a = VectorClass.Vector<Nat>();
+            func() = ignore VectorClass.clone(a);
           }
         ),
         ?(
@@ -129,7 +130,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.Vector<Nat>();
+            let a = VectorClass.Vector<Nat>();
             func() {
               var i = 0;
               while (i < n) {
@@ -172,7 +173,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               var i = 0;
               while (i < n) {
@@ -231,7 +232,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               var i = 0;
               while (i < n) {
@@ -279,7 +280,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               var i = 0;
               while (i < n) {
@@ -338,7 +339,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               var i = 0;
               while (i < n) {
@@ -397,7 +398,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               var i = 0;
               while (i < n) {
@@ -441,9 +442,9 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
-              ignore Vector.Class.indexOf(1, a, Nat.equal);
+              ignore VectorClass.indexOf(1, a, Nat.equal);
             };
           }
         ),
@@ -499,9 +500,9 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
-              ignore Vector.Class.lastIndexOf(1, a, Nat.equal);
+              ignore VectorClass.lastIndexOf(1, a, Nat.equal);
             };
           }
         ),
@@ -637,8 +638,8 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
-            func() = Vector.Class.iterate(a, func(x : Nat) = ());
+            let a = VectorClass.init<Nat>(n, 0);
+            func() = VectorClass.iterate(a, func(x : Nat) = ());
           }
         ),
         ?(
@@ -667,8 +668,8 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
-            func() = Vector.Class.iterateRev(a, func(x : Nat) = ());
+            let a = VectorClass.init<Nat>(n, 0);
+            func() = VectorClass.iterateRev(a, func(x : Nat) = ());
           }
         ),
         null,
@@ -691,7 +692,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               for (x in a.vals()) {
                 ignore x;
@@ -742,7 +743,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               for (x in a.items()) {
                 ignore x;
@@ -770,7 +771,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               for (x in a.valsRev()) {
                 ignore x;
@@ -798,7 +799,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               for (x in a.itemsRev()) {
                 ignore x;
@@ -826,7 +827,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               for (x in a.keys()) {
                 ignore x;
@@ -853,10 +854,10 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.Vector<Nat>();
+            let a = VectorClass.Vector<Nat>();
             let b = Array.vals(Array.freeze(Array.init<Nat>(n, 0)));
             func() {
-              Vector.Class.addFromIter(a, b);
+              VectorClass.addFromIter(a, b);
             };
           }
         ),
@@ -892,9 +893,9 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
-              ignore Vector.Class.toArray(a);
+              ignore VectorClass.toArray(a);
             };
           }
         ),
@@ -930,7 +931,7 @@ module {
           func() {
             let a = Array.freeze(Array.init<Nat>(n, 0));
             func() {
-              ignore Vector.Class.fromArray(a);
+              ignore VectorClass.fromArray(a);
             };
           }
         ),
@@ -959,9 +960,9 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
-              ignore Vector.Class.toVarArray(a);
+              ignore VectorClass.toVarArray(a);
             };
           }
         ),
@@ -1004,7 +1005,7 @@ module {
           func() {
             let a = Array.init<Nat>(n, 0);
             func() {
-              ignore Vector.Class.fromVarArray(a);
+              ignore VectorClass.fromVarArray(a);
             };
           }
         ),
@@ -1040,7 +1041,7 @@ module {
         ),
         ?(
           func() {
-            let a = Vector.Class.init<Nat>(n, 0);
+            let a = VectorClass.init<Nat>(n, 0);
             func() {
               a.clear();
             };
