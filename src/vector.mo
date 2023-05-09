@@ -729,34 +729,6 @@ module {
     );
 
     t.stat_average(
-      "items",
-      [
-        ?(
-          func() {
-            let a = Vector.init<Nat>(n, 0);
-            func() {
-              for (x in Vector.items(a)) {
-                ignore x;
-              };
-            };
-          }
-        ),
-        ?(
-          func() {
-            let a = VectorClass.init<Nat>(n, 0);
-            func() {
-              for (x in a.items()) {
-                ignore x;
-              };
-            };
-          }
-        ),
-        null,
-        null,
-      ],
-    );
-
-    t.stat_average(
       "valsRev",
       [
         ?(
@@ -774,6 +746,34 @@ module {
             let a = VectorClass.init<Nat>(n, 0);
             func() {
               for (x in a.valsRev()) {
+                ignore x;
+              };
+            };
+          }
+        ),
+        null,
+        null,
+      ],
+    );
+
+    t.stat_average(
+      "items",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            func() {
+              for (x in Vector.items(a)) {
+                ignore x;
+              };
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              for (x in a.items()) {
                 ignore x;
               };
             };
@@ -835,6 +835,42 @@ module {
             };
           }
         ),
+        null,
+        null,
+      ],
+    );
+
+    t.stat_average(
+      "iterateItems",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            let f = func(i : Nat, x : Nat) {};
+            func() {
+              Vector.iterateItems<Nat>(a, f);
+            };
+          }
+        ),
+        null,
+        null,
+        null,
+      ],
+    );
+
+    t.stat_average(
+      "iterateItemsRev",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            let f = func(i : Nat, x : Nat) {};
+            func() {
+              Vector.iterateItemsRev<Nat>(a, f);
+            };
+          }
+        ),
+        null,
         null,
         null,
       ],
