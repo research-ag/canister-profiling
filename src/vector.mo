@@ -94,7 +94,7 @@ module {
         ),
         ?(
           func() {
-            let a = VectorClass.Vector<Nat>();
+            let a = VectorClass.init<Nat>(n, 0);
             func() = ignore VectorClass.clone(a);
           }
         ),
