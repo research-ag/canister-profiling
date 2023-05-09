@@ -1,5 +1,6 @@
 [dependencies]
 base = "0.8.7"
+vector = "0.1.0"
 mrr = "https://github.com/research-ag/motoko-lib#main"
 wip = "https://github.com/research-ag/motoko-wip#main"
 motoko-sha2 = "https://github.com/timohanke/motoko-sha2#v2.0.0"
