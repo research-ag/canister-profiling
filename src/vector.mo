@@ -481,7 +481,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.firstIndexWith(a, func(x : Nat) : Bool = x == 1);
+            };
+          }
+        ),
         null,
         null,
       ],
@@ -534,7 +541,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.lastIndexWith(a, func(x : Nat) : Bool = x == 1);
+            };
+          }
+        ),
         null,
         null,
       ],
@@ -551,7 +565,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.forAll(a, func(x : Nat) : Bool = x == 0);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -580,7 +601,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.forSome(a, func(x : Nat) : Bool = x == 1);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -609,7 +637,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.forNone(a, func(x : Nat) : Bool = x == 1);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -852,7 +887,15 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            let f = func(i : Nat, x : Nat) {};
+            func() {
+              VectorClass.iterateItems<Nat>(a, f);
+            };
+          }
+        ),
         null,
         null,
       ],
@@ -870,7 +913,15 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            let f = func(i : Nat, x : Nat) {};
+            func() {
+              VectorClass.iterateItemsRev<Nat>(a, f);
+            };
+          }
+        ),
         null,
         null,
       ],
@@ -1111,7 +1162,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.contains(a, 1, Nat.equal);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -1145,7 +1203,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.max(a, Nat.compare);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -1179,7 +1244,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.min(a, Nat.compare);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -1214,7 +1286,15 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            let b = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.equal<Nat>(a, b, Nat.equal);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -1252,7 +1332,15 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            let b = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.compare<Nat>(a, b, Nat.compare);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -1290,7 +1378,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.toText<Nat>(a, Nat.toText);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -1325,7 +1420,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.foldLeft<Nat, Nat>(a, 0, func(acc, x) = acc + x);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -1359,7 +1461,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.foldRight<Nat, Nat>(a, 0, func(x, acc) = x + acc);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -1393,7 +1502,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              VectorClass.reverse(a);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -1427,7 +1543,14 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              ignore VectorClass.reversed(a);
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
@@ -1465,7 +1588,18 @@ module {
             };
           }
         ),
-        null,
+        ?(
+          func() {
+            let a = VectorClass.init<Nat>(n, 0);
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore VectorClass.isEmpty(a);
+                i += 1;
+              };
+            };
+          }
+        ),
         ?(
           func() {
             let a = Buffer.Buffer<Nat>(0);
