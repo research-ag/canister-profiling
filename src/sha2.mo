@@ -1,6 +1,6 @@
 import Sha256 "mo:mrr/Sha256";
 import Sha512 "mo:mrr/Sha512";
-import Prng "mo:mrr/Prng";
+import Prng "mo:prng";
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
 import Debug "mo:base/Debug";
@@ -17,7 +17,7 @@ module {
   func random_iter(len_ : Nat) : RNG {
     object {
       let sfc = Prng.SFC64a();
-      sfc.init();
+      sfc.init_pre();
       let len = len_;
       var i = 0;
       public func next() : ?Nat8 {
@@ -28,14 +28,14 @@ module {
       };
       public func reset() {
         i := 0;
-        sfc.init();
+        sfc.init_pre();
       };
     };
   };
 
   func ff_blocks_64(n : Nat) : Blob {
     let sfc = Prng.SFC64a();
-    sfc.init();
+    sfc.init_pre();
     let len = if (n == 0) 0 else (64 * n - 9 : Nat);
     let arr = Array.tabulate<Nat8>(len, func(i) = Nat8.fromIntWrap(Nat64.toNat(sfc.next())));
     Blob.fromArray(arr);
@@ -43,7 +43,7 @@ module {
 
   func ff_blocks_128(n : Nat) : Blob {
     let sfc = Prng.SFC64a();
-    sfc.init();
+    sfc.init_pre();
     let len = if (n == 0) 0 else (128 * n - 17 : Nat);
     let arr = Array.tabulate<Nat8>(len, func(i) = Nat8.fromIntWrap(Nat64.toNat(sfc.next())));
     Blob.fromArray(arr);
