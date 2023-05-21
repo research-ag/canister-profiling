@@ -1,5 +1,5 @@
 import Debug "mo:base/Debug";
-import Prng "mo:mrr/Prng";
+import Prng "mo:prng";
 import Table "utils/table";
 
 module {
@@ -18,14 +18,14 @@ module {
         ?(
           func() {
             let r = Prng.SFC64a();
-            r.init();
+            r.init_pre();
             func() = ignore r.next();
           }
         ),
         ?(
           func() {
             let r = Prng.SFC32a();
-            r.init();
+            r.init_pre();
             func() = ignore r.next();
           }
         ),
