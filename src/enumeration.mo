@@ -74,7 +74,8 @@ module {
     };
 
     let n = 2 ** 12;
-    let enumeration = Enumeration.Enumeration();
+    // let enumeration = Enumeration.Enumeration();
+    let enumeration = Enumeration.Enumeration<Blob>(Blob.compare, "");
     let r = RNG();
     var i = 0;
     while (i < n) {
@@ -226,7 +227,8 @@ module {
     let stats = Buffer.Buffer<(Text, Nat, Nat, Nat)>(0);
     let r = RNG();
     var blobs = Array.tabulate<Blob>(n, func(i) = r.blob());
-    let enumeration = Enumeration.Enumeration();
+    let enumeration = Enumeration.Enumeration<Blob>(Blob.compare, "");
+    // let enumeration = Enumeration.Enumeration();
     let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
 
     let { bhash } = Map;

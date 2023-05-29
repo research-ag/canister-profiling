@@ -2,7 +2,7 @@
 base = "0.8.7"
 vector = "0.1.2"
 prng = "0.0.1"
-mrr = "https://github.com/research-ag/motoko-lib#main"
+mrr = "https://github.com/research-ag/motoko-lib#59a39a0"
 wip = "https://github.com/research-ag/motoko-wip#main"
 motoko-sha2 = "https://github.com/timohanke/motoko-sha2#v2.0.0"
 "crypto.mo" = "https://github.com/skilesare/crypto.mo#main"
