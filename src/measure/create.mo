@@ -13,6 +13,7 @@ module {
       case "enumeration" return Enumeration.create_heap;
       case "rb_tree" return Enumeration.rb_tree_heap;
       case "zhus" return Enumeration.zhus_heap;
+      case "zhus7" return Enumeration.zhus7_heap;
       case "sha256" return Sha2.sha256_heap;
       case _ Prim.trap("");
     };

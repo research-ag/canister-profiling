@@ -15,6 +15,7 @@ import Buffer "mo:base/Buffer";
 import Order "mo:base/Order";
 import RbTree "mo:base/RBTree";
 import Map "mo:zhus/Map";
+import Map7 "mo:motoko-hash-map/Map";
 
 module {
   public func create_stable() : (Enumeration.Tree, [var Blob], Nat) {
@@ -145,6 +146,40 @@ module {
 
     while (i < n) {
       Map.set(map, hash, r.blob(), i);
+      i += 1;
+    };
+    map;
+  };
+
+  public func zhus7_heap() : () -> Any = func() {
+
+    class RNG() {
+      var seed = 234234;
+
+      public func next() : Nat {
+        seed += 1;
+        let a = seed * 15485863;
+        a * a * a % 2038074743;
+      };
+
+      public func blob() : Blob {
+        let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
+        Blob.fromArray(a);
+      };
+
+      public func with_byte(byte : Nat8) : Blob {
+        let a = Array.tabulate<Nat8>(29, func(i) = byte);
+        Blob.fromArray(a);
+      };
+    };
+    let n = 2 ** 12;
+    let hash = Map7.bhash;
+    let map = Map7.new<Blob, Nat>();
+    let r = RNG();
+    var i = 0;
+
+    while (i < n) {
+      Map7.set(map, hash, r.blob(), i);
       i += 1;
     };
     map;
