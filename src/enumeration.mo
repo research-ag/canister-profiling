@@ -1,4 +1,4 @@
-import Enumeration "mo:mrr/Enumeration";
+import Enumeration "mo:enumeration";
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
 import Nat8 "mo:base/Nat8";
