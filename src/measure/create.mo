@@ -12,6 +12,7 @@ module {
       case "buffer" return Vector.buffer_heap;
       case "enumeration" return Enumeration.create_heap;
       case "rb_tree" return Enumeration.rb_tree_heap;
+      case "zhus" return Enumeration.zhus_heap;
       case "sha256" return Sha2.sha256_heap;
       case _ Prim.trap("");
     };
