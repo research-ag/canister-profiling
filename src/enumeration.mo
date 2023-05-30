@@ -116,6 +116,40 @@ module {
     rb;
   };
 
+  public func zhus_heap() : () -> Any = func() {
+
+    class RNG() {
+      var seed = 234234;
+
+      public func next() : Nat {
+        seed += 1;
+        let a = seed * 15485863;
+        a * a * a % 2038074743;
+      };
+
+      public func blob() : Blob {
+        let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
+        Blob.fromArray(a);
+      };
+
+      public func with_byte(byte : Nat8) : Blob {
+        let a = Array.tabulate<Nat8>(29, func(i) = byte);
+        Blob.fromArray(a);
+      };
+    };
+    let n = 2 ** 12;
+    let hash = Map.bhash;
+    let map = Map.new<Blob, Nat>(hash);
+    let r = RNG();
+    var i = 0;
+
+    while (i < n) {
+      Map.set(map, hash, r.blob(), i);
+      i += 1;
+    };
+    map;
+  };
+
   public func profile() {
     class RNG() {
       var seed = 234234;
