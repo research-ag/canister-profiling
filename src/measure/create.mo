@@ -23,6 +23,12 @@ module {
       case "zhus_nat" return Enumeration.zhus_nat_heap;
       case "zhus7_nat" return Enumeration.zhus7_nat_heap;
 
+      case "enumeration_nat32" return Enumeration.create_nat32_heap;
+      case "rb_tree_nat32" return Enumeration.rb_tree_nat32_heap;
+      case "b_tree_nat32" return Enumeration.b_tree_nat32_heap;
+      case "zhus_nat32" return Enumeration.zhus_nat32_heap;
+      case "zhus7_nat32" return Enumeration.zhus7_nat32_heap;
+
       case "enumeration_nat64" return Enumeration.create_nat64_heap;
       case "rb_tree_nat64" return Enumeration.rb_tree_nat64_heap;
       case "b_tree_nat64" return Enumeration.b_tree_nat64_heap;
