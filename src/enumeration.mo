@@ -16,6 +16,7 @@ import Order "mo:base/Order";
 import RbTree "mo:base/RBTree";
 import Map "mo:zhus/Map";
 import Map7 "mo:motoko-hash-map/Map";
+import BTree "mo:stableheapbtreemap/BTree";
 
 module {
   public func create_stable() : (Enumeration.Tree, [var Blob], Nat) {
@@ -56,6 +57,7 @@ module {
   // Blob 29bit
 
   public func create_heap() : () -> Any = func() {
+
     class RNG() {
       var seed = 234234;
 
@@ -75,11 +77,11 @@ module {
         Blob.fromArray(a);
       };
     };
-
     let n = 2 ** 12;
     let enumeration = Enumeration.Enumeration<Blob>(Blob.compare, "");
     let r = RNG();
     var i = 0;
+
     while (i < n) {
       ignore enumeration.add(r.blob());
       i += 1;
@@ -88,6 +90,7 @@ module {
   };
 
   public func rb_tree_heap() : () -> Any = func() {
+
     class RNG() {
       var seed = 234234;
 
@@ -107,16 +110,49 @@ module {
         Blob.fromArray(a);
       };
     };
-
     let n = 2 ** 12;
     let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
     let r = RNG();
     var i = 0;
+
     while (i < n) {
       rb.put(r.blob(), i);
       i += 1;
     };
     rb;
+  };
+
+  public func b_tree_heap() : () -> Any = func() {
+
+    class RNG() {
+      var seed = 234234;
+
+      public func next() : Nat {
+        seed += 1;
+        let a = seed * 15485863;
+        a * a * a % 2038074743;
+      };
+
+      public func blob() : Blob {
+        let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
+        Blob.fromArray(a);
+      };
+
+      public func with_byte(byte : Nat8) : Blob {
+        let a = Array.tabulate<Nat8>(29, func(i) = byte);
+        Blob.fromArray(a);
+      };
+    };
+    let n = 2 ** 12;
+    let bt = BTree.init<Blob, Nat>(?29);
+    let r = RNG();
+    var i = 0;
+
+    while (i < n) {
+      ignore BTree.insert<Blob, Nat>(bt, Blob.compare, r.blob(), i);
+      i += 1;
+    };
+    bt;
   };
 
   public func zhus_heap() : () -> Any = func() {
@@ -190,6 +226,7 @@ module {
   // Nat
 
   public func create_nat_heap() : () -> Any = func() {
+
     class RNG() {
       var seed = 234234;
 
@@ -209,11 +246,11 @@ module {
         Blob.fromArray(a);
       };
     };
-
     let n = 2 ** 12;
     let enumeration = Enumeration.Enumeration<Nat>(Nat.compare, 0);
     let r = RNG();
     var i = 0;
+
     while (i < n) {
       ignore enumeration.add(r.next());
       i += 1;
@@ -222,6 +259,7 @@ module {
   };
 
   public func rb_tree_nat_heap() : () -> Any = func() {
+
     class RNG() {
       var seed = 234234;
 
@@ -241,16 +279,49 @@ module {
         Blob.fromArray(a);
       };
     };
-
     let n = 2 ** 12;
     let rb = RBTree.RBTree<Nat, Nat>(Nat.compare);
     let r = RNG();
     var i = 0;
+
     while (i < n) {
       rb.put(r.next(), i);
       i += 1;
     };
     rb;
+  };
+
+  public func b_tree_nat_heap() : () -> Any = func() {
+
+    class RNG() {
+      var seed = 234234;
+
+      public func next() : Nat {
+        seed += 1;
+        let a = seed * 15485863;
+        a * a * a % 2038074743;
+      };
+
+      public func blob() : Blob {
+        let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
+        Blob.fromArray(a);
+      };
+
+      public func with_byte(byte : Nat8) : Blob {
+        let a = Array.tabulate<Nat8>(29, func(i) = byte);
+        Blob.fromArray(a);
+      };
+    };
+    let n = 2 ** 12;
+    let bt = BTree.init<Nat, Nat>(null);
+    let r = RNG();
+    var i = 0;
+
+    while (i < n) {
+      ignore BTree.insert<Nat, Nat>(bt, Nat.compare, r.next(), i);
+      i += 1;
+    };
+    bt;
   };
 
   public func zhus_nat_heap() : () -> Any = func() {
@@ -338,6 +409,7 @@ module {
     let enumeration = Enumeration.Enumeration<Nat64>(Nat64.compare, 0);
     let r = RNG();
     var i = 0;
+
     while (i < n) {
       ignore enumeration.add(r.next());
       i += 1;
@@ -346,6 +418,7 @@ module {
   };
 
   public func rb_tree_nat64_heap() : () -> Any = func() {
+
     class RNG() {
       var seed : Nat64 = 234234;
 
@@ -355,16 +428,39 @@ module {
         a *% a *% a % 2038074743;
       };
     };
-
     let n = 2 ** 12;
     let rb = RBTree.RBTree<Nat64, Nat>(Nat64.compare);
     let r = RNG();
     var i = 0;
+
     while (i < n) {
       rb.put(r.next(), i);
       i += 1;
     };
     rb;
+  };
+
+  public func b_tree_nat64_heap() : () -> Any = func() {
+
+    class RNG() {
+      var seed : Nat64 = 234234;
+
+      public func next() : Nat64 {
+        seed += 1;
+        let a = seed * 15485863;
+        a *% a *% a % 2038074743;
+      };
+    };
+    let n = 2 ** 12;
+    let bt = BTree.init<Nat64, Nat>(?64);
+    let r = RNG();
+    var i = 0;
+
+    while (i < n) {
+      ignore BTree.insert<Nat64, Nat>(bt, Nat64.compare, r.next(), i);
+      i += 1;
+    };
+    bt;
   };
 
   public func zhus_nat64_heap() : () -> Any = func() {
@@ -403,6 +499,7 @@ module {
       };
     };
     let n = 2 ** 12;
+
     let hash : Map7.HashUtils<Nat64> =
       ( func key { var hash = key;
         hash := hash >> 30 ^ hash *% 0xbf58476d1ce4e5b9;
