@@ -828,7 +828,7 @@ module {
     stat("max leaf", max_leaf(enumeration_tree).1, max_leaf(rb_tree).1);
 
     var result = "\nTesting for n = " # Nat.toText(n) # "\n\n" #
-      "|method|enumeration|red-black tree|b-tree|zhus v8|zhus v8|\n" #
+      "|method|enumeration|red-black tree|b-tree|zhus v8|zhus v7|\n" #
       "|---|---|---|---|---|---|\n";
 
     for ((method, enumeration, rb, bt, zh, zh7) in stats.vals()) {
