@@ -240,17 +240,7 @@ module {
       public func next() : Nat {
         seed += 1;
         let a = seed * 15485863;
-        a * a * a % 2038074743;
-      };
-
-      public func blob() : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
-        Blob.fromArray(a);
-      };
-
-      public func with_byte(byte : Nat8) : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = byte);
-        Blob.fromArray(a);
+        (a * a * a % 2038074743) % 0x40000000;
       };
     };
     let n = 2 ** 12;
@@ -273,17 +263,7 @@ module {
       public func next() : Nat {
         seed += 1;
         let a = seed * 15485863;
-        a * a * a % 2038074743;
-      };
-
-      public func blob() : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
-        Blob.fromArray(a);
-      };
-
-      public func with_byte(byte : Nat8) : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = byte);
-        Blob.fromArray(a);
+        (a * a * a % 2038074743) % 0x40000000;
       };
     };
     let n = 2 ** 12;
@@ -306,17 +286,7 @@ module {
       public func next() : Nat {
         seed += 1;
         let a = seed * 15485863;
-        a * a * a % 2038074743;
-      };
-
-      public func blob() : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
-        Blob.fromArray(a);
-      };
-
-      public func with_byte(byte : Nat8) : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = byte);
-        Blob.fromArray(a);
+        (a * a * a % 2038074743) % 0x40000000;
       };
     };
     let n = 2 ** 12;
@@ -339,17 +309,7 @@ module {
       public func next() : Nat {
         seed += 1;
         let a = seed * 15485863;
-        a * a * a % 2038074743;
-      };
-
-      public func blob() : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
-        Blob.fromArray(a);
-      };
-
-      public func with_byte(byte : Nat8) : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = byte);
-        Blob.fromArray(a);
+        (a * a * a % 2038074743) % 0x40000000;
       };
     };
     let n = 2 ** 12;
@@ -373,17 +333,7 @@ module {
       public func next() : Nat {
         seed += 1;
         let a = seed * 15485863;
-        a * a * a % 2038074743;
-      };
-
-      public func blob() : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
-        Blob.fromArray(a);
-      };
-
-      public func with_byte(byte : Nat8) : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = byte);
-        Blob.fromArray(a);
+        (a * a * a % 2038074743) % 0x40000000;
       };
     };
     let n = 2 ** 12;
@@ -409,7 +359,7 @@ module {
       public func next() : Nat32 {
         seed += 1;
         let a : Nat32 = seed *% 15485863;
-        a *% a *% a % 2038074743;
+        (a *% a *% a % 2038074743) & 0x3fffffff;
       };
     };
     let n = 2 ** 12;
@@ -432,7 +382,7 @@ module {
       public func next() : Nat32 {
         seed += 1;
         let a : Nat32 = seed *% 15485863;
-        a *% a *% a % 2038074743;
+        (a *% a *% a % 2038074743) & 0x3fffffff;
       };
     };
     let n = 2 ** 12;
@@ -455,7 +405,7 @@ module {
       public func next() : Nat32 {
         seed += 1;
         let a : Nat32 = seed *% 15485863;
-        a *% a *% a % 2038074743;
+        (a *% a *% a % 2038074743) & 0x3fffffff;
       };
     };
     let n = 2 ** 12;
@@ -478,7 +428,7 @@ module {
       public func next() : Nat32 {
         seed += 1;
         let a : Nat32 = seed *% 15485863;
-        a *% a *% a % 2038074743;
+        (a *% a *% a % 2038074743) & 0x3fffffff;
       };
     };
     let n = 2 ** 12;
@@ -502,7 +452,7 @@ module {
       public func next() : Nat32 {
         seed += 1;
         let a : Nat32 = seed *% 15485863;
-        a *% a *% a % 2038074743;
+        (a *% a *% a % 2038074743) & 0x3fffffff;
       };
     };
     let n = 2 ** 12;
@@ -534,7 +484,7 @@ module {
       public func next() : Nat64 {
         seed += 1;
         let a : Nat64 = seed * 15485863;
-        a *% a *% a % 2038074743;
+        (a *% a *% a % 2038074743) & 0x3fffffff;
       };
     };
     let n = 2 ** 12;
@@ -557,7 +507,7 @@ module {
       public func next() : Nat64 {
         seed += 1;
         let a : Nat64 = seed * 15485863;
-        a *% a *% a % 2038074743;
+        (a *% a *% a % 2038074743) & 0x3fffffff;
       };
     };
     let n = 2 ** 12;
@@ -580,7 +530,7 @@ module {
       public func next() : Nat64 {
         seed += 1;
         let a : Nat64 = seed * 15485863;
-        a *% a *% a % 2038074743;
+        (a *% a *% a % 2038074743) & 0x3fffffff;
       };
     };
     let n = 2 ** 12;
@@ -603,7 +553,7 @@ module {
       public func next() : Nat64 {
         seed += 1;
         let a : Nat64 = seed * 15485863;
-        a *% a *% a % 2038074743;
+        (a *% a *% a % 2038074743) & 0x3fffffff;
       };
     };
     let n = 2 ** 12;
@@ -627,7 +577,7 @@ module {
       public func next() : Nat64 {
         seed += 1;
         let a : Nat64 = seed * 15485863;
-        a *% a *% a % 2038074743;
+        (a *% a *% a % 2038074743) & 0x3fffffff;
       };
     };
     let n = 2 ** 12;
