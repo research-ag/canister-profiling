@@ -50,9 +50,9 @@ actor {
   };
 
   public shared func test() : async () {
-    m.test("test");
     let heap_size : Int = Prim.rts_heap_size() - init_heap_size;
     let gc_size : Int = heap_with_gc_size - heap_size;
+    m.test("test");
     Debug.print(
       Table.format_table(
         "Heap profiling",
