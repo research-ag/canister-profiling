@@ -2,7 +2,7 @@
 base = "https://github.com/dfinity/motoko-base#6bea744"
 vector = "0.1.2"
 prng = "0.0.1"
-enumeration = "https://github.com/research-ag/enumeration#bump-0.9.2"
+enumeration = "0.1.0"
 mrr = "https://github.com/research-ag/motoko-lib"
 wip = "https://github.com/research-ag/motoko-wip#main"
 motoko-sha2 = "https://github.com/timohanke/motoko-sha2#v2.0.0"
