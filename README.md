@@ -1,6 +1,6 @@
 # canister-profiling
 
-Profiling things in canisters.
+Profiling various libraries in canisters.
 
 ## Run
 
@@ -9,17 +9,24 @@ It's better to run `dfx` in background to see debug outputs and ic-repl calls in
 dfx start --background --clean
 chmod +x profile.sh profile_heap.sh profile_stable.sh
 ```
-To run a separate benchmark:
+To benchmark instructions call one of:
 ```
 ./profile.sh vector
+./profile.sh enumeration
+./profile.sh sha2
+./profile.sh prng
 ```
+Note that you need `moc` version `>= 0.9.2` to be able to run all benchmarks.
 
-To profile heap call:
+To profile heap usage call one of:
 ```
 ./profile_heap.sh vector
 ./profile_heap.sh array
+./profile_heap.sh buffer
+./profile_heap.sh enumeration
+./profile_heap.sh rb_tree 
+./profile_heap.sh sha2
 ```
-or enumeration in comparison with rb_tree, etc.
 
 To profile stable memory edit `src/measure/stable.mo` and call:
 ```
