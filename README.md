@@ -1,25 +1,32 @@
 # canister-profiling
 
-Profiling things in canisters.
+Profiling various libraries in canisters.
 
 ## Run
 
 It's better to run `dfx` in background to see debug outputs and ic-repl calls in the same terminal and to clean everything happened before, allow the scripts to run.
 ```
-dfx start --background --clean
+dfx start --background --clean --artificial-delay 0
 chmod +x profile.sh profile_heap.sh profile_stable.sh
 ```
-To run a separate benchmark:
+To benchmark instructions call one of:
 ```
 ./profile.sh vector
+./profile.sh enumeration
+./profile.sh sha2
+./profile.sh prng
 ```
+Note that you need `moc` version `>= 0.9.2` to be able to run all benchmarks.
 
-To profile heap call:
+To profile heap usage call one of:
 ```
 ./profile_heap.sh vector
 ./profile_heap.sh array
+./profile_heap.sh buffer
+./profile_heap.sh enumeration
+./profile_heap.sh rb_tree 
+./profile_heap.sh sha2
 ```
-or enumeration in comparison with rb_tree, etc.
 
 To profile stable memory edit `src/measure/stable.mo` and call:
 ```
@@ -172,23 +179,23 @@ Notes on Memory:
 |vector|5_843_585_345|20_082_525|
 |array|1_604_184_162|10_000_038|
 
-## Bench Enumeration against RBTree
+## Bench Enumeration against RBTree, btree and hashmaps
 
 #### Instructions & heap
 
 Testing for n = 4096
 
-|method|enumeration|red-black tree|zhus|
-|---|---|---|---|
-|random blobs inside average|3829|3593|2060|
-|random blobs average|2644|2379|2060|
-|root|1823|1758|0|
-|leftmost|3895|3596|0|
-|rightmost|4514|4273|0|
-|min blob|2377|2071|0|
-|max blob|3099|2853|0|
-|min leaf|3454|3253|0|
-|max leaf|5240|4929|0|
+|method|enumeration|red-black tree|b-tree|zhus v8|zhus v7|
+|---|---|---|---|---|---|
+|random blobs inside average|2519|2483|4972|2060|1934|
+|random blobs average|2026|1983|4972|2060|1934|
+|root|1006|952|0|0|0|
+|leftmost|2935|2751|0|0|0|
+|rightmost|2676|2787|0|0|0|
+|min blob|2235|2025|0|0|0|
+|max blob|1980|2090|0|0|0|
+|min leaf|2234|2200|0|0|0|
+|max leaf|3286|3382|0|0|0|
 
 min leaf in enumeration: 9
 
@@ -198,13 +205,14 @@ max leaf in enumeration: 16
 
 max leaf in red-black tree: 16
 
-
 #### Heap & GC profiling
 
 |method|heap size|gc size|collector instructions|mutator instructions|
 |---|---|---|---|---|
 |enumeration|278_848|171_613_248|4_349_072|3_472_314_656|
 |rb_tree|377_172|172_176_312|7_690_532|3_471_603_610|
+|zhus v8|393_324|169_653_956|7_224_268|3_454_631_268|
+|zhus v7|327_772|170_031_220|4_832_131|3_456_238_067|
 
 #### Serialization & Deserialization profiling
 
