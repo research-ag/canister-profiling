@@ -13,6 +13,10 @@ module {
       case "enumeration" return Enumeration.create_heap;
       case "rb_tree" return Enumeration.rb_tree_heap;
       case "sha256" return Sha2.sha256_heap;
+      case "sha512" return Sha2.sha512_heap;
+      case "motokosha256" return Sha2.motokosha256_heap;
+      case "motokosha512" return Sha2.motokosha512_heap;
+      case "cryptomo" return Sha2.cryptomo_heap;
       case _ Prim.trap("");
     };
   };
