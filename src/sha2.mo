@@ -1,5 +1,5 @@
-import Sha256 "mo:mrr/Sha256";
-import Sha512 "mo:mrr/Sha512";
+import Sha256 "mo:sha2/Sha256";
+import Sha512 "mo:sha2/Sha512";
 import Prng "mo:prng";
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
@@ -54,8 +54,9 @@ module {
     let lengths = [0, 1, 10, 100, 1000];
     let inputs_64 = Array.map<Nat, Blob>(lengths, ff_blocks_64);
     let inputs_128 = Array.map<Nat, Blob>(lengths, ff_blocks_128);
+    let arrays_64 = Array.map<Blob, [Nat8]>(inputs_64, Blob.toArray);
 
-    let t = Table.Table(0, 4);
+    let t = Table.Table(0, 5);
     var i = 0;
     while (i < lengths.size()) {
       t.stat_average_n(
@@ -65,20 +66,46 @@ module {
           ?(func() = func() = ignore Sha256.fromBlob(#sha256, inputs_64[i])),
           ?(func() = func() = ignore Sha512.fromBlob(#sha512, inputs_128[i])),
           ?(func() = func() = ignore Sha2.fromBlob(#sha256, inputs_64[i])),
-          ?(func() = func() = ignore Crypto.sum(Blob.toArray(inputs_64[i]))),
+          ?(func() = func() = ignore Sha2.fromBlob(#sha512, inputs_128[i])),
+          ?(func() = func() = ignore Crypto.sum(arrays_64[i])),
         ],
       );
       i += 1;
     };
 
-    Debug.print(t.output(["Sha256", "Sha512", "timohanke", "aviate-labs"]));
+    Debug.print(t.output(["Sha256", "Sha512", "mo-sha256", "mo-sha512", "crypto.mo"]));
   };
 
   public func sha256_heap() : () -> Any {
-    let len : Nat = 64 * 1000 - 7;
-    let iter = Iter.toArray(random_iter(len));
+    let b = ff_blocks_64(1000);
     func() {
-      Sha256.fromArray(#sha256, iter);
+      Sha256.fromBlob(#sha256, b);
+    };
+  };
+  public func sha512_heap() : () -> Any {
+    let b = ff_blocks_128(1000);
+    func() {
+      //Sha512.fromArray(#sha512, iter);
+      Sha512.fromBlob(#sha512, b);
+    };
+  };
+  public func motokosha256_heap() : () -> Any {
+    let b = ff_blocks_64(1000);
+    func() {
+      Sha2.fromBlob(#sha256, b);
+    };
+  };
+  public func motokosha512_heap() : () -> Any {
+    let b = ff_blocks_128(1000);
+    func() {
+      Sha2.fromBlob(#sha512, b);
+    };
+  };
+  public func cryptomo_heap() : () -> Any {
+    let b = ff_blocks_64(1000);
+    let a = Blob.toArray(b);
+    func() {
+      Crypto.sum(a);
     };
   };
 };
