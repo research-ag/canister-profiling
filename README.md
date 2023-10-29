@@ -178,17 +178,17 @@ Notes on Memory:
 
 Testing for n = 4096
 
-|method|enumeration|red-black tree|zhus|
-|---|---|---|---|
-|random blobs inside average|3829|3593|2060|
-|random blobs average|2644|2379|2060|
-|root|1823|1758|0|
-|leftmost|3895|3596|0|
-|rightmost|4514|4273|0|
-|min blob|2377|2071|0|
-|max blob|3099|2853|0|
-|min leaf|3454|3253|0|
-|max leaf|5240|4929|0|
+|method|enumeration|red-black tree|zhus|stable enum|
+|---|---|---|---|--|
+|random blobs inside average|3074|2603|2305|234992|
+|random blobs average|2533|2010|2305|234992|
+|root|1151|1061|0|0|
+|leftmost|3472|2888|0|0|
+|rightmost|3383|2875|0|0|
+|min blob|2657|2071|0|0|
+|max blob|2593|2083|0|0|
+|min leaf|2707|2313|0|0|
+|max leaf|4136|3476|0|0|
 
 min leaf in enumeration: 9
 
@@ -212,7 +212,7 @@ max leaf in red-black tree: 16
 |---|---|---|
 |enumeration|3_821_911_243|37_732_293|
 |rb_tree|5_799_815_192|38_780_862|
-
+|stable_enumeration|21_242|57_936|227|
 
 ## Bench Sha2
 

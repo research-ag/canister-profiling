@@ -1,6 +1,6 @@
 import Vector "mo:vector";
 import V "../vector";
-import Enumeration "mo:mrr/Enumeration";
+import Enumeration "mo:enumeration";
 import E "../enumeration";
 import RbTree "mo:base/RBTree";
 import Measure "../utils/measure";
@@ -10,6 +10,7 @@ import Prim "mo:⛔";
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 import Table "../utils/table";
+import StableEnumeration "mo:stable_enumeration";
 
 actor {
   // let name = "vector";
@@ -20,13 +21,17 @@ actor {
   // type Type = [var Nat];
   // let f : () -> Type = V.array_stable;
 
-  // let name = "enumeration";
-  // type Type = (Enumeration.Tree, [var Blob], Nat);
-  // let f = E.create_stable;
+  let name = "enumeration";
+  type Type = (Enumeration.Tree, [var Blob], Nat);
+  let f = E.create_stable;
 
-  let name = "rb_tree";
-  type Type = RbTree.Tree<Blob, Nat>;
-  let f = E.rb_tree_stable;
+  // let name = "rb_tree";
+  // type Type = RbTree.Tree<Blob, Nat>;
+  // let f = E.rb_tree_stable;
+
+  // let name = "stable_enumeration";
+  // type Type = StableEnumeration.StableData;
+  // let f = E.stable_enumeration;
 
   stable var pre = 0 : Nat64;
   stable var post = 0 : Nat64;
