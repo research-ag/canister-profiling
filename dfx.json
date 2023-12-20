@@ -3,15 +3,18 @@
   "canisters": {
     "heap": {
       "type": "motoko",
-      "main": "src/measure/heap.mo"
+      "main": "src/measure/heap.mo",
+      "optimize": "cycles"
     },
     "stable": {
       "type": "motoko",
-      "main": "src/measure/stable.mo"
+      "main": "src/measure/stable.mo",
+      "optimize": "cycles"
     },
     "profile": {
       "type": "motoko",
-      "main": "src/measure/profile.mo"
+      "main": "src/measure/profile.mo",
+      "optimize": "cycles"
     }
   },
   "defaults": {

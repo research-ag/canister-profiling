@@ -1,7 +1,8 @@
-import Enumeration "../enumeration";
+//import Enumeration "../enumeration";
 import Sha2 "../sha2";
 import Prng "../prng";
 import Vector "../vector";
+import SW "../sliding-window";
 import Prim "mo:⛔";
 
 module {
@@ -10,8 +11,8 @@ module {
       case "vector" return Vector.create_heap;
       case "array" return Vector.array_heap;
       case "buffer" return Vector.buffer_heap;
-      case "enumeration" return Enumeration.create_heap;
-      case "rb_tree" return Enumeration.rb_tree_heap;
+//      case "enumeration" return Enumeration.create_heap;
+//      case "rb_tree" return Enumeration.rb_tree_heap;
       case "sha256" return Sha2.sha256_heap;
       case "sha512" return Sha2.sha512_heap;
       case "motokosha256" return Sha2.motokosha256_heap;
@@ -24,9 +25,10 @@ module {
   public func get_profile(name : Text) : () -> () {
     switch (name) {
       case "vector" return Vector.profile;
-      case "enumeration" return Enumeration.profile;
+//      case "enumeration" return Enumeration.profile;
       case "sha2" return Sha2.profile;
       case "prng" return Prng.profile;
+      case "swb" return SW.profile;
       case _ Prim.trap("");
     };
   };
