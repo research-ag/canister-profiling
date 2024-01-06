@@ -52,8 +52,8 @@ module {
   };
 
   public func create_heap() : () -> Any {
-    let ledger = HPL.create_ledger(65536, []);
     func() {
+      let ledger = HPL.create_ledger(65536, []);
       let user = Principal.fromText("un4fu-tqaaa-aaaab-qadjq-cai");
       let tx = generateSimpleTxInput(user, 0, user, 1, 10);
       let caller = Principal.fromBlob("\04");
