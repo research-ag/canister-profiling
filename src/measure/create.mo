@@ -2,6 +2,7 @@ import Enumeration "../enumeration";
 import Sha2 "../sha2";
 import Prng "../prng";
 import Vector "../vector";
+import HPL "../hpl";
 import Prim "mo:⛔";
 
 module {
@@ -17,6 +18,7 @@ module {
       case "motokosha256" return Sha2.motokosha256_heap;
       case "motokosha512" return Sha2.motokosha512_heap;
       case "cryptomo" return Sha2.cryptomo_heap;
+      case "hpl" return HPL.create_heap;
       case _ Prim.trap("");
     };
   };

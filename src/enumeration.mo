@@ -225,7 +225,7 @@ module {
     let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
 
     let { bhash } = Map;
-    let zhus = Map.new<Blob, Nat>(bhash);
+    let zhus = Map.new<Blob, Nat>();
 
     let stable_enum = StableEnumeration.Enumeration();
 
