@@ -1,5 +1,5 @@
 [dependencies]
-base = "0.10.1"
+base = "0.10.4"
 vector = "0.2.0"
 prng = "0.0.3"
 enumeration = "0.1.0"
@@ -11,3 +11,6 @@ motoko-sha2 = "https://github.com/timohanke/motoko-sha2#v2.0.0"
 zhus = "https://github.com/ZhenyaUsenko/motoko-hash-map#master"
 stable_enumeration = "https://github.com/research-ag/stable_enumeration"
 btree = "https://github.com/research-ag/MotokoStableBTree#main"
+
+[toolchain]
+moc = "0.10.4"
