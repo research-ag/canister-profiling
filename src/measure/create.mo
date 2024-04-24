@@ -3,6 +3,7 @@ import Sha2 "../sha2";
 import Prng "../prng";
 import Vector "../vector";
 import Prim "mo:⛔";
+import StableTrie "../stable_trie";
 
 module {
   public func get_heap(name : Text) : () -> () -> Any {
@@ -27,6 +28,7 @@ module {
       case "enumeration" return Enumeration.profile;
       case "sha2" return Sha2.profile;
       case "prng" return Prng.profile;
+      case "trie" return StableTrie.profile;
       case _ Prim.trap("");
     };
   };
