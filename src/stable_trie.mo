@@ -12,6 +12,28 @@ import Debug "mo:base/Debug";
 import Table "utils/table";
 
 module {
+  public func create_heap() : () -> Any {
+    let k = 4;
+    let key_size = 8;
+    let n = 18;
+    let rng = Prng.Seiran128();
+    rng.init(0);
+    let keys = Array.tabulate<Blob>(
+      2 ** n,
+      func(i) {
+        Blob.fromArray(Array.tabulate<Nat8>(key_size, func(j) = Nat8.fromNat(Nat64.toNat(rng.next()) % 256)));
+      },
+    );
+    let trie = StableTrie.StableTrie(k, key_size, 0);
+
+    func () : StableTrie.StableTrie {
+      for (key in keys.vals()) {
+        ignore trie.add(key, "");
+      };
+      trie;
+    };
+  };
+
   public func profile() {
     let children_number = [2, 4];
 

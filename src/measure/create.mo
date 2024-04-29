@@ -18,6 +18,7 @@ module {
       case "motokosha256" return Sha2.motokosha256_heap;
       case "motokosha512" return Sha2.motokosha512_heap;
       case "cryptomo" return Sha2.cryptomo_heap;
+      case "trie" return StableTrie.create_heap;
       case _ Prim.trap("");
     };
   };
