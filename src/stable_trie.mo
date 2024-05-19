@@ -24,7 +24,7 @@ module {
         Blob.fromArray(Array.tabulate<Nat8>(key_size, func(j) = Nat8.fromNat(Nat64.toNat(rng.next()) % 256)));
       },
     );
-    let trie = StableTrie.StableTrie(k, key_size, 0);
+    let trie = StableTrie.StableTrie(8, k, k ** 3, key_size, 0);
 
     func () : StableTrie.StableTrie {
       for (key in keys.vals()) {
@@ -51,7 +51,7 @@ module {
       children_number.vals(),
       func(k) {
         let first = Nat.toText(k);
-        let trie = StableTrie.StableTrie(k, key_size, 0);
+        let trie = StableTrie.StableTrie(8, k, k ** 3, key_size, 0);
         let second = Iter.map<Nat, Text>(
           Iter.range(0, n),
           func(i) {
@@ -97,7 +97,7 @@ module {
       children_number.vals(),
       func(k) {
         let first = Nat.toText(k);
-        let trie = StableTrie.StableTrie(k, key_size, 0);
+        let trie = StableTrie.StableTrie(8, k, k ** 3, key_size, 0);
         let second = Iter.map<Nat, Text>(
           Iter.range(0, n),
           func(i) {
