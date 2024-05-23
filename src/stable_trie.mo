@@ -9,6 +9,7 @@ import Buffer "mo:base/Buffer";
 import Nat "mo:base/Nat";
 import Float "mo:base/Float";
 import Debug "mo:base/Debug";
+import Result "mo:base/Result";
 import Table "utils/table";
 
 module {
@@ -59,7 +60,7 @@ module {
               ignore trie.add(keys[0], "");
             } else {
               for (j in Iter.range(2 ** (i - 1), 2 ** i - 1)) {
-                assert trie.add(keys[j], "");
+                assert Result.isOk(trie.add(keys[j], ""));
               };
             };
             Nat.toText(trie.size() / 2 ** i);
@@ -105,7 +106,7 @@ module {
               ignore trie.add(keys[0], "");
             } else {
               for (j in Iter.range(2 ** (i - 1), 2 ** i - 1)) {
-                assert trie.add(keys[j], "");
+                assert Result.isOk(trie.add(keys[j], ""));
               };
             };
             Nat.toText(trie.size() / 2 ** i);
