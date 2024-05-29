@@ -16,8 +16,10 @@ import Order "mo:base/Order";
 import RbTree "mo:base/RBTree";
 import Map "mo:zhus/Map";
 import StableEnumeration "mo:stable_enumeration";
+import StableTrieMap "mo:mrr/StableTrieMap";
 
 module {
+  let KEY_SIZE = 29;
   class RNG() {
     var seed = 234234;
 
@@ -28,12 +30,12 @@ module {
     };
 
     public func blob() : Blob {
-      let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
+      let a = Array.tabulate<Nat8>(KEY_SIZE, func(i) = Nat8.fromNat(next() % 256));
       Blob.fromArray(a);
     };
 
     public func with_byte(byte : Nat8) : Blob {
-      let a = Array.tabulate<Nat8>(29, func(i) = byte);
+      let a = Array.tabulate<Nat8>(KEY_SIZE, func(i) = byte);
       Blob.fromArray(a);
     };
   };
@@ -48,7 +50,7 @@ module {
       };
     };
     let n = 2 ** 20;
-    let array = Array.init<Nat8>(29, 0);
+    let array = Array.init<Nat8>(KEY_SIZE, 0);
 
     (
       create(0, n - 1),
@@ -58,7 +60,7 @@ module {
   };
 
   public func rb_tree_stable() : RbTree.Tree<Blob, Nat> {
-    let array = Array.init<Nat8>(29, 0);
+    let array = Array.init<Nat8>(KEY_SIZE, 0);
 
     func create(left : Int, right : Int) : RbTree.Tree<Blob, Nat> {
       if (left > right) {
@@ -99,26 +101,6 @@ module {
   };
 
   public func rb_tree_heap() : () -> Any = func() {
-    class RNG() {
-      var seed = 234234;
-
-      public func next() : Nat {
-        seed += 1;
-        let a = seed * 15485863;
-        a * a * a % 2038074743;
-      };
-
-      public func blob() : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = Nat8.fromNat(next() % 256));
-        Blob.fromArray(a);
-      };
-
-      public func with_byte(byte : Nat8) : Blob {
-        let a = Array.tabulate<Nat8>(29, func(i) = byte);
-        Blob.fromArray(a);
-      };
-    };
-
     let n = 2 ** 12;
     let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
     let r = RNG();
@@ -217,17 +199,18 @@ module {
       after - before;
     };
 
-    let stats = Buffer.Buffer<(Text, Nat, Nat, Nat, Nat)>(0);
+    let stats = Buffer.Buffer<(Text, Nat, Nat, Nat, Nat, Nat)>(0);
     let r = RNG();
     var blobs = Array.tabulate<Blob>(n, func(i) = r.blob());
     let enumeration = Enumeration.Enumeration<Blob>(Blob.compare, "");
-    // let enumeration = Enumeration.Enumeration();
     let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
 
     let { bhash } = Map;
     let zhus = Map.new<Blob, Nat>();
 
     let stable_enum = StableEnumeration.Enumeration();
+
+    let trie = StableTrieMap.StableTrieMap(4, 4, 4 ** 6, KEY_SIZE, 0);
 
     func average(blobs : [Blob], get : (Blob) -> ()) : Nat {
       var i = 0;
@@ -244,6 +227,7 @@ module {
         method,
         Nat64.toNat(E.countInstructions(func() = ignore enumeration.lookup(enum_key))),
         Nat64.toNat(E.countInstructions(func() = ignore rb.get(rb_key))),
+        0,
         0,
         0,
       ));
@@ -286,25 +270,30 @@ module {
           };
         }
       ),
+      memory(
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore trie.put(blobs[i], "");
+            i += 1;
+          };
+        }
+      ),
     );
 
-    let random = Array.tabulate<Blob>(m, func(i) = blobs[i * m]);
-    stats.add((
-      "random blobs inside average",
-      average(random, func(b) = ignore enumeration.lookup(b)),
-      average(random, func(b) = ignore rb.get(b)),
-      average(random, func(b) = ignore Map.get(zhus, bhash, b)),
-      average(random, func(b) = ignore stable_enum.lookup(b)),
-    ));
+    func addForArray(a : [Blob]) {
+      stats.add((
+        "random blobs inside average",
+        average(a, func(b) = ignore enumeration.lookup(b)),
+        average(a, func(b) = ignore rb.get(b)),
+        average(a, func(b) = ignore Map.get(zhus, bhash, b)),
+        average(a, func(b) = ignore stable_enum.lookup(b)),
+        average(a, func(b) = ignore trie.lookup(b)),
+      ));
+    };
 
-    let others = Array.tabulate<Blob>(m, func(i) = r.blob());
-    stats.add((
-      "random blobs average",
-      average(others, func(b) = ignore enumeration.lookup(b)),
-      average(others, func(b) = ignore rb.get(b)),
-      average(random, func(b) = ignore Map.get(zhus, bhash, b)),
-      average(random, func(b) = ignore stable_enum.lookup(b)),
-    ));
+    addForArray( Array.tabulate<Blob>(m, func(i) = blobs[i * m]));
+    addForArray( Array.tabulate<Blob>(m, func(i) = r.blob()));
 
     let (t, a, _) = enumeration.share();
     let enumeration_tree = toRBTree(t, a);
@@ -322,9 +311,9 @@ module {
     stat("max leaf", max_leaf(enumeration_tree).1, max_leaf(rb_tree).1);
 
     var result = "\nTesting for n = " # Nat.toText(n) # "\n\n";
-    result #= "|method|enumeration|red-black tree|zhus|stable enum|\n|---|---|---|---|--|\n";
-    for ((method, enumeration, rb, zh, st) in stats.vals()) {
-      result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|" # Nat.toText(zh) # "|" # Nat.toText(st) # "|\n";
+    result #= "|method|enumeration|red-black tree|zhus|stable enum|stable trie|\n|---|---|---|---|---|---|\n";
+    for ((method, enumeration, rb, zh, st, tr) in stats.vals()) {
+      result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|" # Nat.toText(zh) # "|" # Nat.toText(st) # "|" # Nat.toText(tr)  # "|\n";
     };
 
     result #= "\n";
