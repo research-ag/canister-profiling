@@ -1,4 +1,4 @@
-import StableTrie "mo:mrr/StableTrie";
+import StableTrieMap "mo:mrr/StableTrieMap";
 import Prng "mo:prng";
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
@@ -10,6 +10,7 @@ import Nat "mo:base/Nat";
 import Float "mo:base/Float";
 import Debug "mo:base/Debug";
 import Result "mo:base/Result";
+import Option "mo:base/Option";
 import Table "utils/table";
 
 module {
@@ -25,11 +26,11 @@ module {
         Blob.fromArray(Array.tabulate<Nat8>(key_size, func(j) = Nat8.fromNat(Nat64.toNat(rng.next()) % 256)));
       },
     );
-    let trie = StableTrie.StableTrie(8, k, k ** 3, key_size, 0);
+    let trie = StableTrieMap.StableTrieMap(8, k, k ** 3, key_size, 0);
 
-    func () : StableTrie.StableTrie {
+    func () : StableTrieMap.StableTrieMap {
       for (key in keys.vals()) {
-        ignore trie.add(key, "");
+        ignore trie.put(key, "");
       };
       trie;
     };
@@ -52,15 +53,15 @@ module {
       children_number.vals(),
       func(k) {
         let first = Nat.toText(k);
-        let trie = StableTrie.StableTrie(8, k, k ** 3, key_size, 0);
+        let trie = StableTrieMap.StableTrieMap(8, k, k ** 3, key_size, 0);
         let second = Iter.map<Nat, Text>(
           Iter.range(0, n),
           func(i) {
             if (i == 0) {
-              ignore trie.add(keys[0], "");
+              ignore trie.put(keys[0], "");
             } else {
               for (j in Iter.range(2 ** (i - 1), 2 ** i - 1)) {
-                assert Result.isOk(trie.add(keys[j], ""));
+                ignore trie.put(keys[j], "");
               };
             };
             Nat.toText(trie.size() / 2 ** i);
@@ -98,15 +99,15 @@ module {
       children_number.vals(),
       func(k) {
         let first = Nat.toText(k);
-        let trie = StableTrie.StableTrie(8, k, k ** 3, key_size, 0);
+        let trie = StableTrieMap.StableTrieMap(8, k, k ** 3, key_size, 0);
         let second = Iter.map<Nat, Text>(
           Iter.range(0, n),
           func(i) {
             if (i == 0) {
-              ignore trie.add(keys[0], "");
+              ignore trie.put(keys[0], "");
             } else {
               for (j in Iter.range(2 ** (i - 1), 2 ** i - 1)) {
-                assert Result.isOk(trie.add(keys[j], ""));
+                ignore trie.put(keys[j], "");
               };
             };
             Nat.toText(trie.size() / 2 ** i);

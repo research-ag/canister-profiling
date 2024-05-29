@@ -3,7 +3,7 @@ import Sha2 "../sha2";
 import Prng "../prng";
 import Vector "../vector";
 import Prim "mo:⛔";
-import StableTrie "../stable_trie";
+import StableTrieMap "../stable_trie";
 
 module {
   public func get_heap(name : Text) : () -> () -> Any {
@@ -18,7 +18,7 @@ module {
       case "motokosha256" return Sha2.motokosha256_heap;
       case "motokosha512" return Sha2.motokosha512_heap;
       case "cryptomo" return Sha2.cryptomo_heap;
-      case "trie" return StableTrie.create_heap;
+      case "trie" return StableTrieMap.create_heap;
       case _ Prim.trap("");
     };
   };
@@ -29,7 +29,7 @@ module {
       case "enumeration" return Enumeration.profile;
       case "sha2" return Sha2.profile;
       case "prng" return Prng.profile;
-      case "trie" return StableTrie.profile;
+      case "trie" return StableTrieMap.profile;
       case _ Prim.trap("");
     };
   };

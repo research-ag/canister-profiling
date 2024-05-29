@@ -16,7 +16,7 @@ import Order "mo:base/Order";
 import RbTree "mo:base/RBTree";
 import Map "mo:zhus/Map";
 import StableEnumeration "mo:stable_enumeration";
-import StableTrie "mo:mrr/StableTrie";
+import StableTrieMap "mo:mrr/StableTrieMap";
 
 module {
   let KEY_SIZE = 29;
@@ -210,7 +210,7 @@ module {
 
     let stable_enum = StableEnumeration.Enumeration();
 
-    let trie = StableTrie.StableTrie(4, 4, 4 ** 6, KEY_SIZE, 0);
+    let trie = StableTrieMap.StableTrieMap(4, 4, 4 ** 6, KEY_SIZE, 0);
 
     func average(blobs : [Blob], get : (Blob) -> ()) : Nat {
       var i = 0;
@@ -274,7 +274,7 @@ module {
         func() {
           var i = 0;
           while (i < n) {
-            ignore trie.add(blobs[i], "");
+            ignore trie.put(blobs[i], "");
             i += 1;
           };
         }
