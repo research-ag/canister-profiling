@@ -14,7 +14,7 @@ import Buffer "mo:base/Buffer";
 import RbTree "mo:base/RBTree";
 import Map "mo:zhus/Map";
 import StableEnumeration "mo:stable_enumeration";
-import StableTrieMap "mo:mrr/StableTrieMap";
+import StableTrie "mo:stable-trie/Enumeration";
 
 module {
   let KEY_SIZE = 29;
@@ -208,8 +208,13 @@ module {
 
     let stable_enum = StableEnumeration.Enumeration();
 
-    let trie = StableTrieMap.StableTrieMap(4, 4, 4 ** 6, KEY_SIZE, 0);
-
+    let trie = StableTrie.Enumeration({
+      pointer_size = 4;
+      aridity = 4;
+      root_aridity = ?(4 ** 6);
+      key_size = KEY_SIZE;
+      value_size = 0;
+    });
     func average(blobs : [Blob], get : (Blob) -> ()) : Nat {
       var i = 0;
       var sum = 0;

@@ -19,7 +19,7 @@ actor {
 
   let n = 50_000;
 
-  func print(f : () -> ()) {
+  func _print(f : () -> ()) {
     Debug.print(Nat64.toText(E.countInstructions(f)));
   };
 

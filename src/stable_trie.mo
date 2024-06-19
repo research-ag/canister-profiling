@@ -1,16 +1,13 @@
-import StableTrieMap "mo:mrr/StableTrieMap";
+import StableTrie "mo:stable-trie/Enumeration";
+import StableTrieMap "mo:stable-trie/Map";
 import Prng "mo:prng";
 import Array "mo:base/Array";
 import Blob "mo:base/Blob";
 import Nat8 "mo:base/Nat8";
 import Nat64 "mo:base/Nat64";
 import Iter "mo:base/Iter";
-import Buffer "mo:base/Buffer";
 import Nat "mo:base/Nat";
-import Float "mo:base/Float";
 import Debug "mo:base/Debug";
-import Result "mo:base/Result";
-import Option "mo:base/Option";
 import Table "utils/table";
 
 module {
@@ -26,11 +23,48 @@ module {
         Blob.fromArray(Array.tabulate<Nat8>(key_size, func(j) = Nat8.fromNat(Nat64.toNat(rng.next()) % 256)));
       },
     );
-    let trie = StableTrieMap.StableTrieMap(8, k, k ** 3, key_size, 0);
+    let trie = StableTrie.Enumeration({
+      pointer_size = 8;
+      aridity = k;
+      root_aridity = ?(k ** 3);
+      key_size;
+      value_size = 0;
+    });
 
-    func () : StableTrieMap.StableTrieMap {
+    func() : StableTrie.Enumeration {
       for (key in keys.vals()) {
         ignore trie.put(key, "");
+      };
+      trie;
+    };
+  };
+
+  public func map_create_heap() : () -> Any {
+    let k = 4;
+    let key_size = 8;
+    let n = 18;
+    let rng = Prng.Seiran128();
+    rng.init(0);
+    let keys = Array.tabulate<Blob>(
+      2 ** n,
+      func(i) {
+        Blob.fromArray(Array.tabulate<Nat8>(key_size, func(j) = Nat8.fromNat(Nat64.toNat(rng.next()) % 256)));
+      },
+    );
+    let trie = StableTrieMap.Map({
+      pointer_size = 8;
+      aridity = k;
+      root_aridity = ?(k ** 3);
+      key_size;
+      value_size = 0;
+    });
+
+    func() : StableTrieMap.Map {
+      for (key in keys.vals()) {
+        ignore trie.put(key, "");
+      };
+      for (key in keys.vals()) {
+        ignore trie.delete(key);
       };
       trie;
     };
@@ -53,7 +87,13 @@ module {
       children_number.vals(),
       func(k) {
         let first = Nat.toText(k);
-        let trie = StableTrieMap.StableTrieMap(8, k, k ** 3, key_size, 0);
+        let trie = StableTrie.Enumeration({
+          pointer_size = 8;
+          aridity = k;
+          root_aridity = ?(k ** 3);
+          key_size;
+          value_size = 0;
+        });
         let second = Iter.map<Nat, Text>(
           Iter.range(0, n),
           func(i) {
@@ -99,7 +139,13 @@ module {
       children_number.vals(),
       func(k) {
         let first = Nat.toText(k);
-        let trie = StableTrieMap.StableTrieMap(8, k, k ** 3, key_size, 0);
+        let trie = StableTrie.Enumeration({
+          pointer_size = 8;
+          aridity = k;
+          root_aridity = ?(k ** 3);
+          key_size;
+          value_size = 0;
+        });
         let second = Iter.map<Nat, Text>(
           Iter.range(0, n),
           func(i) {
