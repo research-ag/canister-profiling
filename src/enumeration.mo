@@ -10,9 +10,7 @@ import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 import Float "mo:base/Float";
 import RBTree "mo:base/RBTree";
-import Option "mo:base/Option";
 import Buffer "mo:base/Buffer";
-import Order "mo:base/Order";
 import RbTree "mo:base/RBTree";
 import Map "mo:zhus/Map";
 import StableEnumeration "mo:stable_enumeration";
@@ -233,7 +231,7 @@ module {
       ));
     };
 
-    let mem = (
+    let _mem = (
       memory(
         func() {
           var i = 0;

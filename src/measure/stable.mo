@@ -1,16 +1,10 @@
-import Vector "mo:vector";
-import V "../vector";
 import Enumeration "mo:enumeration";
 import E "../enumeration";
-import RbTree "mo:base/RBTree";
 import Measure "../utils/measure";
-import Create "create";
-import Option "mo:base/Option";
 import Prim "mo:⛔";
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 import Table "../utils/table";
-import StableEnumeration "mo:stable_enumeration";
 
 actor {
   // let name = "vector";

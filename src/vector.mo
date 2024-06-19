@@ -1,13 +1,9 @@
 import Vector "mo:vector";
 import VectorClass "mo:vector/Class";
-import E "mo:base/ExperimentalInternetComputer";
 import Buffer "mo:base/Buffer";
 import Array "mo:base/Array";
-import Option "mo:base/Option";
 import Debug "mo:base/Debug";
-import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
-import Prim "mo:⛔";
 import Table "utils/table";
 
 module {
@@ -668,13 +664,13 @@ module {
         ?(
           func() {
             let a = Vector.init<Nat>(n, 0);
-            func() = Vector.iterate(a, func(x : Nat) = ());
+            func() = Vector.iterate(a, func(_ : Nat) = ());
           }
         ),
         ?(
           func() {
             let a = VectorClass.init<Nat>(n, 0);
-            func() = VectorClass.iterate(a, func(x : Nat) = ());
+            func() = VectorClass.iterate(a, func(_ : Nat) = ());
           }
         ),
         ?(
@@ -685,7 +681,7 @@ module {
               a.add(0);
               i += 1;
             };
-            func() = Buffer.iterate(a, func(x : Nat) = ());
+            func() = Buffer.iterate(a, func(_ : Nat) = ());
           }
         ),
         null,
@@ -698,13 +694,13 @@ module {
         ?(
           func() {
             let a = Vector.init<Nat>(n, 0);
-            func() = Vector.iterateRev(a, func(x : Nat) = ());
+            func() = Vector.iterateRev(a, func(_ : Nat) = ());
           }
         ),
         ?(
           func() {
             let a = VectorClass.init<Nat>(n, 0);
-            func() = VectorClass.iterateRev(a, func(x : Nat) = ());
+            func() = VectorClass.iterateRev(a, func(_ : Nat) = ());
           }
         ),
         null,
@@ -881,7 +877,7 @@ module {
         ?(
           func() {
             let a = Vector.init<Nat>(n, 0);
-            let f = func(i : Nat, x : Nat) {};
+            let f = func(_ : Nat, x : Nat) {};
             func() {
               Vector.iterateItems<Nat>(a, f);
             };
@@ -890,7 +886,7 @@ module {
         ?(
           func() {
             let a = VectorClass.init<Nat>(n, 0);
-            let f = func(i : Nat, x : Nat) {};
+            let f = func(_ : Nat, x : Nat) {};
             func() {
               VectorClass.iterateItems<Nat>(a, f);
             };
@@ -907,7 +903,7 @@ module {
         ?(
           func() {
             let a = Vector.init<Nat>(n, 0);
-            let f = func(i : Nat, x : Nat) {};
+            let f = func(_ : Nat, x : Nat) {};
             func() {
               Vector.iterateItemsRev<Nat>(a, f);
             };
@@ -916,7 +912,7 @@ module {
         ?(
           func() {
             let a = VectorClass.init<Nat>(n, 0);
-            let f = func(i : Nat, x : Nat) {};
+            let f = func(_ : Nat, x : Nat) {};
             func() {
               VectorClass.iterateItemsRev<Nat>(a, f);
             };

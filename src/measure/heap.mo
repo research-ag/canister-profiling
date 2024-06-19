@@ -1,7 +1,6 @@
 import Measure "../utils/measure";
 import Create "create";
 import Prim "mo:⛔";
-import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 import Table "../utils/table";
 
@@ -9,7 +8,6 @@ actor {
   var name_ = "";
   var heap_with_gc_size = 0;
   var mutator_instructions = 0 : Nat64;
-  var collector_instructions = 0;
   var data = null : Any;
   var work_f : () -> Any = func() = ();
 

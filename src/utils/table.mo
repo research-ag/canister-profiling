@@ -1,9 +1,6 @@
 import E "mo:base/ExperimentalInternetComputer";
-import StableMemory "mo:base/ExperimentalStableMemory";
 import Buffer "mo:base/Buffer";
 import Array "mo:base/Array";
-import Option "mo:base/Option";
-import Debug "mo:base/Debug";
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 import Text "mo:base/Text";
@@ -13,7 +10,7 @@ import Prim "mo:⛔";
 module {
   public func format_table(name : Text, columns : [Text], iter : Iter.Iter<(Text, Iter.Iter<Text>)>) : Text {
     let header = "\n|method|" # Text.join("|", columns.vals()) # "|";
-    let space = "\n|" # Text.join("|", Iter.map(Iter.range(0, columns.size()), func(i : Nat) : Text = "---")) # "|";
+    let space = "\n|" # Text.join("|", Iter.map(Iter.range(0, columns.size()), func(_ : Nat) : Text = "---")) # "|";
     var result = "\n" # name # ":\n" # header # space # "\n";
     for ((method, row) in iter) {
       result #= "|" # method # "|" # Text.join("|", row) # "|\n";
