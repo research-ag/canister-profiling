@@ -9,26 +9,22 @@ import Debug "mo:base/Debug";
 import Nat64 "mo:base/Nat64";
 import Nat "mo:base/Nat";
 import Float "mo:base/Float";
-import RBTree "mo:base/RBTree";
 import Buffer "mo:base/Buffer";
 import RbTree "mo:base/RBTree";
 import Map "mo:zhus/Map";
+import Prng "mo:prng";
 import StableEnumeration "mo:stable_enumeration";
 import StableTrie "mo:stable-trie/Enumeration";
 
 module {
   let KEY_SIZE = 29;
-  class RNG() {
-    var seed = 234234;
 
-    public func next() : Nat {
-      seed += 1;
-      let a = seed * 15485863;
-      a * a * a % 2038074743;
-    };
+  class RNG() {
+    let r = Prng.Seiran128();
+    r.init(0);
 
     public func blob() : Blob {
-      let a = Array.tabulate<Nat8>(KEY_SIZE, func(i) = Nat8.fromNat(next() % 256));
+      let a = Array.tabulate<Nat8>(KEY_SIZE, func(i) = Nat8.fromNat(Nat64.toNat(r.next()) % 256));
       Blob.fromArray(a);
     };
 
@@ -100,7 +96,7 @@ module {
 
   public func rb_tree_heap() : () -> Any = func() {
     let n = 2 ** 12;
-    let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
+    let rb = RbTree.RBTree<Blob, Nat>(Blob.compare);
     let r = RNG();
     var i = 0;
     while (i < n) {
@@ -111,7 +107,7 @@ module {
   };
 
   public func profile() {
-    type Tree = RBTree.Tree<Blob, Nat>;
+    type Tree = RbTree.Tree<Blob, Nat>;
     let n = 2 ** 12;
     let m = 2 ** 6;
 
@@ -201,7 +197,7 @@ module {
     let r = RNG();
     var blobs = Array.tabulate<Blob>(n, func(i) = r.blob());
     let enumeration = Enumeration.Enumeration<Blob>(Blob.compare, "");
-    let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
+    let rb = RbTree.RBTree<Blob, Nat>(Blob.compare);
 
     let { bhash } = Map;
     let zhus = Map.new<Blob, Nat>();
@@ -295,8 +291,8 @@ module {
       ));
     };
 
-    addForArray( Array.tabulate<Blob>(m, func(i) = blobs[i * m]));
-    addForArray( Array.tabulate<Blob>(m, func(i) = r.blob()));
+    addForArray(Array.tabulate<Blob>(m, func(i) = blobs[i * m]));
+    addForArray(Array.tabulate<Blob>(m, func(i) = r.blob()));
 
     let (t, a, _) = enumeration.share();
     let enumeration_tree = toRBTree(t, a);
@@ -316,7 +312,7 @@ module {
     var result = "\nTesting for n = " # Nat.toText(n) # "\n\n";
     result #= "|method|enumeration|red-black tree|zhus|stable enum|stable trie|\n|---|---|---|---|---|---|\n";
     for ((method, enumeration, rb, zh, st, tr) in stats.vals()) {
-      result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|" # Nat.toText(zh) # "|" # Nat.toText(st) # "|" # Nat.toText(tr)  # "|\n";
+      result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|" # Nat.toText(zh) # "|" # Nat.toText(st) # "|" # Nat.toText(tr) # "|\n";
     };
 
     result #= "\n";

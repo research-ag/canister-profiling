@@ -9,6 +9,15 @@ import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
 import Debug "mo:base/Debug";
 import Table "utils/table";
+import BTree "mo:btree/BTree";
+import RBTree "mo:base/RBTree";
+import Buffer "mo:base/Buffer";
+import Map "mo:zhus/Map";
+import E "mo:base/ExperimentalInternetComputer";
+import Int "mo:base/Int";
+import Nat32 "mo:base/Nat32";
+import Float "mo:base/Float";
+import Prim "mo:⛔";
 
 module {
   public func create_heap() : () -> Any {
@@ -68,6 +77,141 @@ module {
       };
       trie;
     };
+  };
+
+  public func profile_map() {
+    let key_size = 29;
+
+    let rng = Prng.Seiran128();
+    rng.init(0);
+
+    type Tree = RBTree.Tree<Blob, Nat>;
+    let n = 2 ** 12;
+    let m = 2 ** 6;
+
+    func memory(f : () -> ()) : Nat {
+      let before = Prim.rts_heap_size();
+      f();
+      let after = Prim.rts_heap_size();
+      after - before;
+    };
+
+    let stats = Buffer.Buffer<(Text, [Nat])>(0);
+    var blobs = Array.tabulate<Blob>(
+      n,
+      func(i) = Blob.fromArray(
+        Array.tabulate<Nat8>(
+          key_size,
+          func(j) = Nat8.fromNat(Nat64.toNat(rng.next()) % 256),
+        )
+      ),
+    );
+
+    let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
+
+    let { bhash } = Map;
+    let zhus = Map.new<Blob, Nat>();
+
+    let trie = StableTrieMap.Map({
+      pointer_size = 4;
+      aridity = 4;
+      root_aridity = ?(4 ** 6);
+      key_size = key_size;
+      value_size = 0;
+    });
+    let key_conv = BTree.noconv(Nat32.fromNat(key_size));
+    let value_conv = BTree.noconv(0);
+
+    let btree = BTree.new<Blob, Blob>(key_conv, value_conv);
+
+    func average(blobs : [Blob], get : (Blob) -> ()) : Nat {
+      var i = 0;
+      var sum = 0;
+      while (i < blobs.size()) {
+        sum += Nat64.toNat(E.countInstructions(func() = get(blobs[i])));
+        i += 1;
+      };
+      Int.abs(Float.toInt(Float.fromInt(sum) / Float.fromInt(blobs.size())));
+    };
+
+    let _mem = (
+      memory(
+        func() {
+          var i = 0;
+          while (i < n) {
+            rb.put(blobs[i], i);
+            i += 1;
+          };
+        }
+      ),
+      memory(
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore Map.put(zhus, bhash, blobs[i], i);
+            i += 1;
+          };
+        }
+      ),
+      memory(
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore trie.put(blobs[i], "");
+            i += 1;
+          };
+        }
+      ),
+      memory(
+        func() {
+          var i = 0;
+          while (i < n) {
+            ignore BTree.put<Blob, Blob>(btree, key_conv, blobs[i], value_conv, "");
+            i += 1;
+          };
+        }
+      ),
+    );
+
+    func addForArray(s : Text, a : [Blob]) {
+      stats.add((
+        s,
+        [
+          average(a, func(b) = ignore rb.remove(b)),
+          average(a, func(b) = ignore Map.remove(zhus, bhash, b)),
+          average(a, func(b) = ignore trie.delete(b)),
+          average(a, func(b) = ignore BTree.remove<Blob, Blob>(btree, key_conv, b, value_conv)),
+        ],
+      ));
+    };
+
+    addForArray("random blobs inside average", Array.tabulate<Blob>(m, func(i) = blobs[i * m]));
+    addForArray(
+      "random blobs outside average",
+      Array.tabulate<Blob>(
+        m,
+        func(i) = Blob.fromArray(
+          Array.tabulate<Nat8>(
+            key_size,
+            func(j) = Nat8.fromNat(Nat64.toNat(rng.next()) % 256),
+          )
+        ),
+      ),
+    );
+    Debug.print(Table.format_table(
+      "Maps deletion comparison",
+      ["rb tree", "zhus map", "stable trie map", "motoko stable btree"],
+      Iter.map<(Text, [Nat]), (Text, Iter.Iter<Text>)>(
+        stats.vals(),
+        func(x) = (
+          x.0,
+          Iter.map<Nat, Text>(
+            x.1.vals(),
+            func(i) = debug_show i,
+          ),
+        ),
+      ),
+    ));
   };
 
   public func profile() {

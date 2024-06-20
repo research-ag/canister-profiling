@@ -31,6 +31,7 @@ module {
       case "sha2" return Sha2.profile;
       case "prng" return Prng.profile;
       case "trie" return StableTrieMap.profile;
+      case "trie-map" return StableTrieMap.profile_map;
       case _ Prim.trap("");
     };
   };
