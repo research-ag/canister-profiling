@@ -89,13 +89,6 @@ module {
     let n = 2 ** 12;
     let m = 2 ** 6;
 
-    func memory(f : () -> ()) : Nat {
-      let before = Prim.rts_heap_size();
-      f();
-      let after = Prim.rts_heap_size();
-      after - before;
-    };
-
     let stats = Buffer.Buffer<(Text, [Nat])>(0);
     var blobs = Array.tabulate<Blob>(
       n,
@@ -107,10 +100,10 @@ module {
       ),
     );
 
-    let rb = RBTree.RBTree<Blob, Nat>(Blob.compare);
+    let rb = RBTree.RBTree<Blob, Blob>(Blob.compare);
 
     let { bhash } = Map;
-    let zhus = Map.new<Blob, Nat>();
+    let zhus = Map.new<Blob, Blob>();
 
     let trie = StableTrieMap.Map({
       pointer_size = 4;
@@ -134,44 +127,15 @@ module {
       Int.abs(Float.toInt(Float.fromInt(sum) / Float.fromInt(blobs.size())));
     };
 
-    let _mem = (
-      memory(
-        func() {
-          var i = 0;
-          while (i < n) {
-            rb.put(blobs[i], i);
-            i += 1;
-          };
-        }
-      ),
-      memory(
-        func() {
-          var i = 0;
-          while (i < n) {
-            ignore Map.put(zhus, bhash, blobs[i], i);
-            i += 1;
-          };
-        }
-      ),
-      memory(
-        func() {
-          var i = 0;
-          while (i < n) {
-            ignore trie.put(blobs[i], "");
-            i += 1;
-          };
-        }
-      ),
-      memory(
-        func() {
-          var i = 0;
-          while (i < n) {
-            ignore BTree.put<Blob, Blob>(btree, key_conv, blobs[i], value_conv, "");
-            i += 1;
-          };
-        }
-      ),
-    );
+    stats.add((
+      "put",
+      [
+        average(blobs, func(b) = rb.put(b, "")),
+        average(blobs, func(b) = ignore Map.put<Blob, Blob>(zhus, bhash, b, "")),
+        average(blobs, func(b) = ignore trie.put(b, "")),
+        average(blobs, func(b) = ignore BTree.put<Blob, Blob>(btree, key_conv, b, value_conv, "")),
+      ],
+    ));
 
     func addForArray(s : Text, a : [Blob]) {
       stats.add((
@@ -198,20 +162,22 @@ module {
         ),
       ),
     );
-    Debug.print(Table.format_table(
-      "Maps deletion comparison",
-      ["rb tree", "zhus map", "stable trie map", "motoko stable btree"],
-      Iter.map<(Text, [Nat]), (Text, Iter.Iter<Text>)>(
-        stats.vals(),
-        func(x) = (
-          x.0,
-          Iter.map<Nat, Text>(
-            x.1.vals(),
-            func(i) = debug_show i,
+    Debug.print(
+      Table.format_table(
+        "Maps deletion comparison",
+        ["rb tree", "zhus map", "stable trie map", "motoko stable btree"],
+        Iter.map<(Text, [Nat]), (Text, Iter.Iter<Text>)>(
+          stats.vals(),
+          func(x) = (
+            x.0,
+            Iter.map<Nat, Text>(
+              x.1.vals(),
+              func(i) = debug_show i,
+            ),
           ),
         ),
-      ),
-    ));
+      )
+    );
   };
 
   public func profile() {
