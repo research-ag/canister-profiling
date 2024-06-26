@@ -273,7 +273,7 @@ module {
         func() {
           var i = 0;
           while (i < n) {
-            ignore trie.put(blobs[i], "");
+            ignore trie.add(blobs[i], "");
             i += 1;
           };
         }

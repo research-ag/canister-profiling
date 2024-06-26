@@ -17,7 +17,6 @@ import E "mo:base/ExperimentalInternetComputer";
 import Int "mo:base/Int";
 import Nat32 "mo:base/Nat32";
 import Float "mo:base/Float";
-import Prim "mo:⛔";
 
 module {
   public func create_heap() : () -> Any {
@@ -42,7 +41,7 @@ module {
 
     func() : StableTrie.Enumeration {
       for (key in keys.vals()) {
-        ignore trie.put(key, "");
+        ignore trie.add(key, "");
       };
       trie;
     };
@@ -70,10 +69,10 @@ module {
 
     func() : StableTrieMap.Map {
       for (key in keys.vals()) {
-        ignore trie.put(key, "");
+        trie.put(key, "");
       };
       for (key in keys.vals()) {
-        ignore trie.delete(key);
+        trie.delete(key);
       };
       trie;
     };
@@ -132,7 +131,7 @@ module {
       [
         average(blobs, func(b) = rb.put(b, "")),
         average(blobs, func(b) = ignore Map.put<Blob, Blob>(zhus, bhash, b, "")),
-        average(blobs, func(b) = ignore trie.put(b, "")),
+        average(blobs, func(b) = trie.put(b, "")),
         average(blobs, func(b) = ignore BTree.put<Blob, Blob>(btree, key_conv, b, value_conv, "")),
       ],
     ));
@@ -143,7 +142,7 @@ module {
         [
           average(a, func(b) = ignore rb.remove(b)),
           average(a, func(b) = ignore Map.remove(zhus, bhash, b)),
-          average(a, func(b) = ignore trie.delete(b)),
+          average(a, func(b) = trie.delete(b)),
           average(a, func(b) = ignore BTree.remove<Blob, Blob>(btree, key_conv, b, value_conv)),
         ],
       ));
@@ -208,10 +207,10 @@ module {
           Iter.range(0, n),
           func(i) {
             if (i == 0) {
-              ignore trie.put(keys[0], "");
+              ignore trie.add(keys[0], "");
             } else {
               for (j in Iter.range(2 ** (i - 1), 2 ** i - 1)) {
-                ignore trie.put(keys[j], "");
+                ignore trie.add(keys[j], "");
               };
             };
             Nat.toText(trie.size() / 2 ** i);
@@ -260,10 +259,10 @@ module {
           Iter.range(0, n),
           func(i) {
             if (i == 0) {
-              ignore trie.put(keys[0], "");
+              ignore trie.add(keys[0], "");
             } else {
               for (j in Iter.range(2 ** (i - 1), 2 ** i - 1)) {
-                ignore trie.put(keys[j], "");
+                ignore trie.add(keys[j], "");
               };
             };
             Nat.toText(trie.size() / 2 ** i);
