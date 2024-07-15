@@ -136,7 +136,35 @@ module {
       ],
     ));
 
-    func addForArray(s : Text, a : [Blob]) {
+    let rnd = Array.tabulate<Blob>(
+      m,
+      func(i) = Blob.fromArray(
+        Array.tabulate<Nat8>(
+          key_size,
+          func(j) = Nat8.fromNat(Nat64.toNat(rng.next()) % 256),
+        )
+      ),
+    );
+
+    func addGet(s : Text, blobs : [Blob]) {
+      stats.add((
+        s,
+        [
+          average(blobs, func(b) = ignore rb.get(b)),
+          average(blobs, func(b) = ignore Map.get<Blob, Blob>(zhus, bhash, b)),
+          average(blobs, func(b) = ignore trie.get(b)),
+          average(blobs, func(b) = ignore BTree.get<Blob, Blob>(btree, key_conv, b, value_conv)),
+        ],
+      ));
+    };
+
+    addGet(
+      "inside get",
+      Array.tabulate<Blob>(m, func(i) = blobs[i * m]),
+    );
+    addGet("ouside get", rnd);
+
+    func addRemove(s : Text, a : [Blob]) {
       stats.add((
         s,
         [
@@ -148,19 +176,12 @@ module {
       ));
     };
 
-    addForArray("random blobs inside average", Array.tabulate<Blob>(m, func(i) = blobs[i * m]));
-    addForArray(
-      "random blobs outside average",
-      Array.tabulate<Blob>(
-        m,
-        func(i) = Blob.fromArray(
-          Array.tabulate<Nat8>(
-            key_size,
-            func(j) = Nat8.fromNat(Nat64.toNat(rng.next()) % 256),
-          )
-        ),
-      ),
+    addRemove(
+      "inside deletion",
+      Array.tabulate<Blob>(m, func(i) = blobs[i * m]),
     );
+    addRemove("outside deletion", rnd);
+    
     Debug.print(
       Table.format_table(
         "Maps deletion comparison",
