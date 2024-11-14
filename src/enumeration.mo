@@ -11,6 +11,7 @@ import Nat "mo:base/Nat";
 import Float "mo:base/Float";
 import Buffer "mo:base/Buffer";
 import RbTree "mo:base/RBTree";
+import OrderedMap "mo:base/OrderedMap";
 import Map "mo:zhus/Map";
 import Prng "mo:prng";
 import StableEnumeration "mo:stable_enumeration";
@@ -147,11 +148,11 @@ module {
         case (#node(_, #leaf, key, #leaf)) {
           (1, key.0);
         };
-        case (#node(_, left, key, #leaf)) {
+        case (#node(_, left, _key, #leaf)) {
           let (x, y) = max_leaf(left);
           (x + 1, y);
         };
-        case (#node(_, #leaf, key, right)) {
+        case (#node(_, #leaf, _key, right)) {
           let (x, y) = max_leaf(right);
           (x + 1, y);
         };
@@ -169,11 +170,11 @@ module {
         case (#node(_, #leaf, key, #leaf)) {
           (1, key.0);
         };
-        case (#node(_, left, key, #leaf)) {
+        case (#node(_, left, _key, #leaf)) {
           let (x, y) = min_leaf(left);
           (x + 1, y);
         };
-        case (#node(_, #leaf, key, right)) {
+        case (#node(_, #leaf, _key, right)) {
           let (x, y) = min_leaf(right);
           (x + 1, y);
         };
@@ -193,11 +194,13 @@ module {
       after - before;
     };
 
-    let stats = Buffer.Buffer<(Text, Nat, Nat, Nat, Nat, Nat)>(0);
+    let stats = Buffer.Buffer<(Text, Nat, Nat, Nat, Nat, Nat, Nat)>(0);
     let r = RNG();
     var blobs = Array.tabulate<Blob>(n, func(i) = r.blob());
     let enumeration = Enumeration.Enumeration<Blob>(Blob.compare, "");
     let rb = RbTree.RBTree<Blob, Nat>(Blob.compare);
+    let ops = OrderedMap.Make<Blob>(Blob.compare);
+    var orderedMap = ops.empty<Nat>();
 
     let { bhash } = Map;
     let zhus = Map.new<Blob, Nat>();
@@ -229,6 +232,7 @@ module {
         0,
         0,
         0,
+        0,
       ));
     };
 
@@ -247,6 +251,15 @@ module {
           var i = 0;
           while (i < n) {
             rb.put(blobs[i], i);
+            i += 1;
+          };
+        }
+      ),
+      memory(
+        func() {
+          var i = 0;
+          while (i < n) {
+            orderedMap := ops.put(orderedMap, blobs[i], i);
             i += 1;
           };
         }
@@ -280,19 +293,20 @@ module {
       ),
     );
 
-    func addForArray(a : [Blob]) {
+    func addForArray(m : Text, a : [Blob]) {
       stats.add((
-        "random blobs inside average",
+        m,
         average(a, func(b) = ignore enumeration.lookup(b)),
         average(a, func(b) = ignore rb.get(b)),
+        average(a, func(b) = ignore ops.get(orderedMap, b)),
         average(a, func(b) = ignore Map.get(zhus, bhash, b)),
         average(a, func(b) = ignore stable_enum.lookup(b)),
         average(a, func(b) = ignore trie.lookup(b)),
       ));
     };
 
-    addForArray(Array.tabulate<Blob>(m, func(i) = blobs[i * m]));
-    addForArray(Array.tabulate<Blob>(m, func(i) = r.blob()));
+    addForArray("random blobs outside average", Array.tabulate<Blob>(m, func(i) = blobs[i * m]));
+    addForArray("random blobs inside average", Array.tabulate<Blob>(m, func(i) = r.blob()));
 
     let (t, a, _) = enumeration.share();
     let enumeration_tree = toRBTree(t, a);
@@ -310,9 +324,9 @@ module {
     stat("max leaf", max_leaf(enumeration_tree).1, max_leaf(rb_tree).1);
 
     var result = "\nTesting for n = " # Nat.toText(n) # "\n\n";
-    result #= "|method|enumeration|red-black tree|zhus|stable enum|stable trie|\n|---|---|---|---|---|---|\n";
-    for ((method, enumeration, rb, zh, st, tr) in stats.vals()) {
-      result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|" # Nat.toText(zh) # "|" # Nat.toText(st) # "|" # Nat.toText(tr) # "|\n";
+    result #= "|method|enumeration|red-black tree|ordered-map|zhus|stable enum|stable trie|\n|---|---|---|---|---|---|---|\n";
+    for ((method, enumeration, rb, om, zh, st, tr) in stats.vals()) {
+      result #= "|" # method # "|" # Nat.toText(enumeration) # "|" # Nat.toText(rb) # "|" # Nat.toText(om) # "|" # Nat.toText(zh) # "|" # Nat.toText(st) # "|" # Nat.toText(tr) # "|\n";
     };
 
     result #= "\n";

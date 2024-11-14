@@ -178,17 +178,17 @@ Notes on Memory:
 
 Testing for n = 4096
 
-|method|enumeration|red-black tree|zhus|stable enum|stable enum|
-|---|---|---|---|---|---|
-|random blobs inside average|3101|2630|2176|240320|4114|
-|random blobs inside average|2563|2040|1225|247763|2564|
-|root|1157|1067|0|0|0|
-|leftmost|3504|2920|0|0|0|
-|rightmost|3411|2903|0|0|0|
-|min blob|2689|2103|0|0|0|
-|max blob|2621|2111|0|0|0|
-|min leaf|2729|2335|0|0|0|
-|max leaf|4172|3512|0|0|0|
+|method|enumeration|red-black tree|ordered-map|zhus|stable enum|stable trie|
+|---|---|---|---|---|---|---|
+|random blobs outside average|2674|2196|2246|1912|207757|3716|
+|random blobs inside average|2136|1605|1674|1096|214093|2323|
+|root|1060|965|0|0|0|0|
+|leftmost|2514|2039|0|0|0|0|
+|rightmost|3116|2565|0|0|0|0|
+|min blob|1746|1265|0|0|0|0|
+|max blob|2373|1816|0|0|0|0|
+|min leaf|2362|1963|0|0|0|0|
+|max leaf|3330|2665|0|0|0|0|
 
 min leaf in enumeration: 9
 
