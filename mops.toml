@@ -1,6 +1,6 @@
 [dependencies]
 base = "0.13.3"
-vector = "0.4.1"
+vector = "https://github.com/research-ag/vector#766eeb47a6ad9af91ec19b7b7a4c7ae330df5088"
 prng = "0.0.5"
 enumeration = "0.1.1"
 sha2 = "0.1.0"
@@ -8,7 +8,6 @@ stable-trie = "https://github.com/research-ag/stable-trie#deeaee3c0b34ffffe238d2
 mrr = "https://github.com/research-ag/motoko-lib#9939f9e79ce37e975b64aec18c0f9b186514bdaf@9939f9e79ce37e975b64aec18c0f9b186514bdaf"
 wip = "https://github.com/research-ag/motoko-wip#main@10287ea3f5bf68c1143e059bef9c9f00674f389b"
 motoko-sha2 = "https://github.com/timohanke/motoko-sha2#v2.0.0@837682e5a503f200f6829081e41dd6c98b8d6bf9"
-"crypto.mo" = "https://github.com/skilesare/crypto.mo#main@33aef62a7d8bc7a6eaf56cece71024a2c215fd51"
 zhus = "https://github.com/ZhenyaUsenko/motoko-hash-map#master@94d509f97d70ac03828eee3064d939a3259eab78"
 stable_enumeration = "https://github.com/research-ag/stable_enumeration#master@76c4e0b7d3b999fe06a86f815608bcdd0b49490b"
 btree = "https://github.com/research-ag/MotokoStableBTree#main@44d80831198dfb8be50f9a069fbfe5ee224d30ce"
