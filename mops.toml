@@ -13,4 +13,4 @@ stable_enumeration = "https://github.com/research-ag/stable_enumeration#master@7
 btree = "https://github.com/research-ag/MotokoStableBTree#main@44d80831198dfb8be50f9a069fbfe5ee224d30ce"
 
 [toolchain]
-moc = "0.13.3"
+moc = "0.14.11"
