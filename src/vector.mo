@@ -1628,6 +1628,38 @@ module {
       ],
     );
 
+    t.stat_average(
+      "concat",
+      [
+        ?(
+          func() {
+            let a = Vector.init<Nat>(n, 0);
+            let b = Vector.init<Nat>(n, 0);
+            func() {
+              ignore Vector.concat([(a, 0, n), (b, 0, n)]);
+            };
+          }
+        ),
+        null,
+        ?(func() {
+            let a = Buffer.Buffer<Nat>(0);
+            let b = Buffer.Buffer<Nat>(0);
+            var i = 0;
+            while (i < n) {
+              a.add(0);
+              b.add(0);
+              i += 1;
+            };
+            let result = Buffer.Buffer<Nat>(0);
+            func() {
+              result.append(a);
+              result.append(b);
+            };
+        }),
+        null,
+      ],
+    );
+
     Debug.print(t.output(["vector", "vector class", "buffer", "array"]));
   };
 };

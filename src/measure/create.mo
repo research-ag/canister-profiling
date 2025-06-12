@@ -17,7 +17,6 @@ module {
       case "sha512" return Sha2.sha512_heap;
       case "motokosha256" return Sha2.motokosha256_heap;
       case "motokosha512" return Sha2.motokosha512_heap;
-      case "cryptomo" return Sha2.cryptomo_heap;
       case "trie" return StableTrieMap.create_heap;
       case "trie-map" return StableTrieMap.map_create_heap;
       case _ Prim.trap("");
