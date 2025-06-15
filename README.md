@@ -48,6 +48,30 @@ In stable profiling:
 * mutator instructions are the instructions for deserialization of data returned by the profiled function.
 * stable var query is the result of executing stableVarQuery function, the size of the serialized data.
 
+## Bench List against Refactored List
+
+#### Instructions & heap
+
+n = 100000
+
+Time:
+
+|method|List|Refactored|
+|---|---|---|
+|find|196|151|
+|findIndex|163|191|
+|all|175|146|
+|any|163|151|
+
+Memory:
+
+|method|List|Refactored|
+|---|---|---|
+|find|172|36|
+|findIndex|8|48|
+|all|24|36|
+|any|8|36|
+
 ## Bench Vector against Buffer, Array
 
 #### Instructions & heap
