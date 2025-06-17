@@ -80,6 +80,14 @@ module {
       ],
     );
 
+    t.stat_average(
+      "repeat",
+      [
+        ?(func() = func() = ignore List.repeat<Nat>(0, n)),
+        ?(func() = func() = ignore Refactored.repeat<Nat>(0, n)),
+      ],
+    );
+
     Debug.print(t.output(["List", "Refactored"]));
   };
 };
