@@ -2,6 +2,7 @@ import List "mo:new-base/List";
 import Refactored "mo:refactored/List";
 import Table "utils/table";
 import Debug "mo:base/Debug";
+import Array "mo:base/Array";
 
 module {
   public func profile() {
@@ -85,6 +86,42 @@ module {
       [
         ?(func() = func() = ignore List.repeat<Nat>(0, n)),
         ?(func() = func() = ignore Refactored.repeat<Nat>(0, n)),
+      ],
+    );
+
+    t.stat_average(
+      "fromArray",
+      [
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            func() = ignore List.fromArray<Nat>(a);
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.freeze(Array.init<Nat>(n, 0));
+            func() = ignore Refactored.fromArray<Nat>(a);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "fromVarArray",
+      [
+        ?(
+          func() {
+            let a = Array.init<Nat>(n, 0);
+            func() = ignore List.fromVarArray<Nat>(a);
+          }
+        ),
+        ?(
+          func() {
+            let a = Array.init<Nat>(n, 0);
+            func() = ignore Refactored.fromVarArray<Nat>(a);
+          }
+        ),
       ],
     );
 
