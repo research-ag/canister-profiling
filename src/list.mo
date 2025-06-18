@@ -360,6 +360,42 @@ module {
       ],
     );
 
+    t.stat_average(
+      "min",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = ignore List.min<Nat>(a, func(a, b) = Nat.compare(a, b));
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = ignore Refactored.min<Nat>(a, func(a, b) = Nat.compare(a, b));
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "max",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = ignore List.max<Nat>(a, func(a, b) = Nat.compare(a, b));
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = ignore Refactored.max<Nat>(a, func(a, b) = Nat.compare(a, b));
+          }
+        ),
+      ],
+    );
+
     Debug.print(t.output(["List", "Refactored"]));
   };
 };
