@@ -1,4 +1,4 @@
-import List "mo:new-base/List";
+import List "mo:core/List";
 import Refactored "mo:refactored/List";
 import Table "utils/table";
 import Debug "mo:base/Debug";
@@ -8,6 +8,42 @@ module {
   public func profile() {
     let n = 100_000;
     let t = Table.Table(n, 2);
+
+    t.stat_average(
+      "forEach",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = List.forEach<Nat>(a, func(x) = ());
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = Refactored.forEach<Nat>(a, func(x) = ());
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "reverseForEach",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = List.reverseForEach<Nat>(a, func(x) = ());
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = Refactored.reverseForEach<Nat>(a, func(x) = ());
+          }
+        ),
+      ],
+    );
 
     t.stat_average(
       "find",
@@ -40,6 +76,24 @@ module {
           func() {
             let a = Refactored.repeat<Nat>(0, n);
             func() = ignore Refactored.findIndex<Nat>(a, func(x) = x == 1);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "findLastIndex",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = ignore List.findLastIndex<Nat>(a, func(x) = x == 1);
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = ignore Refactored.findLastIndex<Nat>(a, func(x) = x == 1);
           }
         ),
       ],
