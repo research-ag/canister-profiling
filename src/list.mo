@@ -3,11 +3,102 @@ import Refactored "mo:refactored/List";
 import Table "utils/table";
 import Debug "mo:base/Debug";
 import Array "mo:base/Array";
+import Nat "mo:core/Nat";
 
 module {
   public func profile() {
     let n = 100_000;
     let t = Table.Table(n, 2);
+
+    t.stat_average(
+      "get",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore List.get<Nat>(a, i);
+                i += 1;
+              };
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore Refactored.get<Nat>(a, i);
+                i += 1;
+              };
+            };
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "getOpt",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore List.getOpt<Nat>(a, i);
+                i += 1;
+              };
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore Refactored.getOpt<Nat>(a, i);
+                i += 1;
+              };
+            };
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "put",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() {
+              var i = 0;
+              while (i < n) {
+                List.put<Nat>(a, i, 1);
+                i += 1;
+              };
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() {
+              var i = 0;
+              while (i < n) {
+                Refactored.put<Nat>(a, i, 1);
+                i += 1;
+              };
+            };
+          }
+        ),
+      ],
+    );
 
     t.stat_average(
       "forEach",
@@ -174,6 +265,96 @@ module {
           func() {
             let a = Array.init<Nat>(n, 0);
             func() = ignore Refactored.fromVarArray<Nat>(a);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "toArray",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = ignore List.toArray<Nat>(a);
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = ignore Refactored.toArray<Nat>(a);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "toVarArray",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = ignore List.toVarArray<Nat>(a);
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = ignore Refactored.toVarArray<Nat>(a);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "toArray",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = ignore List.toText<Nat>(a, Nat.toText);
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = ignore Refactored.toText<Nat>(a, Nat.toText);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "map",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = ignore List.map<Nat, Nat>(a, func(x) = x);
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = ignore Refactored.map<Nat, Nat>(a, func(x) = x);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "clone",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = ignore List.clone<Nat>(a);
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = ignore Refactored.clone<Nat>(a);
           }
         ),
       ],
