@@ -307,7 +307,7 @@ module {
     );
 
     t.stat_average(
-      "toArray",
+      "toText",
       [
         ?(
           func() {
