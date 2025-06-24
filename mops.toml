@@ -12,7 +12,7 @@ zhus = "https://github.com/ZhenyaUsenko/motoko-hash-map#master@94d509f97d70ac038
 stable_enumeration = "https://github.com/research-ag/stable_enumeration#master@76c4e0b7d3b999fe06a86f815608bcdd0b49490b"
 btree = "https://github.com/research-ag/MotokoStableBTree#main@44d80831198dfb8be50f9a069fbfe5ee224d30ce"
 core = "0.5.0"
-refactored = "https://github.com/research-ag/motoko-core#concat@36a170bc28d9775c85b21a0fa5d823ccbb5599eb"
+refactored = "https://github.com/research-ag/motoko-core#optimize-list@63c31d7fa22938c5116a40edbd8fd05fc4f8e7cc"
 
 [toolchain]
 moc = "0.14.11"
