@@ -396,6 +396,24 @@ module {
       ],
     );
 
+    t.stat_one(
+      "size",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, 1);
+            func() = ignore List.size<Nat>(a);
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, 1);
+            func() = ignore Refactored.size<Nat>(a);
+          }
+        ),
+      ],
+    );
+
     Debug.print(t.output(["List", "Refactored"]));
   };
 };
