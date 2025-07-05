@@ -235,6 +235,24 @@ module {
     );
 
     t.stat_average(
+      "addRepeat",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() = List.addRepeat(a, 1, n);
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() = Refactored.addRepeat(a, 1, n);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
       "fromArray",
       [
         ?(
