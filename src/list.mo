@@ -11,6 +11,36 @@ module {
     let t = Table.Table(n, 2);
 
     t.stat_average(
+      "at",
+      [
+        ?(
+          func() {
+            let a = List.repeat<Nat>(0, n);
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore List.at<Nat>(a, i);
+                i += 1;
+              };
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.repeat<Nat>(0, n);
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore Refactored.at<Nat>(a, i);
+                i += 1;
+              };
+            };
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
       "get",
       [
         ?(
@@ -32,36 +62,6 @@ module {
               var i = 0;
               while (i < n) {
                 ignore Refactored.get<Nat>(a, i);
-                i += 1;
-              };
-            };
-          }
-        ),
-      ],
-    );
-
-    t.stat_average(
-      "getOpt",
-      [
-        ?(
-          func() {
-            let a = List.repeat<Nat>(0, n);
-            func() {
-              var i = 0;
-              while (i < n) {
-                ignore List.getOpt<Nat>(a, i);
-                i += 1;
-              };
-            };
-          }
-        ),
-        ?(
-          func() {
-            let a = Refactored.repeat<Nat>(0, n);
-            func() {
-              var i = 0;
-              while (i < n) {
-                ignore Refactored.getOpt<Nat>(a, i);
                 i += 1;
               };
             };
@@ -427,6 +427,36 @@ module {
           func() {
             let a = Refactored.repeat<Nat>(0, 1);
             func() = ignore Refactored.size<Nat>(a);
+          }
+        ),
+      ],
+    );
+
+    t.stat_average(
+      "binarySearch",
+      [
+        ?(
+          func() {
+            let a = List.fromArray<Nat>(Array.tabulate<Nat>(n, func i = i));
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore List.binarySearch<Nat>(a, Nat.compare, i);
+                i += 1;
+              };
+            };
+          }
+        ),
+        ?(
+          func() {
+            let a = Refactored.fromArray<Nat>(Array.tabulate<Nat>(n, func i = i));
+            func() {
+              var i = 0;
+              while (i < n) {
+                ignore Refactored.binarySearch<Nat>(a, Nat.compare, i);
+                i += 1;
+              };
+            };
           }
         ),
       ],
