@@ -2,8 +2,10 @@ import Enumeration "../enumeration";
 import Sha2 "../sha2";
 import Prng "../prng";
 import Vector "../vector";
+import List "../list";
 import Prim "mo:⛔";
 import StableTrieMap "../stable_trie";
+import VarArray "../var-array";
 
 module {
   public func get_heap(name : Text) : () -> () -> Any {
@@ -26,6 +28,8 @@ module {
   public func get_profile(name : Text) : () -> () {
     switch (name) {
       case "vector" return Vector.profile;
+      case "list" return List.profile;
+      case "var-array" return VarArray.profile;
       case "enumeration" return Enumeration.profile;
       case "sha2" return Sha2.profile;
       case "prng" return Prng.profile;

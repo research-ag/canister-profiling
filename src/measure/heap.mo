@@ -4,18 +4,18 @@ import Prim "mo:⛔";
 import Debug "mo:base/Debug";
 import Table "../utils/table";
 
-actor {
-  var name_ = "";
-  var heap_with_gc_size = 0;
-  var mutator_instructions = 0 : Nat64;
-  var data = null : Any;
-  var work_f : () -> Any = func() = ();
+persistent actor {
+  transient var name_ = "";
+  transient var heap_with_gc_size = 0;
+  transient var mutator_instructions = 0 : Nat64;
+  transient var data = null : Any;
+  transient var work_f : () -> Any = func() = ();
 
   // Numbers are more precise if verbose == false
-  let m = Measure.Measure(false);
+  transient let m = Measure.Measure(false);
   m.header();
   m.test("before constructor");
-  var init_heap_size = 0;
+  transient var init_heap_size = 0;
 
   public shared func pre_init() : async () {
     init_heap_size := Prim.rts_heap_size();
