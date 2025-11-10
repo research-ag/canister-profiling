@@ -11,8 +11,8 @@ motoko-sha2 = "https://github.com/timohanke/motoko-sha2#v2.0.0@837682e5a503f200f
 zhus = "https://github.com/ZhenyaUsenko/motoko-hash-map#master@94d509f97d70ac03828eee3064d939a3259eab78"
 stable_enumeration = "https://github.com/research-ag/stable_enumeration#master@76c4e0b7d3b999fe06a86f815608bcdd0b49490b"
 btree = "https://github.com/research-ag/MotokoStableBTree#main@44d80831198dfb8be50f9a069fbfe5ee224d30ce"
-core = "https://github.com/dfinity/motoko-core#main@034557bc2b6c88b21a59cece340a2ecff0e65de7"
-refactored = "https://github.com/research-ag/motoko-core#optimize-list@e16f0bd6db835497ba913455721cdf6e3c600c4e"
+core = "https://github.com/dfinity/motoko-core#main@090cb32236f74ba0f998df2694f4919a496678d8"
+refactored = "https://github.com/research-ag/motoko-core#sort@fa2c0c5a179af2d2467d3f12ac36ff8ea61c7076"
 
 [toolchain]
 moc = "0.16.2"
