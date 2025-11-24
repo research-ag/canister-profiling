@@ -13,6 +13,7 @@ stable_enumeration = "https://github.com/research-ag/stable_enumeration#master@7
 btree = "https://github.com/research-ag/MotokoStableBTree#main@44d80831198dfb8be50f9a069fbfe5ee224d30ce"
 core = "https://github.com/dfinity/motoko-core#main@090cb32236f74ba0f998df2694f4919a496678d8"
 refactored = "https://github.com/research-ag/motoko-core#sort@fa2c0c5a179af2d2467d3f12ac36ff8ea61c7076"
+radix-sort = "https://github.com/research-ag/radix-sort#main@9b354809a17351c9bbe05238942e33e1256bbcb8"
 
 [toolchain]
 moc = "0.16.2"
