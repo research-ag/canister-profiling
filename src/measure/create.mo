@@ -3,6 +3,7 @@ import Sha2 "../sha2";
 import Prng "../prng";
 import Vector "../vector";
 import List "../list";
+import Sort "../radix-sort";
 import Prim "mo:⛔";
 import StableTrieMap "../stable_trie";
 import VarArray "../var-array";
@@ -35,6 +36,7 @@ module {
       case "prng" return Prng.profile;
       case "trie" return StableTrieMap.profile;
       case "trie-map" return StableTrieMap.profile_map;
+      case "radix-sort" return Sort.profile;
       case _ Prim.trap("");
     };
   };
